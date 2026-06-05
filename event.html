@@ -4,13 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Donation Events Page</title>
+    <link rel="stylesheet" type="text/css" href="format.css">
 </head>
 <body>
     <header>
 
-        <img src="logo.png" alt="Hand2Hand logo" width="100">
+        <div class="logo">
+        <img src="logo.png" alt="Hand2Hand logo" width="80">
+        <h1>Hand2Hand</h1>
+        </div>
 
         <nav>
+            |
             <a href="about.html">About Us</a> |
             <a href="event.html">Events</a> |
             <a href="login.html">Login</a>
@@ -18,76 +23,160 @@
 
     </header>
 
-    <section>
+    <div class="page-title">
         <h1>Donation Events</h1>
         <p>Description</p>
-    </section>
+    </div>
 
-    <section>
-        <div>
-            <img src="image/food.webp" alt="Food Bank" width="300" height="300">
-            <h3>Food Bank</h3>
+    <input class="search-bar" type="text" placeholder="Search">
 
-            <p>Duration: 1 May 2026 - 30 Jun 2026</p>
-            <p>Status: Active</p>
+    <section class="event-grid">
+        <div class="event-card foodbank">
+            <div class="card-content">
+                <h2>Food Bank</h2>
 
-            <h4>Products</h4>
-            <ul>
-                <li>Rice</li>
-                <li>Cooking Oil</li>
-                <li>Sugar</li>
-                <li>Flour</li>
-                <li>Instant Noodles</li>
-            </ul>
+                <p>Duration: 1 May 2026 - 30 Jun 2026</p>
+                <p>Status: Active</p>
 
-            <button>Donate Now</button>
+                <h3>Progress</h3>
+                <div class="item">
+                    <p>Rice</p>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 70%;"></div>
+                    </div>
+                </div>
+                    
+                <div class="item">
+                    <p>Cooking Oil</p>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 30%;"></div>
+                    </div>
+                </div>
+
+                <div class="item">
+                    <p>Sugar</p>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 20%;"></div>
+                    </div>
+                </div>
+
+                <div class="item">
+                    <p>Flour</p>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 10%;"></div>
+                    </div>
+                </div>
+                <div class="item">
+                    <p>Instant Noodles</p>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 80%;"></div>
+                    </div>
+                </div>
+
+            </div>
+            <button class="donate-btn">Donate Now</button>
         </div>
 
-        <div>
-            <img src="image/school.webp" alt="Back To School" width="300" height="300">
-            <h3>Back To School</h3>
+        <div class="event-card backtoschool">
+            <div class="card-content">
+                <h2>Back To School</h2>
 
-            <p>Duration: 1 Jul 2026 - 31 Aug 2026</p>
-            <p>Status: Active</p>
+                <p>Duration: 1 May 2026 - 30 Jun 2026</p>
+                <p>Status: Active</p>
 
-            <h4>Products</h4>
-            <ul>
-                <li>School Bag</li>
-                <li>Exercise Books</li>
-                <li>Pencil Case</li>
-                <li>Stationery Set</li>
-                <li>School Shoes</li>
-            </ul>
+                <h3>Progress</h3>
+                <div class="item">
+                    <p>Rice</p>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 70%;"></div>
+                    </div>
+                </div>
+                    
+                <div class="item">
+                    <p>Cooking Oil</p>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 30%;"></div>
+                    </div>
+                </div>
 
-            <button>Donate Now</button>
+                <div class="item">
+                    <p>Sugar</p>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 20%;"></div>
+                    </div>
+                </div>
+
+                <div class="item">
+                    <p>Flour</p>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 10%;"></div>
+                    </div>
+                </div>
+                <div class="item">
+                    <p>Instant Noodles</p>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 80%;"></div>
+                    </div>
+                </div>
+
+            </div>
+            <button class="donate-btn">Donate Now</button>
         </div>
 
-        <div>
-            <img src="image/baby.jpg" alt="Baby Care" width="300" height="300">
-            <h3>Baby Care</h3>
+        <div class="event-card babycare">
+            <div class="card-content">
+                <h2>Baby Care</h2>
 
-            <p>Duration: 1 Jan 2026 - 31 Mar 2026</p>
-            <p>Status: Active</p>
+                <p>Duration: 1 May 2026 - 30 Jun 2026</p>
+                <p>Status: Active</p>
 
-            <h4>Products</h4>
-            <ul>
-                <li>Baby Diaper</li>
-                <li>Baby Wipes</li>
-                <li>Baby Formula</li>
-                <li>Baby Bottles</li>
-                <li>Baby Clothes</li>
-            </ul>
+                <h3>Progress</h3>
+                <div class="item">
+                    <p>Rice</p>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 70%;"></div>
+                    </div>
+                </div>
+                    
+                <div class="item">
+                    <p>Cooking Oil</p>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 30%;"></div>
+                    </div>
+                </div>
 
-            <button>Donate Now</button>
+                <div class="item">
+                    <p>Sugar</p>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 20%;"></div>
+                    </div>
+                </div>
+
+                <div class="item">
+                    <p>Flour</p>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 10%;"></div>
+                    </div>
+                </div>
+                <div class="item">
+                    <p>Instant Noodles</p>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 80%;"></div>
+                    </div>
+                </div>
+
+            </div>
+            <button class="donate-btn">Donate Now</button>
         </div>
 
     </section>
 
     <footer>
-        <h3>Hand2Hand</h3>
+        <h4>Hand2Hand</h4>
 
         <p>Contact Us:</p>
         <p>Email: hand2hand@support.com</p>
+
     </footer>
 
 </body>
