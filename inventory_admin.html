@@ -63,12 +63,33 @@
     }
 
     .search-bar {
-        width: 860px;
+        width: 50%;
         padding: 10px;
         margin: 0 20px 45px;
         display: block;
         border: 2px solid #A86B6C;
+    }
 
+    .inventory-list {
+        background-color: #f3e7dc;
+        padding: 20px;
+
+    }
+
+    .text {
+        color: #443025;
+        font-size: 17pt;
+    }
+
+    .table-container {
+        width: 50%;
+        background-color: #ffe4ff;
+        color: #443025;
+        border: 2px solid #A86B6C;
+    }
+    
+    th, td {
+        border: 2px solid #A86B6C;
     }
 </style>
 
@@ -93,5 +114,28 @@
     </div>
     
     <input class="search-bar" type="text" placeholder="Search">
+
+    <section class="inventory-list">
+        <div>
+            <p class="text">Inventory List</p>
+        </div>
+
+        <table class="table-container">
+            <thead>
+                <tr>
+                    <th>Item Name</th>
+                    <th>Quantity Available</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
 </body>
 </html>
