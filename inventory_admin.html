@@ -7,7 +7,7 @@
 </head>
 
 <style>
-* {
+    * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -73,7 +73,7 @@
     .inventory-list {
         background-color: #f3e7dc;
         padding: 20px;
-
+        min-height: 100vh;
     }
 
     .text {
@@ -82,15 +82,41 @@
     }
 
     .table-container {
-        width: 50%;
+        width: 80%;
         background-color: #ffe4ff;
         color: #443025;
         border: 2px solid #A86B6C;
+        
     }
     
     th, td {
-        border: 2px solid #A86B6C;
+        border: 1px solid #A86B6C;
+        padding: 30px;
+        color:#443025;
+        font-size: 17pt;
     }
+
+    input[type="text"] {
+        width: 550px;
+        height: 50px;
+        font-size: 16px; 
+    }
+
+    button {
+        padding: 20px 28px;
+        margin-top: 40px;
+        border: none;
+        border-radius: 10px;
+        background-color: #A86B6C;
+        color: #FFE4EF;
+        cursor: pointer;
+        font-size: 15pt;
+    }
+
+   button:hover {
+    background-color: #a45a66;
+   }
+
 </style>
 
 <body>
@@ -120,22 +146,29 @@
             <p class="text">Inventory List</p>
         </div>
 
-        <table class="table-container">
-            <thead>
-                <tr>
-                    <th>Item Name</th>
-                    <th>Quantity Available</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            
-            <tbody>
-                <tr>
-                    <td></td>
-                    <td></td>
-                </tr>
-            </tbody>
-        </table>
+        <form method="POST">
+            <table class="table-container">
+            <tr>	
+                <td>Item Name</td>
+                <td><input type="text" name="item"/></td>	
+            </tr>
+
+            <tr>	
+                <td>Quantity Available</td> 	
+                <td> <input type = "text" name = "quantity"/></td>
+            </tr> 
+        
+            <tr>
+                <td>Status</td>
+                <td><input type = "text" name = "status"/></td>
+            </tr>
+            <br />
+            </table>
+
+            <!-- create a submit button -->
+            <button type="submit">Update Stock</button>
+            <button type="submit">Add New Item</button>
+	    </form>
     </section>
 </body>
 </html>
