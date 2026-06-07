@@ -45,16 +45,16 @@ nav {
   flex-shrink: 0;
 }
 
-/* Brand + Links sebelah */
+
 .brand-links {
   display: flex;
   align-items: center;
-  gap: 15px; /* jarak antara Hand2Hand dan link */
+  gap: 15px; 
 }
 
 .brand-links h1 {
   color: #FFE4EF;
-  font-size: 30px;   /* samakan size dengan link */
+  font-size: 30px;   
   font-weight: bold;
   margin: 0;
 }
@@ -76,7 +76,7 @@ nav .nav-links a {
 
 .nav-links a:not(:last-child)::after {
   content: "|";
-  margin-left: 8px;   /* jarak kecil selepas teks */
+  margin-left: 8px;   
   color: #FFE4EF;
 }
 
@@ -111,7 +111,7 @@ nav .nav-links a {
 }
 
 .main h2 {
-  font-size: 20px;
+  font-size: 22px;
   font-weight: bold;
   color: #3b2a1a;
   margin-bottom: 18px;
@@ -128,10 +128,11 @@ nav .nav-links a {
 .badge {
   background-color: #9e6060;
   color: #FFE4EF;
-  font-size: 13px;
-  padding: 7px 16px;
+  font-size: 14.5px;
+  padding: 13px 16px;
   border-radius: 20px;
   white-space: nowrap;
+  margin-right: 25px;
 }
 
 /* ── DIVIDER ── */
@@ -149,7 +150,7 @@ nav .nav-links a {
 
 /* ── TABLE SECTION ── */
 .table-section h3 {
-  font-size: 15px;
+  font-size: 20px;
   font-weight: bold;
   color: #3b2a1a;
   margin-bottom: 14px;
