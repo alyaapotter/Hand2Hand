@@ -1,0 +1,189 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  background-color: #f3e7dc;
+  color: #443025;
+}
+
+/* ── PAGE LABEL ── */
+.page-label {
+  font-size: 12px;
+  color: #888;
+  padding: 6px 12px;
+  background: #f0f0f0;
+}
+
+/* ── NAVBAR ── */
+nav {
+  background-color: #3b2a1a;
+  display: flex;
+  align-items: center;
+  justify-content: space-between; 
+  padding: 30px 20px;
+}
+
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.logo-circle {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  background-color: #c8a882;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+/* Brand + Links sebelah */
+.brand-links {
+  display: flex;
+  align-items: center;
+  gap: 15px; /* jarak antara Hand2Hand dan link */
+}
+
+.brand-links h1 {
+  color: #FFE4EF;
+  font-size: 30px;   /* samakan size dengan link */
+  font-weight: bold;
+  margin: 0;
+}
+
+/* Navbar Links */
+.nav-links {
+  display: flex;
+}
+
+/* Navbar Links */
+nav .nav-links a {
+  color: #FFE4EF;          
+  font-size: 30px;
+  font-weight: bold;
+  text-decoration: none;   
+  margin: 0 6px;
+}
+
+
+.nav-links a:not(:last-child)::after {
+  content: "|";
+  margin-left: 8px;   /* jarak kecil selepas teks */
+  color: #FFE4EF;
+}
+
+.nav-links a:visited { 
+  color: #FFE4EF;
+ }
+
+.nav-links a:hover { 
+  color: #FFD6E0; text-decoration: underline; 
+}
+
+.nav-links a:active { 
+  color: #FFC0CB; 
+}
+
+/* Logout Button */
+.btn-logout {
+  background-color: #A86B6C;
+  color: #FFE4EF;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 22px;
+  font-size: 20px;
+  cursor: pointer;
+  margin-right: 5px;
+}
+
+/* ── MAIN CONTENT ── */
+.main {
+  background-color: #f3e7dc;
+  padding: 24px 24px 30px;
+}
+
+.main h2 {
+  font-size: 20px;
+  font-weight: bold;
+  color: #3b2a1a;
+  margin-bottom: 18px;
+}
+
+/* ── STAT BADGES ── */
+.stats {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.badge {
+  background-color: #9e6060;
+  color: #FFE4EF;
+  font-size: 13px;
+  padding: 7px 16px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+/* ── DIVIDER ── */
+.divider {
+  width: calc(100% + 100px);
+  margin-left: -24px;
+  height: 12px;
+  background-color: #5a3825;
+  border-radius: 4px;
+}
+
+.table-section {
+  margin-top: 15px;
+}
+
+/* ── TABLE SECTION ── */
+.table-section h3 {
+  font-size: 15px;
+  font-weight: bold;
+  color: #3b2a1a;
+  margin-bottom: 14px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #A86B6C;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+thead tr {
+  background-color: #FFE4EF;
+}
+
+thead th {
+  text-align: left;
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: bold;
+  color: #3b2a1a;
+  border: 1px solid #A86B6C;
+}
+
+tbody tr {
+  background-color: #FFE4EF;
+}
+
+tbody td {
+  padding: 10px 14px;
+  font-size: 13px;
+  color: #3b2a1a;
+  border: 1px solid #A86B6C;
+  height: 36px;
+}
