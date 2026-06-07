@@ -59,6 +59,15 @@
         margin: 0 20px 45px;
         display: block;
         border: 2px solid #A86B6C;
+        background-color: #FFE4EF;
+    }
+
+    .search-icon {
+        position: absolute;
+        left: 40%;
+        top: 40%;
+        transform: translateY(-50%);
+        color: #A86B6C;
     }
 
     .inventory-list {
