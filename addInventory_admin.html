@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="updateInventory_admin.css"> 
-    <title>Inventory Page: Update (Admin)</title>
+    <link rel="stylesheet" type="text/css" href="addInventory_admin.css"> 
+    <title>Inventory Page: Add (Admin)</title>
 </head>
 <body>
     <header>
@@ -20,15 +20,17 @@
             <a href="inventory.html">Inventory</a> |
             <a href="distribution.html">Distribution</a>
         </nav>
+
+        <button class="logout-btn">Logout</button>
     </header>
 
     <div class="title">
         <h1>Inventory</h1>
     </div>
 
-    <section class="update-stock">
+    <section class="add-item">
         <div>
-            <p class="text">Update Stock</p>
+            <p class="text">Add New Item</p>
         </div>
 
         <div class="form-container">
@@ -38,18 +40,25 @@
         </div>
 
         <div class="form-container">
+            <label>Category:</label>
+            <input type="text" id="categoryInput" placeholder="Category" required>
+            <div id="categoryError" class="error-msg"></div>
+        </div>
+
+        <div class="form-container">
             <label>Quantity:</label>
             <input type="text" id="qtyInput" placeholder="Quantity" required>
             <div id="qtyError" class="error-msg"></div>
         </div>
 
-        <button id="updateBtn" class="update-btn">Update Stock</button>
+        <button id="addBtn" class="add-btn">Add New Item</button>
     </section>
 
     <script>
         
         // get input values
         let itemInput = document.getElementById("itemInput");
+        let categoryInput = document.getElementById("categoryInput");
         let qtyInput = document.getElementById("qtyInput");
         let updateBtn = document.getElementById("updateBtn");
 
@@ -59,7 +68,7 @@
             // if else validation for numbers
             if (trimmed == "")
             {
-                return {valid: false, message: "Quantity cannot be empty."};
+                return {valid: false, message: "Quantity cannot be empty." };
             }
 
             let num = Number(trimmed);
@@ -80,7 +89,7 @@
                 return { valid: false, message: "Quantity cannot be a decimal. Please enter a whole number." };
             }
 
-             // check if it's zero
+            // check if it's zero
             if (num == 0) 
             {
                 return { valid: false, message: "Quantity cannot be zero. Please enter a positive number." };
@@ -95,15 +104,22 @@
             return { valid: false, message: "Please enter a valid positive whole number." };
         }
 
-         updateBtn.addEventListener('click', function()
+         addBtn.addEventListener('click', function()
          {
             let itemValue = itemInput.value;
+            let categoryValue = categoryInput.value;
             let qtyValue = qtyInput.value; 
 
-            // check if item is empty using if-else
+            // check if item and category is empty using if-else
             if (!itemValue || itemValue.trim() === "") 
             {
                 alert("Error: Item cannot be empty!");
+                return;
+            }
+
+            if (!categoryValue || categoryValue.trim() === "") 
+            {
+                alert("Error: Category cannot be empty!");
                 return;
             }
 
@@ -116,8 +132,8 @@
                 return;
             }
 
-            // if all validations pass, show success popup
-            alert(`Stock updated successfully!\n\nItem: ${itemValue.trim()}\nQuantity: ${qtyValidation.value}`);
+            // ff all validations pass, show success popup
+            alert(`Stock updated successfully! \n\nItem: ${itemValue.trim()} \nCategory: ${categoryValue.trim()} \nQuantity: ${qtyValidation.value}`);
         });
 
          

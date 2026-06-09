@@ -6,7 +6,7 @@
     }
 
     body {
-        background-color: #443025;
+        background-color: #443025;   
     }
 
     header {
@@ -46,26 +46,34 @@
         color: #a86b8c;
     }
 
-    .search {
+    .logout-btn {
+        background-color: #FFE4EF;
+        color: #443025;
+        border: 2px solid #A86B6C;
+        padding: 10px 25px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-weight: bold;
+        margin-top: -60px;
+        margin-right: -15px;
+    }
+
+    .logout-btn:hover {
+        background-color: #a45a66;
+    }
+
+    .title {
         color: #ffe4ff;
         text-align: left;
         margin-top: 20px;
         padding: 20px;
     }
 
-    .search-bar {
-        width: 50%;
-        padding: 20px;
-        margin: 0 20px 45px;
-        display: block;
-        border: 2px solid #A86B6C;
-        background-color: #FFE4EF;
-    }
-
-    .inventory-list {
+    .add-item {
         background-color: #f3e7dc;
         padding: 20px;
         min-height: 100vh;
+        width: 107vw;
     }
 
     .text {
@@ -73,24 +81,18 @@
         font-size: 17pt;
     }
 
-    .table-container {
-        width: 80%;
-        background-color: #ffe4ff;
-        color: #443025;
-        border: 2px solid #A86B6C;
-    }
-    
-    th, td {
-        border: 1px solid #A86B6C;
-        padding: 30px;
-        color:#443025;
-        font-size: 17pt;
+    .form-container {
+        padding: 10px;
+        align-items: left;
+        margin-top: 20px;
+        font-size: 15pt;
     }
 
     input[type="text"] {
-        width: 550px;
+        width: 35%;
         height: 50px;
         font-size: 16px; 
+        background-color: #FFE4EF;
     }
 
     button {
@@ -101,9 +103,9 @@
         background-color: #A86B6C;
         color: #FFE4EF;
         cursor: pointer;
-        font-size: 15pt;
+        font-size: 10pt;
     }
 
-   button:hover {
+    button:hover {
     background-color: #a45a66;
    }
