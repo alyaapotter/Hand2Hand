@@ -16,7 +16,7 @@
         align-items: center;
         gap: 15px;
         display: flex;
-        margin: 0; /*test*/
+        justify-content: space-between;
     }
 
     header img {
@@ -38,7 +38,7 @@
     nav a {
         color:#ffe4ff;
         text-decoration: none;
-        font-size: 30px;
+        font-size: 25px;
         margin: 10px;
         font-weight: bolder;
     }
@@ -73,8 +73,7 @@
     .add-item {
         background-color: #f3e7dc;
         padding: 20px;
-        min-height: 100vh;
-        width: 107vw;
+        min-height: 69vh;
     }
 
     .text {
@@ -109,4 +108,57 @@
 
     button:hover {
     background-color: #a45a66;
-   }
+    }
+
+    @media (max-width: 768px) {
+    header {
+        flex-direction: column;
+        align-items: center;
+        padding: 10px 15px;
+        gap: 10px;
+    }
+
+    nav {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 3px;
+    }
+
+    nav a {
+        font-size: 16px;
+        margin: 4px;
+    }
+
+    .logout-btn {
+        margin-top: 0;
+        margin-right: 0;
+        width: 30%;
+        text-align: center;
+    }
+
+    .title {
+        margin-top: 10px;
+        padding: 10px;
+    }
+
+    .add-item {
+        padding: 15px;
+        min-height: auto;
+    }
+
+    .form-container {
+        font-size: 12pt;
+        margin-top: 10px;
+    }
+
+    input[type="text"] {
+        width: 100%;
+    }
+
+    button {
+        width: 40%;
+        padding: 15px;
+        margin-top: 20px;
+        font-size: 11pt;
+    }
+}

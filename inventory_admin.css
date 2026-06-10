@@ -16,6 +16,7 @@
         align-items: center;
         gap: 15px;
         display: flex;
+        justify-content: space-between;
     }
 
     header img {
@@ -37,13 +38,29 @@
     nav a {
         color:#ffe4ff;
         text-decoration: none;
-        font-size: 30px;
+        font-size: 25px;
         margin: 10px;
         font-weight: bolder;
     }
 
     nav a:hover {
         color: #a86b8c;
+    }
+
+    .logout-btn {
+        background-color: #FFE4EF;
+        color: #443025;
+        border: 2px solid #A86B6C;
+        padding: 10px 25px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-weight: bold;
+        margin-top: -60px;
+        margin-right: -15px;
+    }
+
+    .logout-btn:hover {
+        background-color: #a45a66;
     }
 
     .search {
@@ -107,3 +124,68 @@
    button:hover {
     background-color: #a45a66;
    }
+
+   @media (max-width: 768px) {
+    header {
+        flex-direction: column;
+        align-items: center;
+        padding: 10px 15px;
+        gap: 10px;
+    }
+
+    nav {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 3px;
+    }
+
+    nav a {
+        font-size: 16px;
+        margin: 4px;
+    }
+
+    .logout-btn {
+        margin-top: 0;
+        margin-right: 0;
+        width: 30%;
+        text-align: center;
+    }
+
+    .search {
+        margin-top: 10px;
+        padding: 10px;
+    }
+
+    .search-bar {
+        width: 90%;
+        padding: 12px;
+        margin: 0 10px 20px;
+    }
+
+    .inventory-list {
+        padding: 15px;
+        min-height: auto;
+    }
+
+    .table-container {
+        width: 100%;
+    }
+
+    th, td {
+        padding: 12px;
+        font-size: 12pt;
+    }
+
+    input[type="text"] {
+        width: 100%;
+        height: 40px;
+        font-size: 14px;
+    }
+
+    button {
+        width: 40%;
+        padding: 15px;
+        margin-top: 20px;
+        font-size: 12pt;
+    }
+}

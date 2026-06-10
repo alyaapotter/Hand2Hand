@@ -20,6 +20,8 @@
             <a href="inventory.html">Inventory</a> |
             <a href="distribution.html">Distribution</a>
         </nav>
+
+        <button class="logout-btn">Logout</button>
     </header>
 
     <div class="title">
@@ -31,96 +33,49 @@
             <p class="text">Update Stock</p>
         </div>
 
-        <div class="form-container">
-            <label>Item:</label>
-            <input type="text" id="itemInput" placeholder="Item" required>
-            <div id="itemError" class="error-msg"></div>
-        </div>
+        <form onsubmit="return validateForm(event)">
+            <div class="form-container">
+                <label>Item:</label>
+                <input type="text" name="item" id="item" placeholder="Item">
+                <div id="itemError" class="error-msg"></div>
+            </div>
 
-        <div class="form-container">
-            <label>Quantity:</label>
-            <input type="text" id="qtyInput" placeholder="Quantity" required>
-            <div id="qtyError" class="error-msg"></div>
-        </div>
+            <div class="form-container">
+                <label>Quantity:</label>
+                <input type="text" name="quantity" id="quantity" placeholder="Quantity">
+                <div id="qtyError" class="error-msg"></div>
+            </div>
 
-        <button id="updateBtn" class="update-btn">Update Stock</button>
+            <!-- create a submit button -->
+            <button type="submit" name="action" value="add">Add New Item</button>
+        </form>
     </section>
 
     <script>
-        
-        // get input values
-        let itemInput = document.getElementById("itemInput");
-        let qtyInput = document.getElementById("qtyInput");
-        let updateBtn = document.getElementById("updateBtn");
-
-        function validateQuantity(value)
+        function validateForm(event) 
         {
-            let trimmed = value.trim();
-            // if else validation for numbers
-            if (trimmed == "")
+            event.preventDefault();
+            let item = document.getElementById("item").value.trim();
+            let quantity = document.getElementById("quantity").value.trim();
+
+            // check empty fields
+            if (item == "" || quantity == "")
             {
-                return {valid: false, message: "Quantity cannot be empty."};
+                alert("All fields are required.")
+                event.preventDefault();
+                return false;
             }
 
-            let num = Number(trimmed);
-            if (isNaN(num)) 
+            // check quantity is a whole num (no decimal & negative num)
+            if (isNaN(quantity) || !Number.isInteger(Number(quantity)) || Number(quantity) <= 0)
             {
-                return { valid: false, message: "Quantity must be a number." };
+                alert("Quantity must be a non-negative whole number.");
+                return false;
             }
 
-            // check for negative numbers using if-else
-            if (num < 0) 
-            {
-                return { valid: false, message: "Quantity cannot be negative." };
-            }
-
-            // check for decimals using if-else
-            if (trimmed.includes('.')) 
-            {
-                return { valid: false, message: "Quantity cannot be a decimal. Please enter a whole number." };
-            }
-
-             // check if it's zero
-            if (num == 0) 
-            {
-                return { valid: false, message: "Quantity cannot be zero. Please enter a positive number." };
-            }
-
-            // check if it's a positive whole number
-            if (num > 0 && Number.isInteger(num)) 
-            {
-                return { valid: true, value: num };
-            }
-
-            return { valid: false, message: "Please enter a valid positive whole number." };
+            alert("Form is valid!");
+            return true;
         }
-
-         updateBtn.addEventListener('click', function()
-         {
-            let itemValue = itemInput.value;
-            let qtyValue = qtyInput.value; 
-
-            // check if item is empty using if-else
-            if (!itemValue || itemValue.trim() === "") 
-            {
-                alert("Error: Item cannot be empty!");
-                return;
-            }
-
-            // validate quantity using if-else structure
-            let qtyValidation = validateQuantity(qtyValue);
-
-            if (!qtyValidation.valid) 
-            {
-                alert("Error: " + qtyValidation.message);
-                return;
-            }
-
-            // if all validations pass, show success popup
-            alert(`Stock updated successfully!\n\nItem: ${itemValue.trim()}\nQuantity: ${qtyValidation.value}`);
-        });
-
-         
     </script>
 </body>
 </html>
