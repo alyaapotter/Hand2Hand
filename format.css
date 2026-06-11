@@ -1,0 +1,284 @@
+/* RESET */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+/* BODY */
+body {
+    background-color: #443025;
+    color: #443025;
+}
+
+/* HEADER */
+header {
+    background-color: #443025;
+    color: #FFE4EF;
+    padding: 15px 30px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+header img {
+    border-radius: 50%;
+}
+
+/* logo side */
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    font-weight: bold;
+}
+
+/* NAV */
+nav {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+nav a {
+    font-size: 30px;
+    color: #FFE4EF;
+    text-decoration: none;
+    margin: 0 10px;
+    font-weight: bold;
+}
+
+nav a:hover {
+    color: #A86B6C;
+}
+
+/* PAGE TITLE */
+.page-title {
+    text-align: left;
+    background-color: #f3e7dc;
+    color: #443025;
+    margin-top: 20px;
+    padding: 20px;
+}
+
+.page-title p, h1 {
+    text-align: left;
+    margin-top: 10px;
+    margin-left: 20px;
+    margin-bottom: 10px;
+    padding: 2px;
+}
+
+/* SEARCH BAR (EVENT PAGE) */
+.search-bar {
+    width: 40%;
+    padding: 10px;
+    margin: 30px 0 20px 45px;
+    display: block;
+    border: 2px solid #A86B6C;
+    background-color: #FFE4EF;
+}
+
+/* EVENT GRID */
+.event-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    padding: 20px 40px;
+}
+
+/* EVENT CARD */
+.event-card {
+    background-color: #f3e7dc;
+    border: 5px solid #7F5836;
+    border-radius: 15px;
+    overflow: hidden;
+    height: 425px;
+    position: relative;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    padding-bottom: 15px;
+    transition: transform 0.3s;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+
+.event-card:hover {
+    transform: translateY(-5px);
+}
+
+.event-card img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+}
+
+.event-card h3 {
+    margin: 12px 0 8px 10px;
+}
+
+.event-card p {
+    padding: 0 10px;
+}
+
+.foodbank {
+    background-image: url("image/food.webp");
+}
+
+.backtoschool {
+    background-image: url("image/school.webp");
+}
+
+.babycare {
+    background-image: url("image/baby.jpg");
+}
+
+.card-content {
+    position: absolute;
+    top: 40px;
+    bottom: 85px;
+    left: 20px;
+    right: 20px;
+    background-color: #B39989D9 ; /* D9 opacity */
+    padding: 15px;
+    color: #443025;
+    border-radius: 10px;
+}
+
+.card-content h2 {
+    font-weight: bolder;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.donate-btn {
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    border: none;
+    padding: 12px 30px;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+/* ITEM*/
+.item {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    margin-bottom: 10px;
+}
+
+/* PROGRESS */
+.progress-container {
+    width: 40%;
+    background-color: #7F5836;
+    border-radius: 20px;
+    overflow: hidden;
+    height: 20px;
+    border: 2px solid #443025;
+}
+
+.progress-bar {
+    height: 100%;
+    background-color: #443025;
+    text-align: center;
+    color: #FFE4EF;
+    font-size: 10px;
+    line-height: 20px;
+}
+
+/* BUTTON */
+button {
+    background-color: #A86B6C;
+    color: #FFE4EF;
+    border: none;
+    padding: 10px 15px;
+    margin: 10px;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #a45a66;
+}
+
+/* FOOTER */
+footer {
+    background-color: #f3e7dc;
+    color: #443025;
+    text-align: left;
+    padding: 20px;
+    margin-top: 30px;
+}
+
+footer h4 {
+    margin-bottom: 15px;
+}
+
+footer p {
+    padding: 3px;
+    font-size: 14px;
+}
+
+/* ========================= */
+/* LOGIN & REGISTER FORM */
+/* ========================= */
+
+.form-container {
+    width: 350px;
+    margin: 40px auto;
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.form-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.form-container input[type="text"],
+.form-container input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+}
+
+/* RADIO */
+input[type="radio"] {
+    margin-right: 5px;
+}
+
+/* SUBMIT BUTTON */
+.form-container input[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    background-color: #A86B6C;
+    color: #FFE4EF;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.form-container input[type="submit"]:hover {
+    background-color: #A86B6C;
+}
+
+/* FORM TEXT */
+.form-container p {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.form-container a {
+    color: #443025;
+    font-weight: bold;
+}
