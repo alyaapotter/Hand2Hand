@@ -380,3 +380,93 @@ body {
     margin-bottom: 6px;
     font-size: 0.85rem;
 }
+
+/* ===== MOBILE RESPONSIVE ===== */
+@media (max-width: 768px) {
+
+    /* Navbar */
+    .navbar {
+        padding: 0 15px;
+        height: auto;
+        padding: 10px 15px;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    .nav-brand-name { font-size: 1rem; }
+    .nav-links-sub  { font-size: 0.7rem; }
+
+    /* Page container */
+    .page-container {
+        padding: 0 12px;
+        margin: 15px auto;
+    }
+    .page-title { font-size: 1.1rem; }
+
+    /* Search bar */
+    .search-bar { width: 100%; max-width: 100%; }
+
+    /* Tables — make scrollable on mobile */
+    .table-wrapper { overflow-x: auto; }
+    .data-table { min-width: 500px; }
+    .data-table th,
+    .data-table td { padding: 9px 10px; font-size: 0.8rem; }
+
+    /* Forms */
+    .form-section { padding: 15px; }
+    .form-group {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+    .form-group label { min-width: unset; }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        width: 100% !important;
+    }
+    .form-group input[type="number"] { width: 100% !important; }
+
+    /* Buttons */
+    .btn { padding: 10px 18px; font-size: 0.85rem; }
+    .btn-full { width: 100%; }
+
+    /* Summary cards */
+    .card-row { grid-template-columns: repeat(2, 1fr); }
+    .card-number { font-size: 1.4rem; }
+
+    /* Auth pages */
+    .auth-box { padding: 25px 18px; }
+    .auth-header h1 { font-size: 1.4rem; }
+
+    /* Footer */
+    .page-footer { padding: 15px; font-size: 0.8rem; }
+
+    /* Distribution layout */
+    .dist-layout,
+    .aid-layout,
+    .donate-layout {
+        grid-template-columns: 1fr;
+    }
+
+    /* Action buttons in table */
+    .action-col,
+    td[style*="display:flex"] {
+        flex-direction: column;
+        gap: 4px;
+    }
+    .btn-edit { width: 100%; text-align: center; }
+
+    /* Modal */
+    .modal-box {
+        padding: 20px 15px;
+        margin: 0 15px;
+    }
+}
+
+/* Extra small screens (phones < 400px) */
+@media (max-width: 400px) {
+    .card-row { grid-template-columns: 1fr 1fr; }
+    .nav-brand-name { font-size: 0.9rem; }
+    .page-title { font-size: 1rem; }
+    .data-table { min-width: 400px; }
+}
