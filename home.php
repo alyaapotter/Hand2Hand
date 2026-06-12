@@ -8,7 +8,7 @@ session_start();
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Hand2Hand - Home</title>
-  <link rel="stylesheet" href="homeStyle.css" />
+  <link rel="stylesheet" href="home.style.css" />
 </head>
 <body>
 

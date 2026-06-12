@@ -8,7 +8,7 @@ session_start();
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Hand2Hand - Profile (Beneficiary)</title>
-  <link rel="stylesheet" href="beneficiary_style.css" />
+  <link rel="stylesheet" href="profile_page_bene.css" />
 </head>
 <body>
 
