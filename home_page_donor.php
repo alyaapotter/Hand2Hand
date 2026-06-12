@@ -8,7 +8,7 @@ session_start();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hand2Hand - Home (Donor)</title>
-    <link rel="stylesheet" type="text/css" href="donor_style.css">
+    <link rel="stylesheet" type="text/css" href="home_page_donor.css">
 </head>
 <body>
 
@@ -37,42 +37,42 @@ session_start();
         <div class="events-grid">
             <div class="event-card">
                 <div class="image-placeholder">
-                    <img src="food_bank.jpg" alt="Food Bank">
+                    <img src="food.webp" alt="Food Bank">
                 </div>
                 <p class="event-label">Food Bank</p>
             </div>
 
             <div class="event-card">
                 <div class="image-placeholder">
-                    <img src="back_to_school.jpg" alt="Back To School">
+                    <img src="school.webp" alt="Back To School">
                 </div>
                 <p class="event-label">Back To School</p>
             </div>
 
             <div class="event-card">
                 <div class="image-placeholder">
-                    <img src="baby_care.jpg" alt="Baby Care">
+                    <img src="baby.jpg" alt="Baby Care">
                 </div>
                 <p class="event-label">Baby Care</p>
             </div>
 
             <div class="event-card">
                 <div class="image-placeholder">
-                    <img src="her_essentials.jpg" alt="Her Essentials">
+                    <img src="women.jpg" alt="Her Essentials">
                 </div>
                 <p class="event-label">Her Essentials</p>
             </div>
 
             <div class="event-card">
                 <div class="image-placeholder">
-                    <img src="medical_aid.jpg" alt="Medical Aid">
+                    <img src="medical.jpg" alt="Medical Aid">
                 </div>
                 <p class="event-label">Medical Aid</p>
             </div>
 
             <div class="event-card">
                 <div class="image-placeholder">
-                    <img src="wear_share.jpg" alt="Wear & Share">
+                    <img src="clothes.jpg" alt="Wear & Share">
                 </div>
                 <p class="event-label">Wear & Share</p>
             </div>
