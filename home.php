@@ -31,7 +31,7 @@ session_start();
       <a href="donate.php"><button class="btn-donate">Donate</button></a>
     </div>
     <div class="hero-divider"></div>
-    <img class="hero-image" src="images/hero.jpg" alt="Charity event" />
+    <img class="hero-image" src="images/donation.jpg" alt="Charity event" />
   </section>
 
   <div class="divider"></div>
@@ -51,21 +51,21 @@ session_start();
 
       <div>
         <div class="event-card">
-          <img src="images/foodbank.jpg" alt="Food Bank" />
+          <img src="images/food.webp" alt="Food Bank" />
         </div>
         <span class="event-label">Food Bank</span>
       </div>
 
       <div>
         <div class="event-card">
-          <img src="images/backtoschool.jpg" alt="Back To School" />
+          <img src="images/school.webp" alt="Back To School" />
         </div>
         <span class="event-label">Back To School</span>
       </div>
 
       <div>
         <div class="event-card">
-          <img src="images/babycare.jpg" alt="Baby Care" />
+          <img src="images/baby.jpg" alt="Baby Care" />
         </div>
         <span class="event-label">Baby Care</span>
       </div>
