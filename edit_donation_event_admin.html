@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Admin Event Management</title>
     <link rel="stylesheet" href="format.css">
@@ -7,150 +8,150 @@
 
 <body>
 
-<header class="header2">
+    <header class="header2">
 
-    <div class="top-header">
-        <div class="logo">
-            <img src="logo.png" alt="Hand2Hand logo" width="80">
-            <h1>Hand2Hand</h1>
+        <div class="top-header">
+            <div class="logo">
+                <img src="logo.png" alt="Hand2Hand logo" width="80">
+                <h1>Hand2Hand</h1>
+            </div>
+            <button class="logout-btn">Logout</button>
         </div>
 
-        <button class="logout-btn">Logout</button>
+        <nav>
+            <a href="#">Dashboard</a> |
+            <a href="#">Beneficiaries</a> |
+            <a href="donation_event_admin.html">Events</a> |
+            <a href="#">Inventory</a> |
+            <a href="#">Distribution</a>
+        </nav>
+
+    </header>
+
+    <div class="page-title2">
+        <h1>Event Management</h1>
     </div>
 
-    <nav>
-        <a href="#">Dashboard</a> |
-        <a href="#">Beneficiaries</a> |
-        <a href="donation_event_admin.html">Events</a> |
-        <a href="#">Inventory</a> |
-        <a href="#">Distribution</a>
-    </nav>
+    <section class="event-management">
 
-</header>
+        <form class="event-form">
+            <div class="left-panel">
+                <label>Event Name</label>
+                <input type="text" value="Food Bank">
 
-<div class="page-title2">
-    <h1>Event Management</h1>
-</div>
+                <label>Start Date</label>
+                <input type="date" value="2026-05-01">
 
-<section class="event-management">
-    
-    <form class="event-form">
-    <div class="left-panel">
-        <label>Event Name</label>
-        <input type="text" value="Food Bank">
+                <label>End Date</label>
+                <input type="date" value="2026-06-30">
 
-        <label>Start Date</label>
-        <input type="date" value="2026-05-01">
+                <label>Description</label>
+                <textarea rows="4">Provide food essentials to families in need.</textarea>
 
-        <label>End Date</label>
-        <input type="date" value="2026-06-30">
+                <label>Status</label>
+                <select>
+                    <option selected>Active</option>
+                    <option>Upcoming</option>
+                    <option>Ended</option>
+                </select>
 
-        <label>Description</label>
-        <textarea rows="4">Provide food essentials to families in need.</textarea>
+                <button type="submit" class="submit-btn">
+                    Save Changes
+                </button>
+            </div>
 
-        <label>Status</label>
-        <select>
-            <option selected>Active</option>
-            <option>Upcoming</option>
-            <option>Ended</option>
-        </select>
+            <div class="right-panel">
+                <label>Add Target Item</label>
 
-        <button type="submit" class="submit-btn">
-            Save Changes
-        </button>
-    </div>
-
-    <div class="right-panel">
-        <label>Add Target Item</label>
-
-        <div class="target-input">
-            <input type="text" placeholder="Item Name">
-            <input type="number" placeholder="Target Quantity">
-            <button type="button" class="add-item-btn">Add</button>
-        </div>
-
-        <div class="target-list">
-
-            <h3>Target Progress</h3>
-
-            <div class="progress-item">
-
-                <div class="progress-header">
-                    <span>Rice 5kg</span>
-                    <span>80 / 100</span>
+                <div class="target-input">
+                    <input type="text" placeholder="Item Name">
+                    <input type="number" placeholder="Target Quantity">
+                    <button type="button" class="add-item-btn">Add</button>
                 </div>
 
-                <div class="progress-container">
-                    <div class="progress-bar" style="width:80%;">
-                        80%
+                <div class="target-list">
+
+                    <h3>Target Progress</h3>
+
+                    <div class="progress-item">
+
+                        <div class="progress-header">
+                            <span>Rice 5kg</span>
+                            <span>80 / 100</span>
+                        </div>
+
+                        <div class="progress-container">
+                            <div class="progress-bar" style="width:80%;">
+                                80%
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="progress-item">
+
+                        <div class="progress-header">
+                            <span>Cooking Oil</span>
+                            <span>45 / 60</span>
+                        </div>
+
+                        <div class="progress-container">
+                            <div class="progress-bar" style="width:75%;">
+                                75%
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="target-list">
+
+                    <h3>Target Item List</h3>
+
+                    <div class="target-row">
+
+                        <span>Rice 5kg</span>
+                        <span>Target: 100</span>
+                        <span>Current: 80</span>
+
+                        <div class="action-btns">
+                            <button type="button" class="edit-btn">Edit</button>
+                            <button type="button" class="remove-btn">Remove</button>
+                        </div>
+
+                    </div>
+
+                    <div class="target-row">
+
+                        <span>Cooking Oil</span>
+                        <span>Target: 60</span>
+                        <span>Current: 45</span>
+
+                        <div class="action-btns">
+                            <button type="button" class="edit-btn">Edit</button>
+                            <button type="button" class="remove-btn">Remove</button>
+                        </div>
+
+                    </div>
+
+                    <div class="target-row">
+
+                        <span>Milk Powder</span>
+                        <span>Target: 40</span>
+                        <span>Current: 20</span>
+
+                        <div class="action-btns">
+                            <button type="button" class="edit-btn">Edit</button>
+                            <button type="button" class="remove-btn">Remove</button>
+                        </div>
                     </div>
                 </div>
-
             </div>
+        </form>
 
-            <div class="progress-item">
-
-                <div class="progress-header">
-                    <span>Cooking Oil</span>
-                    <span>45 / 60</span>
-                </div>
-
-                <div class="progress-container">
-                    <div class="progress-bar" style="width:75%;">
-                        75%
-                    </div>
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="target-list">
-
-            <h3>Target Item List</h3>
-
-            <div class="target-row">
-
-                <span>Rice 5kg</span>
-                <span>Target: 100</span>
-                <span>Current: 80</span>
-
-                <div class="action-btns">
-                    <button type="button" class="edit-btn">Edit</button>
-                    <button type="button" class="remove-btn">Remove</button>
-                </div>
-
-            </div>
-
-            <div class="target-row">
-
-                <span>Cooking Oil</span>
-                <span>Target: 60</span>
-                <span>Current: 45</span>
-
-                <div class="action-btns">
-                    <button type="button" class="edit-btn">Edit</button>
-                    <button type="button" class="remove-btn">Remove</button>
-                </div>
-
-            </div>
-
-            <div class="target-row">
-
-                <span>Milk Powder</span>
-                <span>Target: 40</span>
-                <span>Current: 20</span>
-
-                <div class="action-btns">
-                    <button type="button" class="edit-btn">Edit</button>
-                    <button type="button" class="remove-btn">Remove</button>
-                </div>
-            </div>
-        </div>
-        </div>
-    </form>
-
-</section>
+    </section>
 
 </body>
+
 </html>
