@@ -15,7 +15,7 @@ session_start();
   <header class="admin-header">
     <div class="header-top">
       <div class="logo-brand-container">
-        <img src="logo.png" alt="Logo" class="logo-circle" />
+        <img src="images/logo.png" alt="Logo" class="logo-circle" />
         <div class="brand-nav-box">
           <h1 class="brand-title">Hand2Hand</h1>
           <nav class="admin-nav">
