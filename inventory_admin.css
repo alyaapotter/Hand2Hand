@@ -91,10 +91,11 @@
     }
 
     .table-container {
-        width: 80%;
+        width: 90%;
         background-color: #ffe4ff;
         color: #443025;
         border: 2px solid #A86B6C;
+        table-layout: fixed;
     }
     
     th, td {
@@ -102,12 +103,6 @@
         padding: 30px;
         color:#443025;
         font-size: 17pt;
-    }
-
-    input[type="text"] {
-        width: 550px;
-        height: 50px;
-        font-size: 16px; 
     }
 
     button {
