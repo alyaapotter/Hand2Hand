@@ -1,0 +1,207 @@
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  background-color: #b59b8a; /* Muted taupe brown */
+  color: #443025;
+}
+
+/* Header dark brown */
+.admin-header {
+  background-color: #3b2a1a;
+  padding: 30px 40px;
+}
+
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.logo-brand-container {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.logo-circle {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background-color: #ffe4ef;
+  object-fit: cover;
+}
+
+.brand-nav-box {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.brand-title {
+  color: #ffffff;
+  font-size: 36px;
+  font-weight: bold;
+}
+
+/* Admin Navbar links */
+.admin-nav {
+  color: #ffe4ef;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.admin-nav a {
+  color: #ffe4ef;
+  text-decoration: none;
+  margin: 0 4px;
+}
+
+.admin-nav a:hover, .admin-nav a.active {
+  text-decoration: underline;
+  color: #ffd6e0;
+}
+
+/* Logout button */
+.btn-logout {
+  background-color: #ffe4ef;
+  color: #3b2a1a;
+  text-decoration: none;
+  padding: 8px 24px;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.btn-logout:hover {
+  background-color: #ffd6e0;
+}
+
+/* Header Title */
+.header-title-section {
+  margin-top: 30px;
+}
+
+.header-title-section h2 {
+  color: #ffffff;
+  font-size: 32px;
+}
+
+/* Main Content Area & Form */
+.content-container {
+  padding: 30px 40px;
+}
+
+.profile-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-section {
+  border: none;
+  margin-bottom: 10px;
+}
+
+.section-title {
+  font-size: 24px;
+  color: #3b2a1a;
+  margin-bottom: 20px;
+  font-weight: normal;
+}
+
+.form-group {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  font-size: 18px;
+}
+
+.form-group label {
+  width: 160px; /* Menetapkan jarak seragam antara label dan input */
+  color: #443025;
+}
+
+/* Form Fields Styling (Mengikut rona warna merah jambu lembut mockup) */
+.input-field {
+  border: none;
+  background-color: #ffe4ef;
+  padding: 8px 12px;
+  font-size: 16px;
+  color: #3b2a1a;
+  outline: none;
+}
+
+/* Lebar Input Box Berbeza */
+.dynamic-width { width: 300px; }
+.short-width { width: 150px; }
+.long-width { width: 600px; }
+.tiny-width { width: 60px; }
+
+/* Menyelaras rupa drop-down arrow */
+.dropdown-field {
+  appearance: min-content;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%233b2a1a'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 20px;
+  padding-right: 30px;
+}
+
+/* Separator Garis Putus-putus */
+.section-divider {
+  border: none;
+  border-top: 1px dotted #7a6b63;
+  margin: 20px 0;
+}
+
+/* Save Button Section */
+.save-button-container {
+  margin-top: 15px;
+}
+
+.btn-save {
+  background-color: #a46869; /* Muted reddish-brown button */
+  color: #ffe4ef;
+  border: none;
+  padding: 12px 40px;
+  font-size: 16px;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.btn-save:hover {
+  background-color: #93595a;
+}
+
+/* Footer Styles */
+.main-footer {
+  padding: 10px 40px 40px 40px;
+}
+
+.footer-divider {
+  border: 0;
+  height: 10px;
+  background-color: #3b2a1a;
+  margin-bottom: 20px;
+}
+
+.footer-content h3 {
+  font-size: 20px;
+  margin-bottom: 10px;
+  color: #3b2a1a;
+}
+
+.footer-content p {
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.footer-content a {
+  color: #3b2a1a;
+  text-decoration: none;
+}
