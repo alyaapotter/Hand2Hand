@@ -17,8 +17,8 @@ session_start();
     <img src="images/logo.png" alt="Logo" class="logo-circle" />
     <div class="nav-links">
       <a href="home.php">Hand2Hand</a> |
-      <a href="about.php">About Us</a> |
-      <a href="events.php">Events</a> |
+      <a href="about.html">About Us</a> |
+      <a href="event_main.php">Events</a> |
       <a href="login.php">Login</a>
     </div>
   </nav>
