@@ -67,7 +67,6 @@ body {
   color: #ffd6e0;
 }
 
-/* Logout button */
 .btn-logout {
   background-color: #ffe4ef;
   color: #3b2a1a;
@@ -82,7 +81,6 @@ body {
   background-color: #ffd6e0;
 }
 
-/* Header Title */
 .header-title-section {
   margin-top: 30px;
 }
@@ -92,7 +90,6 @@ body {
   font-size: 32px;
 }
 
-/* Main Content Area & Form */
 .content-container {
   padding: 30px 40px;
 }
@@ -122,11 +119,10 @@ body {
 }
 
 .form-group label {
-  width: 160px; /* Menetapkan jarak seragam antara label dan input */
+  width: 160px; 
   color: #443025;
 }
 
-/* Form Fields Styling (Mengikut rona warna merah jambu lembut mockup) */
 .input-field {
   border: none;
   background-color: #ffe4ef;
@@ -136,13 +132,11 @@ body {
   outline: none;
 }
 
-/* Lebar Input Box Berbeza */
 .dynamic-width { width: 300px; }
 .short-width { width: 150px; }
 .long-width { width: 600px; }
 .tiny-width { width: 60px; }
 
-/* Menyelaras rupa drop-down arrow */
 .dropdown-field {
   appearance: min-content;
   background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%233b2a1a'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
@@ -152,14 +146,12 @@ body {
   padding-right: 30px;
 }
 
-/* Separator Garis Putus-putus */
 .section-divider {
   border: none;
   border-top: 1px dotted #7a6b63;
   margin: 20px 0;
 }
 
-/* Save Button Section */
 .save-button-container {
   margin-top: 15px;
 }
@@ -178,7 +170,6 @@ body {
   background-color: #93595a;
 }
 
-/* Footer Styles */
 .main-footer {
   padding: 10px 40px 40px 40px;
 }

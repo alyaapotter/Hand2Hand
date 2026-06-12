@@ -1,6 +1,5 @@
 <?php
 session_start();
-// Masukkan logik semakan session jika perlu (cth: semak id beneficiary)
 ?>
 <!DOCTYPE html>
 <html lang="en">

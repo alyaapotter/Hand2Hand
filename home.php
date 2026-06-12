@@ -12,7 +12,6 @@ session_start();
 </head>
 <body>
 
-  <!-- Navbar -->
   <nav>
     <img src="images/logo.png" alt="Logo" class="logo-circle" />
     <div class="nav-links">
@@ -23,7 +22,6 @@ session_start();
     </div>
   </nav>
 
-  <!-- Hero Section -->
   <section class="hero">
     <div class="hero-text">
       <h1>Support Communities Through Donation Events</h1>
@@ -36,7 +34,6 @@ session_start();
 
   <div class="divider"></div>
 
-  <!-- About Section -->
   <section class="about-section">
     <h2>About Hand2Hand</h2>
     <p>Hand2Hand is a community-driven platform that connects donors with those in need through organized donation events.</p>
@@ -44,7 +41,6 @@ session_start();
 
   <div class="divider"></div>
 
-  <!-- Active Donation Events Section -->
   <section class="events-section">
     <h2>Active Donation Events</h2>
     <div class="events-grid">

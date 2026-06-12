@@ -10,7 +10,6 @@ body {
   color: #443025;
 }
 
-/* ── PAGE LABEL ── */
 .page-label {
   font-size: 12px;
   color: #888;
@@ -18,7 +17,6 @@ body {
   background: #f0f0f0;
 }
 
-/* ── NAVBAR ── */
 nav {
   background-color: #443025;
   display: flex;
@@ -94,7 +92,6 @@ nav {
   color: #FFC0CB;
 }
 
-/* Logout Button */
 .btn-logout {
   background-color: #A86B6C;
   color: #FFE4EF;
@@ -106,7 +103,6 @@ nav {
   margin-right: 5px;
 }
 
-/* ── WELCOME BANNER ── */
 .welcome-banner {
   background-color: #443025;
   padding: 14px 24px;
@@ -118,14 +114,12 @@ nav {
   font-weight: bold;
 }
 
-/* ── MAIN CONTENT ── */
 .main {
   background-color: #f3e7dc;
   padding: 24px 24px 30px;
   overflow: hidden;
 }
 
-/* ── SECTION BOX ── */
 .section-box {
   background-color: #f3e7dc;
   padding: 16px 20px;
@@ -155,8 +149,6 @@ nav {
   margin-bottom: 20px;
   width: calc(100% + 48px);
 }
-
-/* ── TABLE ── */
 table {
   width: 100%;
   border-collapse: collapse;

@@ -6,13 +6,11 @@
   font-family: Arial, sans-serif;
 }
 
-/* Body */
 body {
   background-color: #f3e7dc; 
   color: #443025;
 }
 
-/* Navbar */
 nav {
  background-color: #3b2a1a;
   display: flex;
@@ -67,7 +65,6 @@ nav .nav-links a:active {
 }
 
 
-/* Hero Section */
 .hero {
   background-color: #f3e7dc;
   display: flex;
@@ -124,7 +121,6 @@ nav .nav-links a:active {
   border-radius: 6px;
 }
 
-/* Divider */
 .divider {
   height: 25px;
   background-color: #5a3825;
@@ -199,7 +195,6 @@ nav .nav-links a:active {
   color: #7F5836;
 }
 
-/* Footer */
 footer {
   background-color: #f3e7dc;
   padding: 16px 24px;

@@ -1,6 +1,5 @@
 <?php
 session_start();
-// masukkan logic semakan session admin kalau nak
 ?>
 
 <!DOCTYPE html>
