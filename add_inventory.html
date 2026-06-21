@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="updateInventory_admin.css"> 
-    <title>Inventory Page: Update (Admin)</title>
+    <link rel="stylesheet" type="text/css" href="format.css"> 
+    <title>Inventory Page: Add (Admin)</title>
 </head>
 <body>
     <header>
@@ -28,9 +28,9 @@
         <h1>Inventory</h1>
     </div>
 
-    <section class="update-stock">
+    <section class="add-item">
         <div>
-            <p class="text">Update Stock</p>
+            <p class="text">Add New Item</p>
         </div>
 
         <form onsubmit="return validateForm(event)">
@@ -41,13 +41,19 @@
             </div>
 
             <div class="form-container">
+                <label>Category:</label>
+                <input type="text" name="category" id="category" placeholder="Category">
+                <div id="categoryError" class="error-msg"></div>
+            </div>
+
+            <div class="form-container">
                 <label>Quantity:</label>
                 <input type="text" name="quantity" id="quantity" placeholder="Quantity">
                 <div id="qtyError" class="error-msg"></div>
             </div>
 
             <!-- create a submit button -->
-            <button type="submit" name="action" value="add">Update Item</button>
+            <button type="submit" name="action" value="add">Add New Item</button>
         </form>
     </section>
 
@@ -56,10 +62,11 @@
         {
             event.preventDefault();
             let item = document.getElementById("item").value.trim();
+            let category = document.getElementById("category").value.trim();
             let quantity = document.getElementById("quantity").value.trim();
 
             // check empty fields
-            if (item == "" || quantity == "")
+            if (item == "" || category =="" || quantity == "")
             {
                 alert("All fields are required.")
                 event.preventDefault();
@@ -73,7 +80,7 @@
                 return false;
             }
 
-            alert("Update Successful!");
+            alert("Add Item Successful!");
             return true;
         }
     </script>
