@@ -2,6 +2,12 @@
 session_start();
 include('connect.php');
 
+// admin only
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+    header('Location: login.php');
+    exit;
+}
+
 // Handle search
 $search = isset($_GET['search']) ? $_GET['search'] : '';
 $search_clean = $conn->real_escape_string($search);
@@ -31,6 +37,7 @@ $result = $conn->query($sql);
     <link rel="stylesheet" type="text/css" href="format.css"> 
     <title>Inventory Page (Admin)</title>
 </head>
+
 <body>
     <header>
         <div class="logo">
@@ -45,6 +52,7 @@ $result = $conn->query($sql);
             <a href="inventory.php">Inventory</a> |
             <a href="distribution.html">Distribution</a>
         </nav>
+
         <button class="logout-btn">Logout</button>
     </header>
 
@@ -71,32 +79,34 @@ $result = $conn->query($sql);
         <?php endif; ?>
 
         <table class="table-container">
-            <tr>
-                <th>Item Name</th>
-                <th>Quantity Available</th>
-                <th>Status</th>
-            </tr>
-
-            <?php if ($result->num_rows > 0): ?>
-                <?php while ($row = $result->fetch_assoc()): ?>
-                    <tr>
-                        <td><?php echo htmlspecialchars($row['name']); ?></td>
-                        <td><?php echo htmlspecialchars($row['quantity'] ?? 0); ?></td>
-                        <td><?php echo htmlspecialchars($row['status']); ?></td>
-                    </tr>
-                <?php endwhile; ?>
-            <?php else: ?>
+            <thead>
                 <tr>
-                    <td colspan="3" style="text-align:center;">No items found.</td>
+                    <td>Item Name</td>
+                    <td>Quantity Available</td>
+                    <td>Status</td>
                 </tr>
-            <?php endif; ?>
+            </thead>
 
+            <tbody>
+                <?php if ($result->num_rows > 0): ?>
+                    <?php while ($row = $result->fetch_assoc()): ?>
+                        <tr>
+                            <td><?php echo htmlspecialchars($row['name']); ?></td>
+                            <td><?php echo htmlspecialchars($row['quantity'] ?? 0); ?></td>
+                            <td><?php echo htmlspecialchars($row['status']); ?></td>
+                        </tr>
+                    <?php endwhile; ?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="3" style="text-align:center;">No items found.</td>
+                    </tr>
+                <?php endif; ?>
+            </tbody>
         </table>
 
         <button onclick="window.location.href='updateInventory_admin.html'">Update Stock</button>
         <button onclick="window.location.href='addInventory_admin.html'">Add New Item</button>
     </section>
-
 </body>
 </html>
 <?php $conn->close(); ?>
