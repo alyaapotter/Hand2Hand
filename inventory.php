@@ -98,8 +98,8 @@ $result = $conn->query($sql);
             </tbody>
         </table>
 
-        <button onclick="window.location.href='updateInventory_admin.html'">Update Stock</button>
-        <button onclick="window.location.href='addInventory_admin.html'">Add New Item</button>
+        <button onclick="window.location.href='update_inventory.html'">Update Stock</button>
+        <button onclick="window.location.href='add_inventory.html'">Add New Item</button>
     </section>
 </body>
 </html>
