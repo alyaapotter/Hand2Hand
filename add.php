@@ -1,5 +1,5 @@
 <?php
-session_start();
+
 include('connect.php');
 
 $name     = $conn->real_escape_string(trim($_POST['item']));

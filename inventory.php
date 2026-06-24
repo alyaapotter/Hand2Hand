@@ -1,12 +1,6 @@
 <?php
-session_start();
-include('connect.php');
 
-// admin only
-if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
-    header('Location: login.php');
-    exit;
-}
+include('connect.php');
 
 // Handle search
 $search = isset($_GET['search']) ? $_GET['search'] : '';
