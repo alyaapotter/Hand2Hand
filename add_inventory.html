@@ -60,7 +60,6 @@
     <script>
         function validateForm(event) 
         {
-            event.preventDefault();
             let item = document.getElementById("item").value.trim();
             let category = document.getElementById("category").value.trim();
             let quantity = document.getElementById("quantity").value.trim();
@@ -81,7 +80,7 @@
             }
 
             // alert("Add Item Successful!");
-            // return true;
+             return true;
         }
     </script>
 </body>

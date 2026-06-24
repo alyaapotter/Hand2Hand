@@ -54,7 +54,6 @@
     <script>
         function validateForm(event) 
         {
-            event.preventDefault();
             let item = document.getElementById("item").value.trim();
             let quantity = document.getElementById("quantity").value.trim();
 
@@ -74,7 +73,7 @@
             }
 
             // alert("Update Successful!");
-            // return true;
+             return true;
         }
     </script>
 </body>
