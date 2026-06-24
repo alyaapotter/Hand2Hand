@@ -11,28 +11,21 @@ session_start();
 </head>
 <body>
 
-  <header class="admin-header">
-    <div class="header-top">
-      <div class="logo-brand-container">
-        <img src="images/logo.png" alt="Logo" class="logo-circle" />
-        <div class="brand-nav-box">
-          <h1 class="brand-title">Hand2Hand</h1>
-          <nav class="admin-nav">
-            <a href="dashboard.php">Dashboard</a> | 
-            <a href="beneficiaries.php">Beneficiaries</a> | 
-            <a href="events.php">Events</a> | 
-            <a href="inventory.php">Inventory</a> | 
-            <a href="distribution.php">Distribution</a>
-          </nav>
-        </div>
+  <!-- Navbar -->
+  <nav>
+    <div class="nav-left">
+      <img src="images/logo.png" alt="Hand2Hand Logo" class="logo-circle">
+      <div class="nav-text">
+        <h1>Hand2Hand</h1>
+         <div class="nav-links">
+        <a href="home.php">Home</a> |
+        <a href="aid.php">My Aid</a> |
+        <a href="profile_page_bene.php">Profile </a> |
       </div>
-      <a href="logout.php" class="btn-logout">Logout</a>
     </div>
-
-    <div class="header-title-section">
-      <h2>Profile</h2>
-    </div>
-  </header>
+  </div>
+  <button class="btn-logout">Logout</button> <!-- letak luar nav-left -->
+</nav>
 
   <main class="content-container">
     <form action="process_profile.php" method="POST" class="profile-form">

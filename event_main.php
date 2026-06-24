@@ -1,6 +1,6 @@
 <?php
 
-function displayProgress($items)
+function displayProgress(array $items)
 {
     foreach ($items as $item) {
         echo "

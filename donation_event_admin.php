@@ -1,6 +1,6 @@
 <?php
 
-function displayEvent($event)
+function displayEvent(array $event)
 {
 ?>
 
