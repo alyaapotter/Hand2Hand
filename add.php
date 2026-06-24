@@ -11,7 +11,7 @@ $check = $conn->query("SELECT item_id FROM item WHERE name = '$name'");
 
 if ($check->num_rows > 0) {
     echo "<p style='text-align:center; color:red;'>Error: '$name' already exists. Use Update Stock instead.</p>";
-    echo "<p style='text-align:center;'><a href='addInventory_admin.html'>Go Back</a></p>";
+    echo "<p style='text-align:center;'><a href='add_inventory.html'>Go Back</a></p>";
 } else {
     // Insert into item table
     $sql_item = "INSERT INTO item (name, category) VALUES ('$name', '$category')";
@@ -27,11 +27,11 @@ if ($check->num_rows > 0) {
             exit;
         } else {
             echo "<p style='text-align:center; color:red;'>Error: " . $conn->error . "</p>";
-            echo "<p style='text-align:center;'><a href='addInventory_admin.html'>Go Back</a></p>";
+            echo "<p style='text-align:center;'><a href='add_inventory.html'>Go Back</a></p>";
         }
     } else {
         echo "<p style='text-align:center; color:red;'>Error: " . $conn->error . "</p>";
-        echo "<p style='text-align:center;'><a href='addInventory_admin.html'>Go Back</a></p>";
+        echo "<p style='text-align:center;'><a href='add_inventory.html'>Go Back</a></p>";
     }
 }
 

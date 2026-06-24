@@ -10,7 +10,7 @@ $check = $conn->query("SELECT item_id FROM item WHERE name = '$name'");
 
 if ($check->num_rows == 0) {
     echo "<p style='text-align:center; color:red;'>Error: Item '$name' not found.</p>";
-    echo "<p style='text-align:center;'><a href='updateInventory_admin.html'>Go Back</a></p>";
+    echo "<p style='text-align:center;'><a href='update_inventory.html'>Go Back</a></p>";
 } else {
     $row     = $check->fetch_assoc();
     $item_id = $row['item_id'];
@@ -31,7 +31,7 @@ if ($check->num_rows == 0) {
         exit;
     } else {
         echo "<p style='text-align:center; color:red;'>Error: " . $conn->error . "</p>";
-        echo "<p style='text-align:center;'><a href='updateInventory_admin.html'>Go Back</a></p>";
+        echo "<p style='text-align:center;'><a href='update_inventory.html'>Go Back</a></p>";
     }
 }
 
