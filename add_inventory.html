@@ -33,7 +33,7 @@
             <p class="text">Add New Item</p>
         </div>
 
-        <form onsubmit="return validateForm(event)">
+        <form method = "POST" action = "add.php" onsubmit="return validateForm(event)">
             <div class="form-container">
                 <label>Item:</label>
                 <input type="text" name="item" id="item" placeholder="Item">
@@ -80,8 +80,8 @@
                 return false;
             }
 
-            alert("Add Item Successful!");
-            return true;
+            // alert("Add Item Successful!");
+            // return true;
         }
     </script>
 </body>

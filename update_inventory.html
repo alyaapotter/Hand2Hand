@@ -33,7 +33,7 @@
             <p class="text">Update Stock</p>
         </div>
 
-        <form onsubmit="return validateForm(event)">
+        <form method = "POST" action = "update.php" onsubmit="return validateForm(event)">
             <div class="form-container">
                 <label>Item:</label>
                 <input type="text" name="item" id="item" placeholder="Item">
@@ -73,8 +73,8 @@
                 return false;
             }
 
-            alert("Update Successful!");
-            return true;
+            // alert("Update Successful!");
+            // return true;
         }
     </script>
 </body>
