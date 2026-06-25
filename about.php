@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <title>About Page</title>
+</head>
+
+<body>
+    <header>
+        <div class="logo">
+        <img src="logo.png" alt="Hand2Hand logo" width="80">
+        <h1>Hand2Hand</h1>
+        </div>
+        <nav>
+            |
+            <a href="about.php">About Us</a> |
+            <a href="event.php">Events</a> |
+            <a href="login.php">Login</a>
+        </nav>
+    </header>
+
+    <div class="description">
+        <h2>About Hand2Hand</h2>
+        <p>Hand2Hand is a community-driven platform that connects individuals who wish to donate unused items with those who need them. 
+            Our goal is to promote sustainability, reduce unnecessary waste, and encourage a culture of sharing and helping within the community. 
+            By giving pre-loved items a second life, Hand2Hand makes it easier for people to support one another while contributing to a greener environment.</p>
+    </div>
+
+    <div class="description">
+        <h2>Our Mission</h2>
+        <p>To create a convenient and trustworthy platform that enables people to share, donate, and 
+            receive reusable items, fostering community support while reducing environmental waste.</p>
+    </div>
+
+    <div class="description">
+        <h2>Our Vision</h2>
+        <p>To become a leading community-sharing platform where every reusable item finds a new purpose, 
+            helping build a sustainable, caring, and environmentally conscious society.</p>
+    </div>
+
+    <div class="description">
+        <h2>Supported Goals</h2>
+        <div class="sub-title">
+            <h3>Environmental Sustainability</h3>
+            <p>Reduce landfill waste by encouraging the reuse and redistribution of usable items.</p>
+        </div>
+        
+        <div class="sub-title">
+            <h3>Community Support</h3>
+            <p>Strengthen communities by connecting donors with individuals and families in need.</p>
+        </div>
+        
+        <div class="sub-title">
+            <h3>Responsible Consumption</h3>
+            <p>Promote a culture of reusing and sharing resources instead of discarding them.</p>
+        </div>
+        
+        <div class="sub-title">
+            <h3>Accessibility</h3>
+            <p>Provide an easy-to-use platform that allows everyone to participate in giving and receiving items.</p>
+        </div>
+
+        <div class="sub-title">
+            <h3>Social Impact</h3>
+            <p>Encourage acts of kindness and generosity that improve the well-being of individuals and communities.</p>
+        </div>
+        
+        <div class="sub-title">
+            <h3>Sustainable Development</h3>
+            <p>Support efforts toward a more sustainable future through responsible resource management and waste reduction.</p>
+        </div>
+    </div>
+
+    <footer>
+        <h4>Hand2Hand</h4>
+        <p>Contact Us:</p>
+        <p>Email: hand2hand@support.com</p>
+        <p>&copy; <?php echo date("Y"); ?> Hand2Hand. All rights reserved.</p>
+    </footer>
+</body>
+</html>
