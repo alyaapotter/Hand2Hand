@@ -389,12 +389,12 @@ footer p {
     font-weight: bold;
 }
 
-.status.completed {
+.status.ended {
     color: red;
     font-weight: bold;
 }
 
-.status.cancelled {
+.status.upcoming {
     color: darkgoldenrod;
     font-weight: bold;
 }
