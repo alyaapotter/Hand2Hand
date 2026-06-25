@@ -30,9 +30,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_SESSION['username'] = $user['username'];
             $_SESSION['role'] = $user['role'];
 
-            if ($user['role'] == 'Admin') header("Location: admin/beneficiary_needs.php");
-            elseif ($user['role'] == 'Requester') header("Location: beneficiary/aid_status.php");
-            elseif ($user['role'] == 'Donor') header("Location: donor/donate_item.php");
+            if ($user['role'] == 'Admin') header("Location: admin/dashboard.php");
+            elseif ($user['role'] == 'Requester') header("Location: beneficiary/home_beneficiary.php");
+            elseif ($user['role'] == 'Donor') header("Location: donor/home_page_donor.php");
             exit();
         } else {
             $error = "Invalid email or password.";

@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'])) {
     }
 }
 
-$beneficiaries = $pdo->query("SELECT user_id, username, email FROM USER WHERE role='Requester' ORDER BY username")->fetchAll();
+$beneficiaries = $pdo->query("SELECT user_id, username, email, contact_number, address FROM USER WHERE role='Requester' ORDER BY username")->fetchAll();
 $search = isset($_GET['search']) ? trim($_GET['search']) : '';
 $query  = "SELECT r.*, u.username, u.email FROM REQUEST r JOIN USER u ON r.user_id=u.user_id WHERE 1=1";
 $params = [];
@@ -69,16 +69,20 @@ $requests = $stmt->fetchAll();
             <input type="hidden" name="action" value="add_request">
             <div class="form-group">
                 <label>Name:</label>
-                <select name="user_id" required>
+                <select name="user_id" onchange="fillInfo(this)" required>
                     <option value="">-- Select --</option>
                     <?php foreach ($beneficiaries as $b): ?>
-                        <option value="<?= $b['user_id'] ?>"><?= htmlspecialchars($b['username']) ?></option>
-                    <?php endforeach; ?>
+                        <option value="<?= $b['user_id'] ?>"
+                        data-contact="<?= htmlspecialchars($b['contact_number'] ?? '') ?>"
+                        data-address="<?= htmlspecialchars($b['address'] ?? '') ?>">
+                        <?= htmlspecialchars($b['username']) ?>
+                    </option>
+                <?php endforeach; ?>
                 </select>
             </div>
             <div class="form-group">
                 <label>Contact Number:</label>
-                <input type="text" placeholder="(from profile)">
+                <input type="text" name="contact_number" placeholder="(from profile)" readonly style="background:#e8d5d5">
             </div>
             <div class="form-group form-group-full">
                 <label>Address:</label>
@@ -202,8 +206,19 @@ function validateForm() {
     }
     return true;
 }
-// test
 
 </script>
+
+<script>
+function fillInfo(select) {
+    const selected = select.options[select.selectedIndex];
+    const contact  = selected.dataset.contact;
+    const address  = selected.dataset.address;
+
+    document.querySelector('input[name="contact_number"]').value = contact || '';
+    document.querySelector('input[name="address"]').value = address || '';
+}
+</script>
+
 </body>
 </html>

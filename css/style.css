@@ -1,19 +1,19 @@
-/* css/style.css - Hand2Hand System - Matching UI Design */
+/* style.css - Hand2Hand System - Combined Styles */
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #b5967a;
     color: #333;
     min-height: 100vh;
 }
 
-/* ===== NAVBAR ===== */
+/* ===== NAVBAR (dashboard-style pages) ===== */
 .navbar {
     background-color: #2c1a0e;
     color: white;
@@ -243,7 +243,7 @@ body {
 .badge-received { background: #c8f5c8; color: #1a5c1a; }
 .badge-cancelled{ background: #e8e8e8; color: #555; }
 
-/* ===== FOOTER ===== */
+/* ===== FOOTER (dashboard-style pages) ===== */
 .page-footer {
     background: #2c1a0e;
     color: #c8a98a;
@@ -381,10 +381,92 @@ body {
     font-size: 0.85rem;
 }
 
+/* =====================================================
+   ABOUT PAGE STYLES (merged from about.css)
+   NOTE: these use plain element selectors (header, nav,
+   footer, h2, h3) rather than classes, so they will apply
+   site-wide wherever those tags are used without an
+   overriding class. Scope them with a wrapper class if you
+   need them to apply only to about.html.
+   ===================================================== */
+
+header {
+    background-color: #443025;
+    color: #ffe4ff;
+    padding: 15px 30px;
+    align-items: center;
+    gap: 15px;
+    display: flex;
+}
+
+header img {
+    border-radius: 50px;
+}
+
+.logo {
+    align-items: center;
+    gap: 20px;
+    display: flex;
+}
+
+nav {
+    align-items: center;
+    gap: 5px;
+    display: flex;
+}
+
+nav a {
+    color: #ffe4ff;
+    text-decoration: none;
+    font-size: 30px;
+    margin: 10px;
+    font-weight: bolder;
+}
+
+nav a:hover {
+    color: #a86b8c;
+}
+
+h2, h3 {
+    text-align: left;
+    margin: 15px 0 5px;
+}
+
+.description {
+    background-color: #f3e7dc;
+    text-align: left;
+    color: #443025;
+    margin-top: 30px;
+    padding: 20px;
+    line-height: 30px;
+}
+
+.sub-title {
+    margin: 20px 0 20px;
+    text-align: left;
+}
+
+footer {
+    background-color: #f3e7dc;
+    text-align: left;
+    color: #443025;
+    margin-top: 30px;
+    padding: 20px;
+}
+
+footer h4 {
+    margin-bottom: 15px;
+}
+
+footer p {
+    padding: 3px;
+    font-size: 14px;
+}
+
 /* ===== MOBILE RESPONSIVE ===== */
 @media (max-width: 768px) {
 
-    /* Navbar */
+    /* Navbar (dashboard) */
     .navbar {
         padding: 0 15px;
         height: auto;
@@ -438,7 +520,7 @@ body {
     .auth-box { padding: 25px 18px; }
     .auth-header h1 { font-size: 1.4rem; }
 
-    /* Footer */
+    /* Footer (dashboard) */
     .page-footer { padding: 15px; font-size: 0.8rem; }
 
     /* Distribution layout */
@@ -460,6 +542,45 @@ body {
     .modal-box {
         padding: 20px 15px;
         margin: 0 15px;
+    }
+
+    /* About page (header/nav/footer as plain tags) */
+    header {
+        flex-direction: column;
+        align-items: center;
+        padding: 10px 15px;
+        gap: 10px;
+    }
+
+    nav {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 3px;
+    }
+
+    nav a {
+        font-size: 16px;
+        margin: 4px;
+    }
+
+    .logout-btn {
+        width: 100%;
+        text-align: center;
+    }
+
+    .description {
+        margin-top: 15px;
+        padding: 15px;
+        line-height: 24px;
+    }
+
+    .sub-title {
+        margin: 12px 0;
+    }
+
+    footer {
+        margin-top: 15px;
+        padding: 15px;
     }
 }
 

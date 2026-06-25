@@ -138,6 +138,33 @@ if (isset($_GET['event_id'])) {
         rowCount++;
     }
     </script>
+
+    <script>
+function validateDonation() {
+    const items = document.querySelectorAll('select[name="item_id[]"]');
+    const qtys  = document.querySelectorAll('input[name="quantity[]"]');
+    let valid   = true;
+
+    if (items.length === 0) {
+        alert('Please add at least one item!');
+        return false;
+    }
+
+    items.forEach((sel, i) => {
+        if (sel.value === '') {
+            alert('Please select an item for row ' + (i + 1) + '!');
+            valid = false;
+        }
+        if (qtys[i].value <= 0 || qtys[i].value === '') {
+            alert('Please enter a valid quantity for row ' + (i + 1) + '!');
+            valid = false;
+        }
+    });
+
+    return valid;
+}
+</script>
+
     <?php endif; ?>
 </div>
 

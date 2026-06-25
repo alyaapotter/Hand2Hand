@@ -1,0 +1,201 @@
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  background-color: #b59b8a; /* color bg bawah taupe or muted brown) */
+  color: #443025;
+}
+
+/* header dark brown */
+.admin-header {
+  background-color: #3b2a1a;
+  padding: 30px 40px;
+}
+
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.logo-brand-container {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.logo-circle {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background-color: #ffe4ef; /* Fallback color sekiranya logo tiada */
+  object-fit: cover;
+}
+
+.brand-nav-box {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.brand-title {
+  color: #ffffff;
+  font-size: 36px;
+  font-weight: bold;
+}
+
+/* admin Navbar links */
+.admin-nav {
+  color: #ffe4ef;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.admin-nav a {
+  color: #ffe4ef;
+  text-decoration: none;
+  margin: 0 4px;
+}
+
+.admin-nav a:hover, .admin-nav a.active {
+  text-decoration: underline;
+  color: #ffd6e0;
+}
+
+/* logout button */
+.btn-logout {
+  background-color: #ffe4ef;
+  color: #3b2a1a;
+  text-decoration: none;
+  padding: 8px 24px;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.btn-logout:hover {
+  background-color: #ffd6e0;
+}
+
+/* header Title & Search Bar */
+.header-title-section {
+  margin-top: 30px;
+}
+
+.header-title-section h2 {
+  color: #ffffff;
+  font-size: 32px;
+  margin-bottom: 15px;
+}
+
+.search-container {
+  position: relative;
+  max-width: 550px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 12px 12px 12px 40px;
+  border: none;
+  background-color: #ffe4ef;
+  font-size: 16px;
+  color: #3b2a1a;
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 18px;
+  color: #7a6b63;
+}
+
+/* Main Content Area */
+.content-container {
+  padding: 30px 40px;
+}
+
+.section-title {
+  font-size: 24px;
+  color: #3b2a1a;
+  margin-bottom: 25px;
+}
+
+/* Wrapper to align Table and Edit Buttons side-by-side */
+.table-action-wrapper {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+/* Beneficiaries Table */
+.beneficiaries-table {
+  width: 75%;
+  border-collapse: collapse;
+  background-color: #ffe4ef;
+}
+
+.beneficiaries-table th, .beneficiaries-table td {
+  border: 1px solid #b59b8a;
+  padding: 15px;
+  text-align: left;
+  font-size: 16px;
+  color: #3b2a1a;
+}
+
+.beneficiaries-table th {
+  font-weight: normal;
+}
+
+/* Menetapkan tinggi baris jadual yang kosong supaya nampak seperti di mock-up */
+.beneficiaries-table tbody tr {
+  height: 48px; 
+}
+
+/* Edit Buttons Column */
+.action-buttons-column {
+  display: flex;
+  flex-direction: column;
+  gap: 12px; /* Jarak antara butang Edit supaya selari dengan baris jadual */
+  margin-top: 52px; /* Menolak butang ke bawah supaya selari dengan tbody row pertama */
+}
+
+.btn-edit {
+  background-color: #ffe4ef;
+  color: #3b2a1a;
+  border: none;
+  padding: 8px 24px;
+  font-size: 14px;
+  cursor: pointer;
+  width: 80px;
+  text-align: center;
+}
+
+.btn-edit:hover {
+  background-color: #ffd6e0;
+}
+
+/* Add Beneficiary Button Section */
+.add-button-container {
+  margin-top: 30px;
+}
+
+.btn-add {
+  background-color: #a46869;
+  color: #ffe4ef;
+  border: none;
+  padding: 14px 28px;
+  font-size: 16px;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.btn-add:hover {
+  background-color: #93595a;
+}
