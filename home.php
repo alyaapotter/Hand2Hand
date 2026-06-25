@@ -1,4 +1,7 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> siti
 <?php
 session_start();
 ?>
@@ -83,6 +86,7 @@ session_start();
   </footer>
 
 </body>
+<<<<<<< HEAD
 =======
 <?php
 session_start();
@@ -169,4 +173,6 @@ session_start();
 
 </body>
 >>>>>>> alya
+=======
+>>>>>>> siti
 </html>
