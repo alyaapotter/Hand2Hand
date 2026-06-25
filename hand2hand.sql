@@ -111,28 +111,3 @@ INSERT INTO ITEM (name, category, description) VALUES
 INSERT INTO INVENTORY (item_id, quantity) VALUES
 (1, 50), (2, 30), (3, 40), (4, 10), (5, 20),
 (6, 25), (7, 15), (8, 35), (9, 20), (10, 12);
-
-ALTER TABLE DONATIONEVENT
-    ADD COLUMN start_date DATE NOT NULL AFTER name,
-    ADD COLUMN end_date DATE NOT NULL AFTER start_date,
-    DROP COLUMN date,
-    DROP COLUMN location;
-
-INSERT INTO DONATIONEVENT (name, start_date, end_date, status) VALUES
-('Food Bank', '2026-05-01', '2026-06-30', 'Active'),
-('Back To School', '2026-05-01', '2026-06-30', 'Active'),
-('Baby Care', '2026-05-01', '2026-06-30', 'Active'),
-('Her Essentials', '2026-05-01', '2026-06-30', 'Active'),
-('Medical Aid', '2026-05-01', '2026-06-30', 'Active'),
-('Wear & Share', '2026-05-01', '2026-06-30', 'Active');
-
-INSERT INTO TARGET (event_id, item_id, quantity) VALUES
-(1, 1, 100), 
-(1, 2, 60),  
-(1, 3, 80),
-(2, 4, 20),  
-(2, 5, 40), 
-(3, 10, 10), 
-(4, 9, 3),  
-(6, 6, 98), 
-(6, 7, 40);  
