@@ -205,7 +205,9 @@ function validateForm() {
         return false;
     }
     return true;
+    //this is a test comment
 }
+
 
 </script>
 
