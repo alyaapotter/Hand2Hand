@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="format.css"> 
-    <title>Inventory Page: Update (Admin)</title>
+    <link rel="stylesheet" type="text/css" href="../css/addInventory_admin.css"> 
+    <title>Inventory Page: Add (Admin)</title>
 </head>
 <body>
     <header>
         <div class="logo">
-        <img src="logo.png" alt="Hand2Hand logo" width="80">
+        <img src="../image/logo.png" alt="Hand2Hand logo" width="80">
         <h1>Hand2Hand</h1>
         </div>
         <nav>
@@ -17,7 +17,7 @@
             <a href="dashboard.html">Dashboard</a> |
             <a href="beneficiaries.html">Beneficiaries</a> |
             <a href="eventAdmin.html">Events</a> |
-            <a href="inventory.php">Inventory</a> |
+            <a href="inventory.html">Inventory</a> |
             <a href="distribution.html">Distribution</a>
         </nav>
 
@@ -28,16 +28,22 @@
         <h1>Inventory</h1>
     </div>
 
-    <section class="update-stock">
+    <section class="add-item">
         <div>
-            <p class="text">Update Stock</p>
+            <p class="text">Add New Item</p>
         </div>
 
-        <form method = "POST" action = "update.php" onsubmit="return validateForm(event)">
+        <form onsubmit="return validateForm(event)">
             <div class="form-container">
                 <label>Item:</label>
                 <input type="text" name="item" id="item" placeholder="Item">
                 <div id="itemError" class="error-msg"></div>
+            </div>
+
+            <div class="form-container">
+                <label>Category:</label>
+                <input type="text" name="category" id="category" placeholder="Category">
+                <div id="categoryError" class="error-msg"></div>
             </div>
 
             <div class="form-container">
@@ -47,18 +53,20 @@
             </div>
 
             <!-- create a submit button -->
-            <button type="submit" name="action" value="add">Update Item</button>
+            <button type="submit" name="action" value="add">Add New Item</button>
         </form>
     </section>
 
     <script>
         function validateForm(event) 
         {
+            event.preventDefault();
             let item = document.getElementById("item").value.trim();
+            let category = document.getElementById("category").value.trim();
             let quantity = document.getElementById("quantity").value.trim();
 
             // check empty fields
-            if (item == "" || quantity == "")
+            if (item == "" || category =="" || quantity == "")
             {
                 alert("All fields are required.")
                 event.preventDefault();
@@ -72,8 +80,8 @@
                 return false;
             }
 
-             alert("Update Successful!");
-             return true;
+            alert("Add Item Successful!");
+            return true;
         }
     </script>
 </body>

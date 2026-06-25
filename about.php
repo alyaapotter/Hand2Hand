@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="format.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
     <title>About Page</title>
 </head>
 
@@ -13,11 +13,11 @@
         <img src="logo.png" alt="Hand2Hand logo" width="80">
         <h1>Hand2Hand</h1>
         </div>
-        <nav >
+        <nav>
             |
-            <a href="about.html">About Us</a> |
-            <a href="event.html">Events</a> |
-            <a href="login.html">Login</a>
+            <a href="about.php">About Us</a> |
+            <a href="event.php">Events</a> |
+            <a href="login.php">Login</a>
         </nav>
     </header>
 
@@ -77,6 +77,7 @@
         <h4>Hand2Hand</h4>
         <p>Contact Us:</p>
         <p>Email: hand2hand@support.com</p>
+        <p>&copy; <?php echo date("Y"); ?> Hand2Hand. All rights reserved.</p>
     </footer>
 </body>
 </html>
