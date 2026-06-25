@@ -75,12 +75,13 @@ nav a:hover {
     padding: 20px;
 }
 
-.page-title p, h1 {
+.page-title h1 {
     text-align: left;
-    margin-top: 10px;
-    margin-left: 20px;
-    margin-bottom: 10px;
-    padding: 2px;
+    margin: 0 0 10px 20px;
+}
+
+.page-title p {
+    margin: 0 0 10px 20px;
 }
 
 .page-title2 {
@@ -88,6 +89,15 @@ nav a:hover {
     color: #FFE4EF;
     margin-top: 22px;
     margin-left: 20px;
+}
+
+.page-title2 h1 {
+    text-align: left;
+    margin: 0 0 10px 20px;
+}
+
+.page-title2 p {
+    margin: 0 0 10px 20px;
 }
 
 /* SEARCH BAR (EVENT PAGE) */
@@ -277,7 +287,7 @@ footer p {
 }
 
 .reg {
-    height: 720px;
+    height: 635px;
 }
 
 .form-container h2 {
@@ -294,14 +304,12 @@ footer p {
     border: 1px solid #ccc;
 }
 
-/* RADIO */
 .form-container input[type="radio"] {
     margin-right: 5px;
     margin-top: 7px;
     margin-bottom: 6px;
 }
 
-/* SUBMIT BUTTON */
 .form-container input[type="submit"] {
     width: 100%;
     padding: 10px;
@@ -310,13 +318,13 @@ footer p {
     border: none;
     border-radius: 20px;
     cursor: pointer;
+    font-weight: bold;
 }
 
 .form-container input[type="submit"]:hover {
     background-color: #a45a66;
 }
 
-/* FORM TEXT */
 .form-container p {
     text-align: center;
     margin-top: 16px;
@@ -421,9 +429,8 @@ footer p {
     background-color: #a45a66;
 }
 
-/* override header layout */
 header {
-    display: block; /* override flex lama */
+    display: block; 
 }
 
 .top-header {
@@ -437,7 +444,7 @@ header {
 }
 
 .header2 nav {
-    margin-left: 95px; /* align with logo + text */
+    margin-left: 95px; 
     margin-top: -34px;
 }
 
@@ -446,7 +453,7 @@ header {
 }
 
 /* ========================= */
-/* EVENTS MANAGEMENT ADMIN */
+/* EVENTS ADMIN */
 /* ========================= */
 .form-page {
     display: flex;

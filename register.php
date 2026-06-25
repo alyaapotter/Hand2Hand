@@ -1,21 +1,40 @@
+<?php
+
+session_start();
+
+if (isset($_POST['submit'])) {
+    $email = $_POST['email'];
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+    $confirmPassword = $_POST['confirmPassword'];
+    $role = $_POST['role'];
+
+    if ($password != $confirmPassword) {
+        echo "Password and Confirm Password do not match.";
+    } else {
+        $_SESSION['email'] = $email;
+        $_SESSION['username'] = $username;
+        $_SESSION['password'] = $password;
+        $_SESSION['role'] = $role;
+
+        echo "Registration successful!";
+    }
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Register</title>
-    <link rel="stylesheet" type="text/css" href="format.css">
+    <link rel="stylesheet" type="text/css" href="css/format.css">
 </head>
+
 <body>
 
-    <header>
-        <div class="logo">
-            <img src="logo.png" alt="Hand2Hand logo" width="80">
-        </div>
-
-        <nav>
-            <a href="home.html">Hand2Hand</a>
-        </nav>
-    </header>
+    <?php include('header.php'); ?>
 
     <section class="logbackground">
         <div class="form-container reg">
@@ -24,8 +43,8 @@
 
             <form action="" method="post">
 
-                <label>Full Name:</label><br>
-                <input type="text" name="fullname"><br><br>
+                <label>Email:</label><br>
+                <input type="text" name="email"><br><br>
 
                 <label>Username:</label><br>
                 <input type="text" name="username"><br><br>
@@ -35,9 +54,6 @@
 
                 <label>Confirm Password:</label><br>
                 <input type="password" name="confirmPassword"><br><br>
-
-                <label>Contact Number:</label><br>
-                <input type="text" name="contact"><br><br>
 
                 <label>Role:</label><br>
 
@@ -56,10 +72,11 @@
 
             <p>
                 Already have an account?
-                <a href="login.html">Login here</a>
+                <a href="login.php">Login here</a>
             </p>
 
         </div>
     </section>
 </body>
+
 </html>

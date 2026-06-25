@@ -1,0 +1,642 @@
+/* RESET */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+/* BODY */
+body {
+    background-color: #443025;
+    color: #443025;
+}
+
+/* HEADER */
+header {
+    background-color: #443025;
+    color: #FFE4EF;
+    padding: 15px 30px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.header1 nav {
+    margin-left: 95px; 
+    margin-top: -55px;
+}
+
+header img {
+    border-radius: 50%;
+}
+
+/* logo side */
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    font-weight: bold;
+}
+
+.logo h1 {
+    font-size: 30px;
+    color: #FFE4EF;
+    text-decoration: none;
+    margin: 0 3px;
+    font-weight: bold;
+}
+
+/* NAV */
+nav {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+nav a {
+    font-size: 30px;
+    color: #FFE4EF;
+    text-decoration: none;
+    margin: 0 10px;
+    font-weight: bold;
+}
+
+nav a:hover {
+    color: #A86B6C;
+}
+
+/* PAGE TITLE */
+.page-title {
+    text-align: left;
+    background-color: #f3e7dc;
+    color: #443025;
+    margin-top: 20px;
+    padding: 20px;
+}
+
+.page-title h1 {
+    text-align: left;
+    margin: 0 0 10px 20px;
+}
+
+.page-title p {
+    margin: 0 0 10px 20px;
+}
+
+.page-title2 {
+    text-align: left;
+    color: #FFE4EF;
+    margin-top: 22px;
+    margin-left: 20px;
+}
+
+.page-title2 h1 {
+    text-align: left;
+    margin: 0 0 10px 20px;
+}
+
+.page-title2 p {
+    margin: 0 0 10px 20px;
+}
+
+/* SEARCH BAR (EVENT PAGE) */
+.search-bar {
+    width: 40%;
+    padding: 10px;
+    margin: 30px 0 20px 45px;
+    display: block;
+    border: 2px solid #A86B6C;
+    background-color: #FFE4EF;
+}
+
+.search-icon {
+    position: absolute;
+    left: 40%;
+    top: 43%;
+    transform: translateY(-50%);
+    color: #A86B6C;
+}
+
+/* EVENT GRID */
+.event-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    padding: 20px 40px;
+}
+
+/* EVENT CARD */
+.event-card {
+    background-color: #f3e7dc;
+    border: 5px solid #7F5836;
+    border-radius: 15px;
+    overflow: hidden;
+    height: 425px;
+    position: relative;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    transition: transform 0.3s;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    margin-bottom: 20px;
+}
+
+.event-card:hover {
+    transform: translateY(-5px);
+}
+
+.event-card h3 {
+    margin: 12px 0 8px 10px;
+}
+
+.event-card p {
+    padding: 0 10px;
+}
+
+.foodbank {
+    background-image: url("image/food.webp");
+}
+
+.backtoschool {
+    background-image: url("image/school.webp");
+}
+
+.babycare {
+    background-image: url("image/baby.jpg");
+}
+
+.heressentials {
+    background-image: url("image/women.jpg");
+}
+
+.medicalaid {
+    background-image: url("image/medical.jpg");
+}
+
+.wearshare {
+    background-image: url("image/clothes.jpg");
+}
+
+.card-content {
+    position: absolute;
+    top: 40px;
+    bottom: 85px;
+    left: 20px;
+    right: 20px;
+    background-color: #B39989D9 ; /* D9 opacity */
+    padding: 15px;
+    color: #443025;
+    border-radius: 10px;
+}
+
+.card-content h2 {
+    font-weight: bolder;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.donate-btn {
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    border: none;
+    padding: 12px 30px;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+/* ITEM*/
+.item {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    margin-bottom: 10px;
+}
+
+/* PROGRESS */
+.progress-container {
+    width: 40%;
+    background-color: #7F5836;
+    border-radius: 20px;
+    overflow: hidden;
+    height: 20px;
+    border: 2px solid #443025;
+}
+
+.progress-bar {
+    height: 100%;
+    background-color: #443025;
+    text-align: center;
+    color: #FFE4EF;
+    font-size: 10px;
+    line-height: 20px;
+}
+
+/* BUTTON */
+button {
+    background-color: #A86B6C;
+    color: #FFE4EF;
+    border: none;
+    padding: 10px 15px;
+    margin: 10px;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #a45a66;
+}
+
+/* FOOTER */
+footer {
+    background-color: #f3e7dc;
+    color: #443025;
+    text-align: left;
+    padding: 30px;
+}
+
+footer h4 {
+    margin-bottom: 15px;
+}
+
+footer p {
+    margin-bottom: 2px;
+    font-size: 14px;
+}
+
+/* ========================= */
+/* LOGIN & REGISTER FORM */
+/* ========================= */
+
+.logbackground {
+    background-color: #f3e7dc;
+    margin-top: 20px;
+    padding: 20px;
+}
+
+.form-container {
+    width: 350px;
+    height: 455px;
+    margin: 40px auto;
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.reg {
+    height: 635px;
+}
+
+.form-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.form-container input[type="text"],
+.form-container input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+}
+
+.form-container input[type="radio"] {
+    margin-right: 5px;
+    margin-top: 7px;
+    margin-bottom: 6px;
+}
+
+.form-container input[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    background-color: #A86B6C;
+    color: #FFE4EF;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.form-container input[type="submit"]:hover {
+    background-color: #a45a66;
+}
+
+.form-container p {
+    text-align: center;
+    margin-top: 16px;
+}
+
+.form-container a {
+    color: #443025;
+    font-weight: bold;
+}
+
+/* ========================= */
+/* DONATION EVENTS ADMIN */
+/* ========================= */
+.admin-table {
+    background-color: #f3e7dc;
+    padding: 25px;
+    margin-top: 20px;
+}
+
+.admin-table h2 {
+    margin-left: 20px;
+}
+
+
+.admin-table button {
+    padding: 15px 30px;
+    border-radius: 10px;
+    margin-left: 20px;
+}
+
+.event-list {
+    margin-top: 20px;
+}
+
+.event-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    background-color: #FFE4EF;
+    border: 2px solid #A86B6C;
+    padding: 15px 20px;
+    margin-left: 20px;
+    margin-bottom: 12px;
+    border-radius: 10px;
+
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.event-info h3 {
+    margin: 0;
+    color: #443025;
+}
+
+.event-info p {
+    margin: 5px 0;
+    color: #666;
+}
+
+.status.active {
+    color: green;
+    font-weight: bold;
+}
+
+.status.completed {
+    color: red;
+    font-weight: bold;
+}
+
+.status.cancelled {
+    color: darkgoldenrod;
+    font-weight: bold;
+}
+
+.edit-btn {
+    background-color: #A86B6C;
+    color: #FFE4EF;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    line-height: 10px;
+    font-weight: bold;
+}
+
+.edit-btn:hover {
+    background-color: #a45a66;
+}
+
+.logout-btn {
+    background-color: #FFE4EF;
+    color: #443025;
+    border: 2px solid #A86B6C;
+    padding: 10px 25px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: -29px;
+    margin-right: -15px;
+}
+
+.logout-btn:hover {
+    background-color: #a45a66;
+}
+
+header {
+    display: block; 
+}
+
+.top-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.top-header h1 {
+    margin-top: -24px;
+}
+
+.header2 nav {
+    margin-left: 95px; 
+    margin-top: -34px;
+}
+
+.header2 a {
+    font-size: 19px;
+}
+
+/* ========================= */
+/* EVENTS ADMIN */
+/* ========================= */
+.form-page {
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 30px;
+    padding-top: 20px;
+    padding-left: 45px; 
+    background-color: #f3e7dc;
+}
+
+.event-management {
+    margin-top: 30px;
+    padding-top: 20px;
+    padding-left: 45px; 
+    background-color: #f3e7dc;
+}
+
+.left-panel {
+    flex: 1;
+    max-width: 500px;
+}
+
+.right-panel {
+    flex: 1;
+}
+
+.event-form {
+    display: flex;
+    gap: 50px;
+    width: 100%;
+}
+
+.event-form input,
+.event-form textarea,
+.event-form select {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0 20px 0;
+    border: 1px solid #A86B6C;
+    border-radius: 10px;
+    background-color: #FFE4EF;
+    color: #443025;
+}
+
+.event-form label {
+    font-weight: bold;
+    color: #443025; 
+    font-size: 1.17rem;
+}
+
+.target-input {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.target-input input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #A86B6C;
+    border-radius: 10px;
+    background-color: #FFE4EF;
+    margin: 0;
+}
+
+.add-item-btn {
+    background-color: #A86B6C;
+    color: #FFE4EF;
+    border: none;
+    height: 40px;
+    width: 70px;
+    padding: 0 15px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.add-item-btn:hover {
+    background-color: #a45a66;
+}
+
+.target-list {
+    margin-top: 20px;
+}
+
+.target-list h3 {
+    color: #443025;
+    margin-top: 30px;
+    margin-bottom: 10px;
+}
+
+.target-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    background-color: #FFE4EF;
+    border: 1px solid #A86B6C;
+    padding: 10px 15px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+}
+
+.target-row span:nth-child(1) {
+    width: 200px;
+}
+
+.target-row span:nth-child(2) {
+    width: 200px;
+}
+
+.target-row span:nth-child(3) {
+    width: 200px;
+}
+
+.action-btns {
+    margin-left: auto;
+}
+
+.item-name {
+    width: 150px;
+}
+
+.item-qty {
+    width: 20px;
+}
+
+.remove-btn {
+    background-color: #A86B6C;
+    color: #FFE4EF;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.remove-btn:hover {
+    background-color: #a45a66;
+}
+
+.submit-btn {
+    width: auto;
+    background-color: #A86B6C;
+    color: #FFE4EF;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.submit-btn:hover {
+    background-color: #a45a66;
+}
+
+.progress-item {
+    margin-bottom: 20px;
+}
+
+.progress-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.progress-header span:first-child {
+    width: 150px;
+}
+
+.progress-header span:last-child {
+    width: 80px;
+}
+
+.action-btns {
+    margin-left: auto;
+    display: flex;
+    gap: 10px;
+}
+
+.remove-btn {
+    background-color: #A86B6C;
+    color: #FFE4EF;
+}
