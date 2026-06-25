@@ -73,11 +73,11 @@ $result = $conn->query($sql);
         <?php endif; ?>
 
         <table class="table-container">
-            <thead>
+            <thead >
                 <tr>
-                    <td>Item Name</td>
-                    <td>Quantity Available</td>
-                    <td>Status</td>
+                    <th>Item Name</th>
+                    <th>Quantity Available</th>
+                    <th>Status</th>
                 </tr>
             </thead>
 
