@@ -53,8 +53,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <nav>
             |
             <a href="dashboard.php">Dashboard</a> |
-            <a href="beneficiaries.php">Beneficiaries</a> |
-            <a href="eventAdmin.html">Events</a> |
+            <a href="beneficiary.php">Beneficiaries</a> |
+            <a href="event_management.php">Events</a> |
             <a href="inventory.php">Inventory</a> |
             <a href="distribution.php">Distribution</a>
         </nav>
