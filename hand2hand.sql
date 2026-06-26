@@ -136,3 +136,6 @@ INSERT INTO TARGET (event_id, item_id, quantity) VALUES
 (4, 9, 3),  
 (6, 6, 98), 
 (6, 7, 40);  
+
+ALTER TABLE DONATION_ITEM 
+ADD quantity INT(11) NOT NULL DEFAULT 1;

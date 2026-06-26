@@ -3,6 +3,12 @@ session_start();
 require_once '../includes/db.php';
 
 $error = "";
+$success = "";
+
+if (isset($_SESSION['success'])) {
+    $success = $_SESSION['success'];
+    unset($_SESSION['success']);
+}
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['action'] == 'create_event') {
     $name       = trim($_POST['name']);
@@ -14,6 +20,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
 
     if (!$name || !$start_date || !$end_date || !$status) {
         $error = "Please fill in all event fields.";
+    } else if ($end_date < $start_date) {
+        $error = "End date cannot be earlier than start date.";
+    } else if (empty($item_ids)) {
+    $error = "Please add at least one target item.";
     } else {
         $stmt = $pdo->prepare("INSERT INTO DONATIONEVENT (name, start_date, end_date, status) VALUES (?, ?, ?, ?)");
         $stmt->execute([$name, $start_date, $end_date, $status]);
@@ -27,7 +37,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
             }
         }
 
-        header("Location: donation_events.php");
+        
+        $_SESSION['success'] = "Event created successfully!";
+        header("Location: event_management.php");
         exit();
     }
 }
@@ -41,7 +53,7 @@ $items = $pdo->query("SELECT item_id, name, category FROM ITEM ORDER BY name")->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Donation Event - Hand2Hand</title>
-    <link rel="stylesheet" href="../css/formatBulan.css">
+    <link rel="stylesheet" href="../css/format.css">
 </head>
 
 <body>
@@ -54,6 +66,10 @@ $items = $pdo->query("SELECT item_id, name, category FROM ITEM ORDER BY name")->
 
         <?php if ($error): ?>
             <div class="alert alert-error"><?= htmlspecialchars($error) ?></div>
+        <?php endif; ?>
+
+        <?php if ($success): ?>
+            <div class="alert alert-success"><?= htmlspecialchars($success) ?></div>
         <?php endif; ?>
 
         <section class="event-management">
@@ -82,6 +98,10 @@ $items = $pdo->query("SELECT item_id, name, category FROM ITEM ORDER BY name")->
                     </select>
 
                     <button type="submit" class="submit-btn">Create Event</button>
+
+                    <button type="button" class="back-btn" onclick="window.location.href='donation_event.php'">
+                        Cancel
+                    </button>
 
                 </div>
 

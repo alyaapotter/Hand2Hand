@@ -3,6 +3,12 @@ session_start();
 require_once '../includes/db.php';
 
 $error = "";
+$success = "";
+
+if (isset($_SESSION['success'])) {
+    $success = $_SESSION['success'];
+    unset($_SESSION['success']);
+}
 
 // Get event id from URL
 if (!isset($_GET['id'])) {
@@ -59,7 +65,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
             }
         }
 
-        header("Location: donation_events.php");
+        // Refetch updated event data
+        $stmt = $pdo->prepare("SELECT * FROM DONATIONEVENT WHERE event_id = ?");
+        $stmt->execute([$event_id]);
+        $event = $stmt->fetch();
+
+        // Refetch updated targets
+        $stmt = $pdo->prepare("
+            SELECT t.target_id, t.item_id, i.name, t.quantity
+            FROM TARGET t
+            JOIN ITEM i ON t.item_id = i.item_id
+            WHERE t.event_id = ?
+        ");
+        $stmt->execute([$event_id]);
+        $existingTargets = $stmt->fetchAll();
+
+        $_SESSION['success'] = "Event updated successfully!";
+        header("Location: edit_donation_event.php?id=" . $event_id);
         exit();
     }
 }
@@ -74,7 +96,7 @@ $items = $pdo->query("SELECT item_id, name, category FROM ITEM ORDER BY name")->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Donation Event - Hand2Hand</title>
-    <link rel="stylesheet" href="../css/formatBulan.css">
+    <link rel="stylesheet" href="/Hand2Hand/css/format.css">
 </head>
 
 <body>
@@ -87,6 +109,10 @@ $items = $pdo->query("SELECT item_id, name, category FROM ITEM ORDER BY name")->
 
         <?php if ($error): ?>
             <div class="alert alert-error"><?= htmlspecialchars($error) ?></div>
+        <?php endif; ?>
+
+        <?php if ($success): ?>
+            <div class="alert alert-success"><?= htmlspecialchars($success) ?></div>
         <?php endif; ?>
 
         <section class="event-management">
@@ -115,6 +141,10 @@ $items = $pdo->query("SELECT item_id, name, category FROM ITEM ORDER BY name")->
                     </select>
 
                     <button type="submit" class="submit-btn">Save Changes</button>
+
+                    <button type="button" class="back-btn" onclick="window.location.href='donation_event.php'">
+                        Back
+                    </button>
 
                 </div>
 
@@ -162,7 +192,6 @@ $items = $pdo->query("SELECT item_id, name, category FROM ITEM ORDER BY name")->
         Hand2Hand<br>Contact Us:<br>Email: hand2hand@support.com
     </div>
 
-    <!-- Pass existing targets from PHP to JS -->
     <script>
         let targets = <?= json_encode(array_map(fn($t) => [
                             'item_id'  => $t['item_id'],

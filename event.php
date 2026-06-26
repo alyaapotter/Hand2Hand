@@ -2,7 +2,12 @@
 session_start();
 require_once 'includes/db.php';
 
-$events = $pdo->query("SELECT * FROM DONATIONEVENT ORDER BY start_date ASC")->fetchAll();
+$events = $pdo->query("
+    SELECT * 
+    FROM DONATIONEVENT 
+    WHERE status = 'Active'
+    ORDER BY start_date ASC
+")->fetchAll();
 
 function getTargets($pdo, $event_id)
 {
@@ -17,6 +22,8 @@ function getTargets($pdo, $event_id)
         GROUP BY t.target_id, i.name, t.quantity
     ");
     $stmt->execute([$event_id]);
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 ?>
 <!DOCTYPE html>
@@ -86,7 +93,9 @@ function getTargets($pdo, $event_id)
                         <?php endif; ?>
 
                     </div>
-                    <button class="donate-btn">Donate Now</button>
+                    <button class="donate-btn" onclick="window.location.href='login.php'">
+                        Donate Now
+                    </button>
                 </div>
 
             <?php endforeach; ?>

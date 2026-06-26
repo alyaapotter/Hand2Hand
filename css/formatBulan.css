@@ -66,6 +66,19 @@ nav a:hover {
     color: #A86B6C;
 }
 
+/* ALERT */
+.alert {
+    padding: 12px 18px;
+    margin: 0 auto 18px auto;
+    font-size: 0.88rem;
+    display: inline-block !important;
+    max-width: 600px;
+    width: 100%;
+    text-align: left;
+}
+.alert-success { background: #d1f5d1; color: #1a5c1a; }
+.alert-error   { background: #f5d1d1; color: #5c1a1a; }
+
 /* PAGE TITLE */
 .page-title {
     text-align: left;
@@ -389,12 +402,12 @@ footer p {
     font-weight: bold;
 }
 
-.status.ended {
+.status.completed {
     color: red;
     font-weight: bold;
 }
 
-.status.upcoming {
+.status.cancelled {
     color: darkgoldenrod;
     font-weight: bold;
 }
