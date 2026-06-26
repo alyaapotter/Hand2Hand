@@ -35,13 +35,13 @@ $result = $conn->query($sql);
         </div>
         <nav>
             |
-            <a href="dashboard.html">Dashboard</a> |
-            <a href="beneficiaries.html">Beneficiaries</a> |
+            <a href="dashboard.php">Dashboard</a> |
+            <a href="beneficiaries.php">Beneficiaries</a> |
             <a href="eventAdmin.html">Events</a> |
             <a href="inventory.php">Inventory</a> |
-            <a href="distribution.html">Distribution</a>
+            <a href="distribution.php">Distribution</a>
         </nav>
-        <button class="logout-btn">Logout</button>
+        <a href="logout.php" class="logout-btn">Logout</a>
     </header>
     <div class="search">
         <h1>Inventory</h1>
