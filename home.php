@@ -1,6 +1,9 @@
 <?php
 session_start();
 ?>
+<div style='background:red;color:white;padding:10px;'>
+RUNNING FROM HAND2HAND
+</div>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -25,6 +28,7 @@ session_start();
 
   <!-- Hero Section -->
   <section class="hero">
+    
     <div class="hero-text">
       <h1>Support Communities Through Donation Events</h1>
       <p class="description">Join us in making a difference by donating to those in need.</p>

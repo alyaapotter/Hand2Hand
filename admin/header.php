@@ -17,7 +17,7 @@
                 <img src="../image/logo.png" alt="Hand2Hand logo" width="80">
                 <h1>Hand2Hand</h1>
             </div>
-            <a href="logout.php">
+            <a href="../logout.php">
                 <button class="logout-btn">Logout</button>
             </a>
         </div>

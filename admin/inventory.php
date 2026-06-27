@@ -22,7 +22,7 @@
             <a href="distribution.php">Distribution</a>
         </nav>
 
-        <button class="logout-btn">Logout</button>
+        <a href="../logout.php"><button class="logout-btn">Logout</button>
     </header>
 
     <div class="search">
