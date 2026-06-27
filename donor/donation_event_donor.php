@@ -1,10 +1,10 @@
 <?php
 session_start();
-require_once '../includes/db.php';
+require_once '../includes/connect.php';
 
-function getTargets($pdo, $event_id)
+function getTargets($conn, $event_id)
 {
-    $stmt = $pdo->prepare("
+    $stmt = $conn->prepare("
         SELECT i.name, t.quantity AS target,
                COALESCE(SUM(di.quantity), 0) AS current
         FROM TARGET t
@@ -14,8 +14,9 @@ function getTargets($pdo, $event_id)
         WHERE t.event_id = ?
         GROUP BY t.target_id, i.name, t.quantity
     ");
-    $stmt->execute([$event_id]);
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $stmt->bind_param("i", $event_id);
+    $stmt->execute();
+    return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 }
 
 function getEventClass($name)
@@ -60,7 +61,7 @@ function displayEvent($event, $items)
     $duration = htmlspecialchars($event['start_date']) . ' - ' . htmlspecialchars($event['end_date']);
     ?>
     <div class="event-card <?php echo $class; ?>"
-         <?php echo $bg ? "style=\"background-image: url('$bg');\"" : ""; ?>>
+        <?php echo $bg ? "style=\"background-image: url('$bg');\"" : ""; ?>>
 
         <div class="card-content">
 
@@ -77,7 +78,7 @@ function displayEvent($event, $items)
 
         </div>
 
-        <button class="donate-btn"onclick="window.location.href='donate_item.php?event_id=<?= $event['event_id'] ?>'">
+        <button class="donate-btn" onclick="window.location.href='donate_item.php?event_id=<?= $event['event_id'] ?>'">
             Donate
         </button>
 
@@ -85,12 +86,12 @@ function displayEvent($event, $items)
 <?php
 }
 
-$events = $pdo->query("
+$events = $conn->query("
     SELECT *
     FROM DONATIONEVENT
     WHERE status = 'Active'
     ORDER BY start_date ASC
-")->fetchAll();
+")->fetch_all(MYSQLI_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -123,7 +124,7 @@ $events = $pdo->query("
 
         <?php if (count($events) > 0): ?>
             <?php foreach ($events as $event): ?>
-                <?php $items = getTargets($pdo, $event['event_id']); ?>
+                <?php $items = getTargets($conn, $event['event_id']); ?>
                 <?php displayEvent($event, $items); ?>
             <?php endforeach; ?>
         <?php else: ?>

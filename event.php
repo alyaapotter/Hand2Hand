@@ -1,17 +1,12 @@
 <?php
 session_start();
-require_once 'includes/db.php';
+require_once 'includes/connect.php';
 
-$events = $pdo->query("
-    SELECT * 
-    FROM DONATIONEVENT 
-    WHERE status = 'Active'
-    ORDER BY start_date ASC
-")->fetchAll();
+$result = $conn->query("SELECT * FROM DONATIONEVENT WHERE status = 'Active' ORDER BY start_date ASC");
+$events = $result->fetch_all(MYSQLI_ASSOC);
 
-function getTargets($pdo, $event_id)
-{
-    $stmt = $pdo->prepare("
+function getTargets($conn, $event_id) {
+    $stmt = $conn->prepare("
         SELECT i.name, t.quantity AS target,
                COALESCE(SUM(di.quantity), 0) AS current
         FROM TARGET t
@@ -21,9 +16,10 @@ function getTargets($pdo, $event_id)
         WHERE t.event_id = ?
         GROUP BY t.target_id, i.name, t.quantity
     ");
-    $stmt->execute([$event_id]);
-
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $stmt->bind_param("i", $event_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    return $result->fetch_all(MYSQLI_ASSOC);
 }
 
 function getEventClass($name)
@@ -79,7 +75,7 @@ function getEventClass($name)
 
         <?php if (count($events) > 0): ?>
             <?php foreach ($events as $event): ?>
-                <?php $targets = getTargets($pdo, $event['event_id']); ?>
+                <?php $targets = getTargets($conn, $event['event_id']); ?>
 
                 <?php
                 $bg = $event['image_path']

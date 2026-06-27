@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once '../includes/db.php';
+require_once '../includes/connect.php';
 
 $error = "";
 $success = "";
@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
     } else if ($end_date < $start_date) {
         $error = "End date cannot be earlier than start date.";
     } else if (empty($item_ids)) {
-    $error = "Please add at least one target item.";
+        $error = "Please add at least one target item.";
     } else {
 
         // Handle image upload
@@ -50,15 +50,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
         }
 
         if (!$error) {
-            $stmt = $pdo->prepare("INSERT INTO DONATIONEVENT (name, start_date, end_date, status, image_path) VALUES (?, ?, ?, ?, ?)");
-            $stmt->execute([$name, $start_date, $end_date, $status, $image_path]);
-            $new_event_id = $pdo->lastInsertId();
+            $stmt = $conn->prepare("INSERT INTO DONATIONEVENT (name, start_date, end_date, status, image_path) VALUES (?, ?, ?, ?, ?)");
+            $stmt->bind_param("sssss", $name, $start_date, $end_date, $status, $image_path);
+            $stmt->execute();
+            $new_event_id = $conn->insert_id;
 
             foreach ($item_ids as $i => $item_id) {
                 $qty = intval($quantities[$i]);
                 if ($item_id && $qty > 0) {
-                    $pdo->prepare("INSERT INTO TARGET (event_id, item_id, quantity) VALUES (?, ?, ?)")
-                        ->execute([$new_event_id, $item_id, $qty]);
+                    $stmt2 = $conn->prepare("INSERT INTO TARGET (event_id, item_id, quantity) VALUES (?, ?, ?)");
+                    $stmt2->bind_param("iii", $new_event_id, $item_id, $qty);
+                    $stmt2->execute();
                 }
             }
 
@@ -69,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
     }
 }
 
-$items = $pdo->query("SELECT item_id, name, category FROM ITEM ORDER BY name")->fetchAll();
+$items = $conn->query("SELECT item_id, name, category FROM ITEM ORDER BY name")->fetch_all(MYSQLI_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -199,7 +201,11 @@ $items = $pdo->query("SELECT item_id, name, category FROM ITEM ORDER BY name")->
                 return;
             }
 
-            targets.push({ item_id, name, quantity: qty });
+            targets.push({
+                item_id,
+                name,
+                quantity: qty
+            });
 
             sel.value = '';
             document.getElementById('qtyInput').value = '';
@@ -284,7 +290,7 @@ $items = $pdo->query("SELECT item_id, name, category FROM ITEM ORDER BY name")->
             });
         }
 
-        setTimeout(function () {
+        setTimeout(function() {
             const alert = document.querySelector('.alert2');
             if (alert) {
                 alert.style.display = 'none';

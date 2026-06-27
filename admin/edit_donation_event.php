@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once '../includes/db.php';
+require_once '../includes/connect.php';
 
 $error = "";
 $success = "";
@@ -19,9 +19,10 @@ if (!isset($_GET['id'])) {
 $event_id = $_GET['id'];
 
 // Fetch event data
-$stmt = $pdo->prepare("SELECT * FROM DONATIONEVENT WHERE event_id = ?");
-$stmt->execute([$event_id]);
-$event = $stmt->fetch();
+$stmt = $conn->prepare("SELECT * FROM DONATIONEVENT WHERE event_id = ?");
+$stmt->bind_param("i", $event_id);
+$stmt->execute();
+$event = $stmt->get_result()->fetch_assoc();
 
 if (!$event) {
     header("Location: donation_events.php");
@@ -29,14 +30,15 @@ if (!$event) {
 }
 
 // Fetch existing targets for this event
-$stmt = $pdo->prepare("
+$stmt = $conn->prepare("
     SELECT t.target_id, t.item_id, i.name, t.quantity
     FROM TARGET t
     JOIN ITEM i ON t.item_id = i.item_id
     WHERE t.event_id = ?
 ");
-$stmt->execute([$event_id]);
-$existingTargets = $stmt->fetchAll();
+$stmt->bind_param("i", $event_id);
+$stmt->execute();
+$existingTargets = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 
 // Handle Update
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['action'] == 'update_event') {
@@ -76,34 +78,40 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
 
         if (!$error) {
             // Update event
-            $pdo->prepare("UPDATE DONATIONEVENT SET name=?, start_date=?, end_date=?, status=?, image_path=? WHERE event_id=?")
-                ->execute([$name, $start_date, $end_date, $status, $image_path, $event_id]);
+            $stmt = $conn->prepare("UPDATE DONATIONEVENT SET name=?, start_date=?, end_date=?, status=?, image_path=? WHERE event_id=?");
+            $stmt->bind_param("sssssi", $name, $start_date, $end_date, $status, $image_path, $event_id);
+            $stmt->execute();
 
             // Delete old targets then reinsert
-            $pdo->prepare("DELETE FROM TARGET WHERE event_id=?")->execute([$event_id]);
+            $stmt = $conn->prepare("DELETE FROM TARGET WHERE event_id=?");
+            $stmt->bind_param("i", $event_id);
+            $stmt->execute();
 
             foreach ($item_ids as $i => $item_id) {
                 $qty = intval($quantities[$i]);
                 if ($item_id && $qty > 0) {
-                    $pdo->prepare("INSERT INTO TARGET (event_id, item_id, quantity) VALUES (?, ?, ?)")
-                        ->execute([$event_id, $item_id, $qty]);
+                    $stmt = $conn->prepare("INSERT INTO TARGET (event_id, item_id, quantity) VALUES (?, ?, ?)");
+                    $stmt->bind_param("iii", $event_id, $item_id, $qty);
+                    $stmt->execute();
                 }
             }
 
             // Refetch updated event data
-            $stmt = $pdo->prepare("SELECT * FROM DONATIONEVENT WHERE event_id = ?");
-            $stmt->execute([$event_id]);
-            $event = $stmt->fetch();
+            $stmt = $conn->prepare("SELECT * FROM DONATIONEVENT WHERE event_id = ?");
+            $stmt->bind_param("i", $event_id);
+            $stmt->execute();
+            $event = $stmt->get_result()->fetch_assoc();
 
             // Refetch updated targets
-            $stmt = $pdo->prepare("
+            $stmt = $conn->prepare("
                 SELECT t.target_id, t.item_id, i.name, t.quantity
                 FROM TARGET t
                 JOIN ITEM i ON t.item_id = i.item_id
                 WHERE t.event_id = ?
             ");
-            $stmt->execute([$event_id]);
-            $existingTargets = $stmt->fetchAll();
+            $stmt->bind_param("i", $event_id);
+            $stmt->execute();
+            $existingTargets = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 
             $_SESSION['success'] = "Event updated successfully!";
             header("Location: edit_donation_event.php?id=" . $event_id);
@@ -113,7 +121,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
 }
 
 // All items for dropdown
-$items = $pdo->query("SELECT item_id, name, category FROM ITEM ORDER BY name")->fetchAll();
+$items = $conn->query("SELECT item_id, name, category FROM ITEM ORDER BY name")->fetch_all(MYSQLI_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -338,7 +346,7 @@ $items = $pdo->query("SELECT item_id, name, category FROM ITEM ORDER BY name")->
             });
         }
 
-        setTimeout(function () {
+        setTimeout(function() {
             const alert = document.querySelector('.alert2');
             if (alert) {
                 alert.style.display = 'none';

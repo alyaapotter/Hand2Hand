@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once '../includes/db.php';
+require_once '../includes/connect.php';
 
 $success = "";
 $error = "";
@@ -19,25 +19,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
 
     $event_id = intval($_POST['event_id']);
 
+    $conn->begin_transaction();
     try {
-        $pdo->beginTransaction();
-        $pdo->prepare("DELETE FROM TARGET WHERE event_id = ?")
-             ->execute([$event_id]);
-        $pdo->prepare("DELETE FROM DONATIONEVENT WHERE event_id = ?")
-             ->execute([$event_id]);
-        $pdo->commit();
+        $stmt1 = $conn->prepare("DELETE FROM TARGET WHERE event_id = ?");
+        $stmt1->bind_param("i", $event_id);
+        $stmt1->execute();
 
+        $stmt2 = $conn->prepare("DELETE FROM DONATIONEVENT WHERE event_id = ?");
+        $stmt2->bind_param("i", $event_id);
+        $stmt2->execute();
+
+        $conn->commit();
         $_SESSION['success'] = "Event deleted successfully!";
         header("Location: donation_event.php");
         exit();
-
     } catch (Exception $e) {
-        $pdo->rollBack();
+        $conn->rollback();
         $_SESSION['error'] = "Delete failed!";
     }
 }
 
-$stmt = $pdo->query("
+$stmt = $conn->query("
     SELECT *
     FROM DONATIONEVENT
     ORDER BY
@@ -48,7 +50,7 @@ $stmt = $pdo->query("
         END,
         start_date DESC
 ");
-$events = $stmt->fetchAll();
+$events = $stmt->fetch_all(MYSQLI_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -65,7 +67,9 @@ $events = $stmt->fetchAll();
     <?php include '../includes/navbar.php'; ?>
 
     <div class="page-container">
-        <div class="page-title2"><h1>Donation Events</h1></div>
+        <div class="page-title2">
+            <h1>Donation Events</h1>
+        </div>
 
         <div class="search-box">
             <input type="text" class="search-bar" id="searchInput" placeholder="Search Event" onkeyup="searchEvents()">
@@ -141,7 +145,7 @@ $events = $stmt->fetchAll();
             });
         }
 
-        setTimeout(function () {
+        setTimeout(function() {
             const alert = document.querySelector('.alert');
             if (alert) {
                 alert.style.display = 'none';
