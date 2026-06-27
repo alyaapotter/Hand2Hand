@@ -12,7 +12,7 @@ if ($role == 'Admin') {
     $nav_links = "<a href='../home.php'>Home</a> | <a href='../about.php'>About Us</a> | <a href='../event.php'>Events</a> | <a href='../login.php'>Login</a>";
 }
 ?>
-<link rel="stylesheet" href="../css/navbar.css">
+<link rel="stylesheet" href="../css/navbar_footer.css">
 <nav class="navbar">
     <div class="nav-left">
         <div class="nav-logo">
