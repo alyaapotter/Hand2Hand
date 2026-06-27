@@ -1,10 +1,6 @@
 <?php
 session_start();
 ?>
-<div style='background:red;color:white;padding:10px;'>
-RUNNING FROM HAND2HAND
-</div>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
