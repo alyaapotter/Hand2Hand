@@ -42,24 +42,11 @@ $aidStatus = $stmt3->fetchAll();
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Hand2Hand - Beneficiary Home</title>
   <link rel="stylesheet" href="../css/home_beneficiary.css" />
+  <link rel="stylesheet" href="../css/navbar_footer.css" />
 </head>
 <body>
 
-  <!-- Navbar -->
-  <nav>
-    <div class="nav-left">
-      <img src="../image/logo.png" alt="Hand2Hand Logo" class="logo-circle">
-      <div class="nav-text">
-        <h1>Hand2Hand</h1>
-        <p>
-          <a href="home_beneficiary.php">Home</a> |
-          <a href="aid_status.php">My Aid</a> |
-          <a href="profile_page_bene.php">Profile</a>
-        </p>
-      </div>
-    </div>
-    <button class="btn-logout" onclick="window.location.href='logout.php'">Logout</button>
-  </nav>
+  <?php include '../includes/navbar.php'; ?>
 
   <!-- Welcome Banner -->
   <div class="welcome-banner">
@@ -90,18 +77,18 @@ $aidStatus = $stmt3->fetchAll();
           </tr>
         </thead>
         <tbody>
-  <?php if (count($aidStatus) > 0): ?>
-    <?php foreach ($aidStatus as $aid): ?>
-      <tr>
-        <td><?= htmlspecialchars($aid['item_name']) ?></td>
-        <td><?= htmlspecialchars($aid['quantity']) ?></td>
-        <td><?= htmlspecialchars($aid['status']) ?></td>
-      </tr>
-    <?php endforeach; ?>
-  <?php else: ?>
-    <tr><td colspan="3">No aid records yet.</td></tr>
-  <?php endif; ?>
-</tbody>
+          <?php if (count($aidStatus) > 0): ?>
+            <?php foreach ($aidStatus as $aid): ?>
+              <tr>
+                <td><?= htmlspecialchars($aid['item_name']) ?></td>
+                <td><?= htmlspecialchars($aid['quantity']) ?></td>
+                <td><?= htmlspecialchars($aid['status']) ?></td>
+              </tr>
+            <?php endforeach; ?>
+          <?php else: ?>
+            <tr><td colspan="3">No aid records yet.</td></tr>
+          <?php endif; ?>
+        </tbody>
       </table>
     </div>
 
@@ -117,11 +104,7 @@ $aidStatus = $stmt3->fetchAll();
 
   <div class="divider"></div>
 
-  <!-- Footer -->
-  <footer>
-    <div class="footer-brand">Hand2Hand</div>
-    <p>Contact Us:<br/>Email: hand2hand@support.com</p>
-  </footer>
+  <?php include '../includes/footer.php'; ?>
 
 </body>
 </html>

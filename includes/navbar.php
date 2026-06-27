@@ -13,12 +13,11 @@ if ($role == 'Admin') {
 <nav class="navbar">
     <div class="nav-left">
         <div class="nav-logo">
-            <img src="/Hand2Hand/image/logo.png" alt="logo" style="width:45px;height:45px;border-radius:50%;object-fit:cover;">
-        </div>
+<img src="../image/logo.png" alt="logo" style="width:45px;height:45px;border-radius:50%;object-fit:cover;">        </div>
         <div class="nav-brand-text">
             <span class="nav-brand-name">Hand2Hand</span>
             <span class="nav-links-sub"><?= $nav_links ?></span>
         </div>
     </div>
-    <a href="/h2h_final/logout.php" class="btn-logout">Logout</a>
+<a href="../logout.php" class="btn-logout">Logout</a>
 </nav>
