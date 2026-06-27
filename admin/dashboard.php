@@ -18,7 +18,7 @@ $stmt = $pdo->prepare($sql);
 $stmt->execute();
 $rows = $stmt->fetchAll();
 
-// Stat badge queries
+
 $totalEvents = $pdo->query("SELECT COUNT(*) FROM donationevent")->fetchColumn();
 $activeEvents = $pdo->query("SELECT COUNT(*) FROM donationevent WHERE status = 'Active'")->fetchColumn();
 $itemsCollected = $pdo->query("SELECT COALESCE(SUM(quantity), 0) FROM donation_item")->fetchColumn();
@@ -35,7 +35,7 @@ $beneficiaries = $pdo->query("SELECT COUNT(DISTINCT user_id) FROM request")->fet
 </head>
 <body>
 
-  <!-- Navbar -->
+  <!-- Navigation bar -->
   <nav>
     <div class="nav-left">
       <img src="../image/logo.png" alt="Hand2Hand Logo" class="logo-circle">

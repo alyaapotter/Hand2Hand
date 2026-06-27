@@ -1,5 +1,38 @@
 <?php
 session_start();
+require_once '../includes/db.php';
+
+$user_id = $_SESSION['user_id'] ?? null;
+
+// Get beneficiary profile info
+$stmt = $pdo->prepare("SELECT family_size, priority_level FROM user WHERE user_id = ?");
+$stmt->execute([$user_id]);
+$profile = $stmt->fetch();
+
+// Get next upcoming distribution date for this beneficiary
+$stmt2 = $pdo->prepare("
+    SELECT MIN(d.date) AS next_date
+    FROM distribution d
+    JOIN request r ON d.request_id = r.request_id
+    WHERE r.user_id = ? AND d.date >= CURDATE()
+");
+$stmt2->execute([$user_id]);
+$nextDistribution = $stmt2->fetch();
+
+// Get latest aid status (items distributed to this beneficiary)
+$stmt3 = $pdo->prepare("
+    SELECT 
+        i.name AS item_name,
+        d.quantity,
+        r.status
+    FROM distribution d
+    JOIN request r ON d.request_id = r.request_id
+    JOIN item i ON d.item_id = i.item_id
+    WHERE r.user_id = ?
+    ORDER BY d.date DESC
+");
+$stmt3->execute([$user_id]);
+$aidStatus = $stmt3->fetchAll();
 ?>
 
 <!DOCTYPE html>
@@ -12,18 +45,17 @@ session_start();
 </head>
 <body>
 
-  <!-- Page label -->
-  <div class="page-label">home page (beneficiary)</div>
-
   <!-- Navbar -->
   <nav>
     <div class="nav-left">
       <img src="../image/logo.png" alt="Hand2Hand Logo" class="logo-circle">
       <div class="nav-text">
         <h1>Hand2Hand</h1>
-        <a href="home_beneficiary.php">Home</a> |
-        <a href="aid_status.php">My Aid</a> |
-        <a href="profile_page_bene.php">Profile</a>
+        <p>
+          <a href="home_beneficiary.php">Home</a> |
+          <a href="aid_status.php">My Aid</a> |
+          <a href="profile_page_bene.php">Profile</a>
+        </p>
       </div>
     </div>
     <button class="btn-logout" onclick="window.location.href='logout.php'">Logout</button>
@@ -40,8 +72,8 @@ session_start();
     <!-- Beneficiary Dashboard -->
     <div class="section-box">
       <h3>Beneficiary Dashboard</h3>
-      <p>Family Size</p>
-      <p>Priority Level</p>
+      <p>Family Size: <?= $profile['family_size'] !== null ? htmlspecialchars($profile['family_size']) : 'Not set' ?></p>
+      <p>Priority Level: <?= $profile['priority_level'] !== null ? htmlspecialchars($profile['priority_level']) : 'Not set' ?></p>
     </div>
 
     <div class="divider"></div>
@@ -58,11 +90,18 @@ session_start();
           </tr>
         </thead>
         <tbody>
-          <tr><td></td><td></td><td></td></tr>
-          <tr><td></td><td></td><td></td></tr>
-          <tr><td></td><td></td><td></td></tr>
-          <tr><td></td><td></td><td></td></tr>
-        </tbody>
+  <?php if (count($aidStatus) > 0): ?>
+    <?php foreach ($aidStatus as $aid): ?>
+      <tr>
+        <td><?= htmlspecialchars($aid['item_name']) ?></td>
+        <td><?= htmlspecialchars($aid['quantity']) ?></td>
+        <td><?= htmlspecialchars($aid['status']) ?></td>
+      </tr>
+    <?php endforeach; ?>
+  <?php else: ?>
+    <tr><td colspan="3">No aid records yet.</td></tr>
+  <?php endif; ?>
+</tbody>
       </table>
     </div>
 
@@ -71,8 +110,7 @@ session_start();
     <!-- Upcoming Distribution -->
     <div class="section-box">
       <h3>Upcoming Distribution</h3>
-      <p>Next Distribution Date</p>
-      <p>Location</p>
+      <p>Next Distribution Date: <?= $nextDistribution['next_date'] ? htmlspecialchars($nextDistribution['next_date']) : 'No upcoming distribution' ?></p>
     </div>
 
   </div>
