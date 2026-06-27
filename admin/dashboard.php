@@ -1,5 +1,28 @@
 <?php
 session_start();
+require_once '../includes/db.php';
+$sql = "SELECT 
+            de.name AS event_name,
+            i.name AS item_name,
+            t.quantity AS target_qty,
+            COALESCE(SUM(di.quantity), 0) AS collected_qty
+        FROM target t
+        JOIN donationevent de ON t.event_id = de.event_id
+        JOIN item i ON t.item_id = i.item_id
+        LEFT JOIN donation d ON d.event_id = t.event_id AND d.status = 'Received'
+        LEFT JOIN donation_item di ON di.donation_id = d.donation_id AND di.item_id = t.item_id
+        GROUP BY t.target_id, de.name, i.name, t.quantity
+        ORDER BY de.event_id, i.item_id";
+
+$stmt = $pdo->prepare($sql);
+$stmt->execute();
+$rows = $stmt->fetchAll();
+
+// Stat badge queries
+$totalEvents = $pdo->query("SELECT COUNT(*) FROM donationevent")->fetchColumn();
+$activeEvents = $pdo->query("SELECT COUNT(*) FROM donationevent WHERE status = 'Active'")->fetchColumn();
+$itemsCollected = $pdo->query("SELECT COALESCE(SUM(quantity), 0) FROM donation_item")->fetchColumn();
+$beneficiaries = $pdo->query("SELECT COUNT(DISTINCT user_id) FROM request")->fetchColumn();
 ?>
 
 <!DOCTYPE html>
@@ -28,13 +51,12 @@ session_start();
   <div class="main">
     <h2>Target Tracking Dashboard</h2>
 
-    <!-- Stats -->
-    <div class="stats">
-      <span class="badge">Total events: 10</span>
-      <span class="badge">Active events: 6</span>
-      <span class="badge">Items collected: 30</span>
-      <span class="badge">Beneficiaries: 19</span>
-    </div>
+  <div class="stats">
+  <span class="badge">Total events: <?= $totalEvents ?></span>
+  <span class="badge">Active events: <?= $activeEvents ?></span>
+  <span class="badge">Items collected: <?= $itemsCollected ?></span>
+  <span class="badge">Beneficiaries: <?= $beneficiaries ?></span>
+</div>
 
     <div class="divider"></div>
 
@@ -52,12 +74,20 @@ session_start();
           </tr>
         </thead>
         <tbody>
-          <tr><td></td><td></td><td></td><td></td><td></td></tr>
-          <tr><td></td><td></td><td></td><td></td><td></td></tr>
-          <tr><td></td><td></td><td></td><td></td><td></td></tr>
-          <tr><td></td><td></td><td></td><td></td><td></td></tr>
-          <tr><td></td><td></td><td></td><td></td><td></td></tr>
-          <tr><td></td><td></td><td></td><td></td><td></td></tr>
+          <?php foreach ($rows as $row): ?>
+            <?php
+              $progress = $row['target_qty'] > 0 
+                          ? round(($row['collected_qty'] / $row['target_qty']) * 100) 
+                          : 0;
+            ?>
+            <tr>
+              <td><?= htmlspecialchars($row['event_name']) ?></td>
+              <td><?= htmlspecialchars($row['item_name']) ?></td>
+              <td><?= $row['target_qty'] ?></td>
+              <td><?= $row['collected_qty'] ?></td>
+              <td><?= $progress ?>%</td>
+            </tr>
+          <?php endforeach; ?>
         </tbody>
       </table>
     </div>

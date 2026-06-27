@@ -1,0 +1,165 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+    }
+
+    body {
+        background-color: #443025;
+    }
+
+    header {
+        background-color: #443025;
+        color: #ffe4ff;
+        padding: 15px 30px;
+        align-items: center;
+        gap: 15px;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    header img {
+        border-radius: 50px;
+    }
+
+    .logo {
+        align-items: center;
+        gap: 20px;
+        display: flex;
+    }
+
+    nav {
+        align-items: center;
+        gap: 5px;
+        display: flex;
+    }
+
+    nav a {
+        color:#ffe4ff;
+        text-decoration: none;
+        font-size: 25px;
+        margin: 10px;
+        font-weight: bolder;
+    }
+
+    nav a:hover {
+        color: #a86b8c;
+    }
+
+    .logout-btn {
+        background-color: #FFE4EF;
+        color: #443025;
+        border: 2px solid #A86B6C;
+        padding: 10px 25px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-weight: bold;
+        margin-top: -60px;
+        margin-right: -15px;
+    }
+
+    .logout-btn:hover {
+        background-color: #a45a66;
+    }
+
+    .title {
+        color: #ffe4ff;
+        text-align: left;
+        margin-top: 20px;
+        padding: 20px;
+    }
+
+    .update-stock {
+        background-color: #f3e7dc;
+        padding: 20px;
+        min-height: 69vh;
+    }
+
+    .text {
+        color: #443025;
+        font-size: 17pt;
+    }
+
+    .form-container {
+        padding: 10px;
+        align-items: left;
+        margin-top: 20px;
+        font-size: 15pt;
+    }
+
+    input[type="text"] {
+        width: 35%;
+        height: 50px;
+        font-size: 16px; 
+        background-color: #FFE4EF;
+    }
+
+    button {
+        padding: 20px 28px;
+        margin-top: 40px;
+        border: none;
+        border-radius: 10px;
+        background-color: #A86B6C;
+        color: #FFE4EF;
+        cursor: pointer;
+        font-size: 10pt;
+    }
+
+   button:hover {
+    background-color: #a45a66;
+   }
+
+    @media (max-width: 768px) {
+    header {
+        flex-direction: column;
+        align-items: center;
+        padding: 10px 15px;
+        gap: 10px;
+    }
+
+    nav {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 3px;
+    }
+
+    nav a {
+        font-size: 16px;
+        margin: 4px;
+    }
+
+    .logout-btn {
+        margin-top: 0;
+        margin-right: 0;
+        width: 30%;
+        text-align: center;
+    }
+
+    .title {
+        margin-top: 10px;
+        padding: 10px;
+    }
+
+    .add-item {
+        padding: 15px;
+        min-height: auto;
+    }
+
+    .form-container {
+        font-size: 12pt;
+        margin-top: 10px;
+    }
+
+    input[type="text"] {
+        width: 100%;
+    }
+
+    button {
+        width: 40%;
+        padding: 15px;
+        margin-top: 20px;
+        font-size: 11pt;
+    }
+
+}

@@ -3,7 +3,7 @@
 // Database connection for Hand2Hand system
 
 $host = "localhost";
-$port = "3307"; // Default MySQL port — change to 3307 if connection still fails
+$port = "3301"; // Default MySQL port — change to 3307 if connection still fails
 $dbname = "hand2hand";
 $username = "root";
 $password = ""; // Change this to your MySQL password if needed
