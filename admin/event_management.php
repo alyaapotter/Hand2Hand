@@ -25,22 +25,47 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
     } else if (empty($item_ids)) {
     $error = "Please add at least one target item.";
     } else {
-        $stmt = $pdo->prepare("INSERT INTO DONATIONEVENT (name, start_date, end_date, status) VALUES (?, ?, ?, ?)");
-        $stmt->execute([$name, $start_date, $end_date, $status]);
-        $new_event_id = $pdo->lastInsertId();
 
-        foreach ($item_ids as $i => $item_id) {
-            $qty = intval($quantities[$i]);
-            if ($item_id && $qty > 0) {
-                $pdo->prepare("INSERT INTO TARGET (event_id, item_id, quantity) VALUES (?, ?, ?)")
-                    ->execute([$new_event_id, $item_id, $qty]);
+        // Handle image upload
+        $image_path = null;
+
+        if (isset($_FILES['event_image']) && $_FILES['event_image']['error'] === 0) {
+            $allowed = ['jpg', 'jpeg', 'png', 'webp'];
+            $ext = strtolower(pathinfo($_FILES['event_image']['name'], PATHINFO_EXTENSION));
+
+            if (in_array($ext, $allowed)) {
+                $filename = time() . '_' . basename($_FILES['event_image']['name']);
+                $uploadDir = '../image/';
+
+                if (!is_dir($uploadDir)) {
+                    mkdir($uploadDir, 0755, true);
+                }
+
+                if (move_uploaded_file($_FILES['event_image']['tmp_name'], $uploadDir . $filename)) {
+                    $image_path = $filename;
+                }
+            } else {
+                $error = "Invalid image format. Only jpg, jpeg, png, webp allowed.";
             }
         }
 
-        
-        $_SESSION['success'] = "Event created successfully!";
-        header("Location: event_management.php");
-        exit();
+        if (!$error) {
+            $stmt = $pdo->prepare("INSERT INTO DONATIONEVENT (name, start_date, end_date, status, image_path) VALUES (?, ?, ?, ?, ?)");
+            $stmt->execute([$name, $start_date, $end_date, $status, $image_path]);
+            $new_event_id = $pdo->lastInsertId();
+
+            foreach ($item_ids as $i => $item_id) {
+                $qty = intval($quantities[$i]);
+                if ($item_id && $qty > 0) {
+                    $pdo->prepare("INSERT INTO TARGET (event_id, item_id, quantity) VALUES (?, ?, ?)")
+                        ->execute([$new_event_id, $item_id, $qty]);
+                }
+            }
+
+            $_SESSION['success'] = "Event created successfully!";
+            header("Location: event_management.php");
+            exit();
+        }
     }
 }
 
@@ -53,7 +78,7 @@ $items = $pdo->query("SELECT item_id, name, category FROM ITEM ORDER BY name")->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Donation Event - Hand2Hand</title>
-    <link rel="stylesheet" href="../css/format.css">
+    <link rel="stylesheet" href="../css/formatBulan.css">
 </head>
 
 <body>
@@ -65,15 +90,15 @@ $items = $pdo->query("SELECT item_id, name, category FROM ITEM ORDER BY name")->
         </div>
 
         <?php if ($error): ?>
-            <div class="alert alert-error"><?= htmlspecialchars($error) ?></div>
+            <div class="alert2 alert-error"><?= htmlspecialchars($error) ?></div>
         <?php endif; ?>
 
         <?php if ($success): ?>
-            <div class="alert alert-success"><?= htmlspecialchars($success) ?></div>
+            <div class="alert2 alert-success"><?= htmlspecialchars($success) ?></div>
         <?php endif; ?>
 
         <section class="event-management">
-            <form method="POST" class="event-form" id="mainForm">
+            <form method="POST" class="event-form" id="mainForm" enctype="multipart/form-data">
                 <input type="hidden" name="action" value="create_event">
                 <div id="hidden-targets"></div>
 
@@ -94,13 +119,16 @@ $items = $pdo->query("SELECT item_id, name, category FROM ITEM ORDER BY name")->
                         <option value="">-- Select Status --</option>
                         <option value="Active">Active</option>
                         <option value="Completed">Completed</option>
-                        <option value="Cancelled">Cancelled</option>
+                        <option value="Scheduled">Scheduled</option>
                     </select>
+
+                    <label>Event Image</label>
+                    <input type="file" name="event_image" accept="image/*">
 
                     <button type="submit" class="submit-btn">Create Event</button>
 
                     <button type="button" class="back-btn" onclick="window.location.href='donation_event.php'">
-                        Cancel
+                        Back
                     </button>
 
                 </div>
@@ -255,6 +283,13 @@ $items = $pdo->query("SELECT item_id, name, category FROM ITEM ORDER BY name")->
                 `;
             });
         }
+
+        setTimeout(function () {
+            const alert = document.querySelector('.alert2');
+            if (alert) {
+                alert.style.display = 'none';
+            }
+        }, 3000);
     </script>
 </body>
 

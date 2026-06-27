@@ -37,7 +37,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
     }
 }
 
-$stmt = $pdo->query("SELECT * FROM DONATIONEVENT ORDER BY start_date DESC");
+$stmt = $pdo->query("
+    SELECT *
+    FROM DONATIONEVENT
+    ORDER BY
+        CASE status
+            WHEN 'Active' THEN 1
+            WHEN 'Scheduled' THEN 2
+            WHEN 'Completed' THEN 3
+        END,
+        start_date DESC
+");
 $events = $stmt->fetchAll();
 ?>
 
@@ -48,7 +58,7 @@ $events = $stmt->fetchAll();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Donation Events - Hand2Hand</title>
-    <link rel="stylesheet" href="../css/format.css">
+    <link rel="stylesheet" href="../css/formatBulan.css">
 </head>
 
 <body>
@@ -91,14 +101,17 @@ $events = $stmt->fetchAll();
                                     <?= htmlspecialchars($event['status']) ?>
                                 </span>
                             </div>
-                            <a href="edit_donation_event.php?id=<?= $event['event_id'] ?>">
-                                <button class="edit-btn">Edit</button>
-                            </a>
-                            <form method="POST" onsubmit="return confirm('Delete this event?')">
-                                <input type="hidden" name="action" value="delete">
-                                <input type="hidden" name="event_id" value="<?= $event['event_id'] ?>">
-                                <button type="submit" class="delete-btn">Delete</button>
-                            </form>
+                            <div class="action-btns">
+                                <a href="edit_donation_event.php?id=<?= $event['event_id'] ?>">
+                                    <button type="button" class="edit-btn">Edit</button>
+                                </a>
+
+                                <form method="POST" onsubmit="return confirm('Delete this event?')">
+                                    <input type="hidden" name="action" value="delete">
+                                    <input type="hidden" name="event_id" value="<?= $event['event_id'] ?>">
+                                    <button type="submit" class="delete-btn">Delete</button>
+                                </form>
+                            </div>
                         </div>
                     <?php endforeach; ?>
                 <?php else: ?>
@@ -127,6 +140,13 @@ $events = $stmt->fetchAll();
                 row.style.display = name.includes(input) ? '' : 'none';
             });
         }
+
+        setTimeout(function () {
+            const alert = document.querySelector('.alert');
+            if (alert) {
+                alert.style.display = 'none';
+            }
+        }, 3000);
     </script>
 </body>
 

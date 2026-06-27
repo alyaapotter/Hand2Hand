@@ -25,6 +25,20 @@ function getTargets($pdo, $event_id)
 
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
+
+function getEventClass($name)
+{
+    $map = [
+        'food bank'      => 'foodbank',
+        'back to school' => 'backtoschool',
+        'baby care'      => 'babycare',
+        'her essentials' => 'heressentials',
+        'medical aid'    => 'medicalaid',
+        'wear & share'   => 'wearshare',
+    ];
+    $key = strtolower(trim($name));
+    return $map[$key] ?? '';
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -33,8 +47,7 @@ function getTargets($pdo, $event_id)
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Donation Events Page</title>
-    <link rel="stylesheet" type="text/css" href="css/format.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="css/formatBulan.css">
 </head>
 
 <body>
@@ -68,7 +81,13 @@ function getTargets($pdo, $event_id)
             <?php foreach ($events as $event): ?>
                 <?php $targets = getTargets($pdo, $event['event_id']); ?>
 
-                <div class="event-card">
+                <?php
+                $bg = $event['image_path']
+                    ? "image/" . htmlspecialchars($event['image_path'])
+                    : "";
+                ?>
+                <div class="event-card <?= getEventClass($event['name']) ?>"
+                    <?= $bg ? "style=\"background-image: url('$bg');\"" : "" ?>>
                     <div class="card-content">
                         <h2><?= htmlspecialchars($event['name']) ?></h2>
 

@@ -1,141 +1,96 @@
 <?php
+session_start();
+require_once '../includes/db.php';
+
+function getTargets($pdo, $event_id)
+{
+    $stmt = $pdo->prepare("
+        SELECT i.name, t.quantity AS target,
+               COALESCE(SUM(di.quantity), 0) AS current
+        FROM TARGET t
+        JOIN ITEM i ON t.item_id = i.item_id
+        LEFT JOIN DONATION d ON d.event_id = t.event_id AND d.status = 'Received'
+        LEFT JOIN DONATION_ITEM di ON di.donation_id = d.donation_id AND di.item_id = t.item_id
+        WHERE t.event_id = ?
+        GROUP BY t.target_id, i.name, t.quantity
+    ");
+    $stmt->execute([$event_id]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function getEventClass($name)
+{
+    $map = [
+        'food bank'      => 'foodbank',
+        'back to school' => 'backtoschool',
+        'baby care'      => 'babycare',
+        'her essentials' => 'heressentials',
+        'medical aid'    => 'medicalaid',
+        'wear & share'   => 'wearshare',
+    ];
+    $key = strtolower(trim($name));
+    return $map[$key] ?? 'default';
+}
 
 function displayProgress($items)
 {
     foreach ($items as $item) {
+        $percent = $item['target'] > 0
+            ? min(round(($item['current'] / $item['target']) * 100), 100)
+            : 0;
 ?>
-
         <div class="item">
-            <p><?php echo $item['name']; ?></p>
-
+            <p><?php echo htmlspecialchars($item['name']); ?></p>
             <div class="progress-container">
                 <div class="progress-bar"
-                    style="width: <?php echo $item['progress']; ?>%;">
+                    style="width: <?php echo $percent; ?>%;">
                 </div>
             </div>
         </div>
-
     <?php
     }
 }
 
-function displayEvent($event)
+function displayEvent($event, $items)
 {
+    $class = getEventClass($event['name']);
+    $bg = $event['image_path']
+        ? "../image/" . htmlspecialchars($event['image_path'])
+        : "";
+    $duration = htmlspecialchars($event['start_date']) . ' - ' . htmlspecialchars($event['end_date']);
     ?>
-
-    <div class="event-card <?php echo $event['class']; ?>">
+    <div class="event-card <?php echo $class; ?>"
+         <?php echo $bg ? "style=\"background-image: url('$bg');\"" : ""; ?>>
 
         <div class="card-content">
 
-            <h2><?php echo $event['name']; ?></h2>
+            <h2><?php echo htmlspecialchars($event['name']); ?></h2>
 
-            <p>Duration: <?php echo $event['duration']; ?></p>
+            <p>Duration: <?php echo $duration; ?></p>
 
-            <p>Status: <?php echo $event['status']; ?></p>
+            <p>Status: <?php echo htmlspecialchars($event['status']); ?></p>
 
-            <h3>Progress</h3>
-
-            <?php displayProgress($event['items']); ?>
+            <?php if (count($items) > 0): ?>
+                <h3>Progress</h3>
+                <?php displayProgress($items); ?>
+            <?php endif; ?>
 
         </div>
 
-        <button class="donate-btn">
-            Donate Now
+        <button class="donate-btn"onclick="window.location.href='donate_item.php?event_id=<?= $event['event_id'] ?>'">
+            Donate
         </button>
 
     </div>
-
 <?php
 }
 
-$events = [
-
-    [
-        "name" => "Food Bank",
-        "class" => "foodbank",
-        "duration" => "1 May 2026 - 30 Jun 2026",
-        "status" => "Active",
-        "items" => [
-            ["name" => "Rice", "progress" => 70],
-            ["name" => "Cooking Oil", "progress" => 30],
-            ["name" => "Sugar", "progress" => 20],
-            ["name" => "Flour", "progress" => 10],
-            ["name" => "Instant Noodles", "progress" => 80]
-        ]
-    ],
-
-    [
-        "name" => "Back To School",
-        "class" => "backtoschool",
-        "duration" => "1 May 2026 - 30 Jun 2026",
-        "status" => "Active",
-        "items" => [
-            ["name" => "School Bag", "progress" => 20],
-            ["name" => "Exercise Books", "progress" => 40],
-            ["name" => "Pencil Case", "progress" => 23],
-            ["name" => "Stationery Set", "progress" => 30],
-            ["name" => "School Shoes", "progress" => 70]
-        ]
-    ],
-
-    [
-        "name" => "Baby Care",
-        "class" => "babycare",
-        "duration" => "1 May 2026 - 30 Jun 2026",
-        "status" => "Active",
-        "items" => [
-            ["name" => "Baby Diapers", "progress" => 10],
-            ["name" => "Baby Wipes", "progress" => 90],
-            ["name" => "Baby Formula", "progress" => 5],
-            ["name" => "Baby Bottles", "progress" => 20],
-            ["name" => "Baby Clothes", "progress" => 90]
-        ]
-    ],
-
-    [
-        "name" => "Her Essentials",
-        "class" => "heressentials",
-        "duration" => "1 May 2026 - 30 Jun 2026",
-        "status" => "Active",
-        "items" => [
-            ["name" => "Sanitary Pads", "progress" => 60],
-            ["name" => "Pantyliners", "progress" => 50],
-            ["name" => "Wet Wipes", "progress" => 10],
-            ["name" => "Shampoo", "progress" => 3],
-            ["name" => "Soap", "progress" => 27]
-        ]
-    ],
-
-    [
-        "name" => "Medical Aid",
-        "class" => "medicalaid",
-        "duration" => "1 May 2026 - 30 Jun 2026",
-        "status" => "Active",
-        "items" => [
-            ["name" => "First Aid Kit", "progress" => 30],
-            ["name" => "Paracetamol", "progress" => 100],
-            ["name" => "Adhesive Bandages", "progress" => 40],
-            ["name" => "Antiseptic Solution", "progress" => 2],
-            ["name" => "Face Masks", "progress" => 40]
-        ]
-    ],
-
-    [
-        "name" => "Wear & Share",
-        "class" => "wearshare",
-        "duration" => "1 May 2026 - 30 Jun 2026",
-        "status" => "Active",
-        "items" => [
-            ["name" => "T-Shirts", "progress" => 98],
-            ["name" => "Pants", "progress" => 40],
-            ["name" => "Jackets", "progress" => 10],
-            ["name" => "Shoes", "progress" => 50],
-            ["name" => "Blankets", "progress" => 30]
-        ]
-    ]
-
-];
-
+$events = $pdo->query("
+    SELECT *
+    FROM DONATIONEVENT
+    WHERE status = 'Active'
+    ORDER BY start_date ASC
+")->fetchAll();
 ?>
 
 <!DOCTYPE html>
@@ -148,13 +103,9 @@ $events = [
 
     <link rel="stylesheet" type="text/css" href="../css/formatBulan.css">
 
-    <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-</head>
-
 <body>
 
-    <?php include('headerdonor.php'); ?>
+    <?php include '../includes/navbar.php'; ?>
 
     <div class="page-title2">
         <h1>Donation Events</h1>
@@ -163,29 +114,40 @@ $events = [
     <div class="search-box">
         <input type="text"
             class="search-bar"
-            placeholder="Search Event">
+            id="searchInput"
+            placeholder="Search Event"
+            onkeyup="searchEvents()">
     </div>
 
     <section class="event-grid">
 
-        <?php
-
-        foreach ($events as $event) {
-            displayEvent($event);
-        }
-
-        ?>
+        <?php if (count($events) > 0): ?>
+            <?php foreach ($events as $event): ?>
+                <?php $items = getTargets($pdo, $event['event_id']); ?>
+                <?php displayEvent($event, $items); ?>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <p class="no-data">No active events found.</p>
+        <?php endif; ?>
 
     </section>
 
     <footer>
-
         <h4>Hand2Hand</h4>
-
         <p>Contact Us:</p>
         <p>Email: hand2hand@support.com</p>
-
     </footer>
+
+    <script>
+        function searchEvents() {
+            const input = document.getElementById('searchInput').value.toLowerCase();
+            const cards = document.querySelectorAll('.event-card');
+            cards.forEach(card => {
+                const name = card.querySelector('h2').textContent.toLowerCase();
+                card.style.display = name.includes(input) ? '' : 'none';
+            });
+        }
+    </script>
 
 </body>
 

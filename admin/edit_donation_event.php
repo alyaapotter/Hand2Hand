@@ -50,39 +50,65 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
     if (!$name || !$start_date || !$end_date || !$status) {
         $error = "Please fill in all event fields.";
     } else {
-        // Update event
-        $pdo->prepare("UPDATE DONATIONEVENT SET name=?, start_date=?, end_date=?, status=? WHERE event_id=?")
-            ->execute([$name, $start_date, $end_date, $status, $event_id]);
 
-        // Delete old targets then reinsert
-        $pdo->prepare("DELETE FROM TARGET WHERE event_id=?")->execute([$event_id]);
+        // Handle image upload
+        $image_path = $event['image_path']; // keep existing by default
 
-        foreach ($item_ids as $i => $item_id) {
-            $qty = intval($quantities[$i]);
-            if ($item_id && $qty > 0) {
-                $pdo->prepare("INSERT INTO TARGET (event_id, item_id, quantity) VALUES (?, ?, ?)")
-                    ->execute([$event_id, $item_id, $qty]);
+        if (isset($_FILES['event_image']) && $_FILES['event_image']['error'] === 0) {
+            $allowed = ['jpg', 'jpeg', 'png', 'webp'];
+            $ext = strtolower(pathinfo($_FILES['event_image']['name'], PATHINFO_EXTENSION));
+
+            if (in_array($ext, $allowed)) {
+                $filename = time() . '_' . basename($_FILES['event_image']['name']);
+                $uploadDir = '../image/';
+
+                if (!is_dir($uploadDir)) {
+                    mkdir($uploadDir, 0755, true);
+                }
+
+                if (move_uploaded_file($_FILES['event_image']['tmp_name'], $uploadDir . $filename)) {
+                    $image_path = $filename;
+                }
+            } else {
+                $error = "Invalid image format. Only jpg, jpeg, png, webp allowed.";
             }
         }
 
-        // Refetch updated event data
-        $stmt = $pdo->prepare("SELECT * FROM DONATIONEVENT WHERE event_id = ?");
-        $stmt->execute([$event_id]);
-        $event = $stmt->fetch();
+        if (!$error) {
+            // Update event
+            $pdo->prepare("UPDATE DONATIONEVENT SET name=?, start_date=?, end_date=?, status=?, image_path=? WHERE event_id=?")
+                ->execute([$name, $start_date, $end_date, $status, $image_path, $event_id]);
 
-        // Refetch updated targets
-        $stmt = $pdo->prepare("
-            SELECT t.target_id, t.item_id, i.name, t.quantity
-            FROM TARGET t
-            JOIN ITEM i ON t.item_id = i.item_id
-            WHERE t.event_id = ?
-        ");
-        $stmt->execute([$event_id]);
-        $existingTargets = $stmt->fetchAll();
+            // Delete old targets then reinsert
+            $pdo->prepare("DELETE FROM TARGET WHERE event_id=?")->execute([$event_id]);
 
-        $_SESSION['success'] = "Event updated successfully!";
-        header("Location: edit_donation_event.php?id=" . $event_id);
-        exit();
+            foreach ($item_ids as $i => $item_id) {
+                $qty = intval($quantities[$i]);
+                if ($item_id && $qty > 0) {
+                    $pdo->prepare("INSERT INTO TARGET (event_id, item_id, quantity) VALUES (?, ?, ?)")
+                        ->execute([$event_id, $item_id, $qty]);
+                }
+            }
+
+            // Refetch updated event data
+            $stmt = $pdo->prepare("SELECT * FROM DONATIONEVENT WHERE event_id = ?");
+            $stmt->execute([$event_id]);
+            $event = $stmt->fetch();
+
+            // Refetch updated targets
+            $stmt = $pdo->prepare("
+                SELECT t.target_id, t.item_id, i.name, t.quantity
+                FROM TARGET t
+                JOIN ITEM i ON t.item_id = i.item_id
+                WHERE t.event_id = ?
+            ");
+            $stmt->execute([$event_id]);
+            $existingTargets = $stmt->fetchAll();
+
+            $_SESSION['success'] = "Event updated successfully!";
+            header("Location: edit_donation_event.php?id=" . $event_id);
+            exit();
+        }
     }
 }
 
@@ -96,7 +122,7 @@ $items = $pdo->query("SELECT item_id, name, category FROM ITEM ORDER BY name")->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Donation Event - Hand2Hand</title>
-    <link rel="stylesheet" href="/Hand2Hand/css/format.css">
+    <link rel="stylesheet" href="../css/formatBulan.css">
 </head>
 
 <body>
@@ -108,15 +134,15 @@ $items = $pdo->query("SELECT item_id, name, category FROM ITEM ORDER BY name")->
         </div>
 
         <?php if ($error): ?>
-            <div class="alert alert-error"><?= htmlspecialchars($error) ?></div>
+            <div class="alert2 alert-error"><?= htmlspecialchars($error) ?></div>
         <?php endif; ?>
 
         <?php if ($success): ?>
-            <div class="alert alert-success"><?= htmlspecialchars($success) ?></div>
+            <div class="alert2 alert-success"><?= htmlspecialchars($success) ?></div>
         <?php endif; ?>
 
         <section class="event-management">
-            <form method="POST" class="event-form" id="mainForm" action="?id=<?= $event_id ?>">
+            <form method="POST" class="event-form" id="mainForm" action="?id=<?= $event_id ?>" enctype="multipart/form-data">
                 <input type="hidden" name="action" value="update_event">
                 <div id="hidden-targets"></div>
 
@@ -137,8 +163,14 @@ $items = $pdo->query("SELECT item_id, name, category FROM ITEM ORDER BY name")->
                         <option value="">-- Select Status --</option>
                         <option value="Active" <?= $event['status'] == 'Active' ? 'selected' : '' ?>>Active</option>
                         <option value="Completed" <?= $event['status'] == 'Completed' ? 'selected' : '' ?>>Completed</option>
-                        <option value="Cancelled" <?= $event['status'] == 'Cancelled' ? 'selected' : '' ?>>Cancelled</option>
+                        <option value="Scheduled" <?= $event['status'] == 'Scheduled' ? 'selected' : '' ?>>Scheduled</option>
                     </select>
+
+                    <label>Event Image</label>
+                    <?php if ($event['image_path']): ?>
+                        <p><img src="../image/<?= htmlspecialchars($event['image_path']) ?>" height="80" style="border-radius:8px; margin-bottom:8px;"></p>
+                    <?php endif; ?>
+                    <input type="file" name="event_image" accept="image/*">
 
                     <button type="submit" class="submit-btn">Save Changes</button>
 
@@ -305,6 +337,13 @@ $items = $pdo->query("SELECT item_id, name, category FROM ITEM ORDER BY name")->
                 `;
             });
         }
+
+        setTimeout(function () {
+            const alert = document.querySelector('.alert2');
+            if (alert) {
+                alert.style.display = 'none';
+            }
+        }, 3000);
     </script>
 </body>
 
