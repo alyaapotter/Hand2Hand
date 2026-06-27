@@ -10,7 +10,7 @@ if (isset($_SESSION['user_id'])) {
     exit();
 }
 
-require_once 'includes/db.php';
+require_once 'includes/connect.php';
 
 $error = "";
 
@@ -21,9 +21,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (empty($email) || empty($password)) {
         $error = "Please fill in all fields.";
     } else {
-        $stmt = $pdo->prepare("SELECT * FROM USER WHERE email = ?");
-        $stmt->execute([$email]);
-        $user = $stmt->fetch();
+        $stmt = $conn->prepare("SELECT * FROM USER WHERE email = ?");
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $user = $stmt->get_result()->fetch_assoc();
 
         if ($user && password_verify($password, $user['password'])) {
             $_SESSION['user_id'] = $user['user_id'];
@@ -42,12 +43,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hand2Hand - Login</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
     <div class="auth-container">
         <div class="auth-box">
@@ -76,30 +79,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </div>
     </div>
 
-<script>
-function validateLogin() {
-    const email    = document.querySelector('input[name="email"]').value.trim();
-    const password = document.querySelector('input[name="password"]').value;
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    <script>
+        function validateLogin() {
+            const email = document.querySelector('input[name="email"]').value.trim();
+            const password = document.querySelector('input[name="password"]').value;
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    if (email === '') {
-        alert('Please enter your email!');
-        return false;
-    }
-    if (!emailRegex.test(email)) {
-        alert('Please enter a valid email address!');
-        return false;
-    }
-    if (password === '') {
-        alert('Please enter your password!');
-        return false;
-    }
-    if (password.length < 6) {
-        alert('Password must be at least 6 characters!');
-        return false;
-    }
-    return true;
-}
-</script>
+            if (email === '') {
+                alert('Please enter your email!');
+                return false;
+            }
+            if (!emailRegex.test(email)) {
+                alert('Please enter a valid email address!');
+                return false;
+            }
+            if (password === '') {
+                alert('Please enter your password!');
+                return false;
+            }
+            if (password.length < 6) {
+                alert('Password must be at least 6 characters!');
+                return false;
+            }
+            return true;
+        }
+    </script>
 </body>
+
 </html>

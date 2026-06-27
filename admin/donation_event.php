@@ -1,6 +1,9 @@
 <?php
 session_start();
 require_once '../includes/connect.php';
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 'Admin') {
+    header("Location: ../login.php"); exit();
+}
 
 $success = "";
 $error = "";

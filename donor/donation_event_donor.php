@@ -1,6 +1,9 @@
 <?php
 session_start();
 require_once '../includes/connect.php';
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 'Donor') {
+    header("Location: ../login.php"); exit();
+}
 
 function getTargets($conn, $event_id)
 {
