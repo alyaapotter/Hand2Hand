@@ -19,8 +19,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
         if (!$inv || $inv['quantity'] < $quantity) {
             $error = "Not enough stock! Available: " . ($inv['quantity'] ?? 0);
         } else {
+            $dist_date = $_POST['dist_date'];
             $pdo->prepare("INSERT INTO DISTRIBUTION (request_id, item_id, quantity, date) VALUES (?,?,?,?)")
-                ->execute([$request_id, $item_id, $quantity, date('Y-m-d')]);
+            ->execute([$request_id, $item_id, $quantity, $dist_date]);
             $pdo->prepare("UPDATE INVENTORY SET quantity=quantity-? WHERE item_id=?")->execute([$quantity, $item_id]);
             $pdo->prepare("UPDATE REQUEST SET status='Approved' WHERE request_id=?")->execute([$request_id]);
             $success = "Items distributed successfully!";
@@ -100,6 +101,10 @@ $items = $pdo->query("SELECT i.item_id, i.name, i.category, COALESCE(inv.quantit
                 <label>Quantity To Distribute:</label>
                 <input type="number" name="quantity" id="qtyInput" min="1" style="width:80px" required>
             </div>
+            <div class="form-group">
+                <label>Distribution Date:</label>
+                <input type="date" name="dist_date" required min="<?= date('Y-m-d') ?>">
+            </div>
         </div>
 
         <!-- Distribution Summary -->
@@ -108,6 +113,7 @@ $items = $pdo->query("SELECT i.item_id, i.name, i.category, COALESCE(inv.quantit
             <div class="dist-info-row">Beneficiary: <span id="sumBeneficiary"><?= $selected_request ? htmlspecialchars($selected_request['username']) : '—' ?></span></div>
             <div class="dist-info-row">Item: <span id="sumItem">—</span></div>
             <div class="dist-info-row">Quantity: <span id="sumQty">—</span></div>
+            <div class="dist-info-row">Date: <span id="sumDate">—</span></div>
         </div>
 
         <button type="submit" class="btn btn-primary">Confirm Distribution</button>
@@ -131,8 +137,11 @@ function updateStock(sel) {
     updateSummary();
 }
 function updateSummary() {
-    const qty = document.getElementById('qtyInput').value;
-    document.getElementById('sumQty').textContent = qty || '—';
+    const qty  = document.getElementById('qtyInput').value;
+    const date = document.querySelector('input[name="dist_date"]').value;
+    document.getElementById('sumQty').textContent  = qty  || '—';
+    document.querySelector('input[name="dist_date"]')?.addEventListener('change', updateSummary);
+    document.getElementById('sumDate').textContent = date || '—';
 }
 document.getElementById('qtyInput')?.addEventListener('input', updateSummary);
 </script>
