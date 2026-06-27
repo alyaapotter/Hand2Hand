@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once '../includes/db.php';
+require_once '../includes/connect.php';
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 'Donor') {
     header("Location: ../login.php"); exit();
 }
@@ -12,32 +12,40 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
     $event_id = intval($_POST['event_id']);
     $items    = $_POST['item_id'] ?? [];
     $qtys     = $_POST['quantity'] ?? [];
-    if (!$event_id) { $error = "Please select a donation event."; }
-    elseif (empty($items)) { $error = "Please add at least one item."; }
-    else {
-        $pdo->prepare("INSERT INTO DONATION (event_id, user_id, date, status) VALUES (?,?,?,'Pending')")
-            ->execute([$event_id, $user_id, date('Y-m-d')]);
-        $donation_id = $pdo->lastInsertId();
+
+    if (!$event_id) {
+        $error = "Please select a donation event.";
+    } elseif (empty($items)) {
+        $error = "Please add at least one item.";
+    } else {
+        $date = date('Y-m-d');
+        mysqli_query($conn, "INSERT INTO DONATION (event_id, user_id, date, status) VALUES ($event_id, $user_id, '$date', 'Pending')");
+        $donation_id = mysqli_insert_id($conn);
+
         foreach ($items as $idx => $item_id) {
-            $qty = intval($qtys[$idx] ?? 1);
+            $item_id = intval($item_id);
+            $qty     = intval($qtys[$idx] ?? 1);
             if ($item_id && $qty > 0) {
-                $pdo->prepare("INSERT INTO DONATION_ITEM (donation_id, item_id, quantity) VALUES (?,?,?) ON DUPLICATE KEY UPDATE quantity=quantity+VALUES(quantity)")
-                    ->execute([$donation_id, $item_id, $qty]);
-                $pdo->prepare("INSERT INTO INVENTORY (item_id, quantity) VALUES (?,?) ON DUPLICATE KEY UPDATE quantity=quantity+VALUES(quantity)")
-                    ->execute([$item_id, $qty]);
+                mysqli_query($conn, "INSERT INTO DONATION_ITEM (donation_id, item_id, quantity) VALUES ($donation_id, $item_id, $qty)
+                                     ON DUPLICATE KEY UPDATE quantity=quantity+$qty");
+                mysqli_query($conn, "INSERT INTO INVENTORY (item_id, quantity) VALUES ($item_id, $qty)
+                                     ON DUPLICATE KEY UPDATE quantity=quantity+$qty");
             }
         }
-        $pdo->prepare("UPDATE DONATION SET status='Received' WHERE donation_id=?")->execute([$donation_id]);
+        mysqli_query($conn, "UPDATE DONATION SET status='Received' WHERE donation_id=$donation_id");
         $success = "Thank you for your donation!";
     }
 }
 
-$events = $pdo->query("SELECT * FROM DONATIONEVENT WHERE status='Active' ORDER BY date ASC")->fetchAll();
-$items  = $pdo->query("SELECT item_id, name, category FROM ITEM ORDER BY category, name")->fetchAll();
+$ev_result      = mysqli_query($conn, "SELECT * FROM DONATIONEVENT WHERE status='Active' ORDER BY date ASC");
+$events         = mysqli_fetch_all($ev_result, MYSQLI_ASSOC);
+$item_result    = mysqli_query($conn, "SELECT item_id, name, category FROM ITEM ORDER BY category, name");
+$items          = mysqli_fetch_all($item_result, MYSQLI_ASSOC);
 $selected_event = null;
 if (isset($_GET['event_id'])) {
-    $stmt = $pdo->prepare("SELECT * FROM DONATIONEVENT WHERE event_id=?");
-    $stmt->execute([intval($_GET['event_id'])]); $selected_event = $stmt->fetch();
+    $eid = intval($_GET['event_id']);
+    $res = mysqli_query($conn, "SELECT * FROM DONATIONEVENT WHERE event_id=$eid");
+    $selected_event = mysqli_fetch_assoc($res);
 }
 ?>
 <!DOCTYPE html>
@@ -56,7 +64,6 @@ if (isset($_GET['event_id'])) {
     <?php if ($success): ?><div class="alert alert-success"><?= htmlspecialchars($success) ?></div><?php endif; ?>
     <?php if ($error):   ?><div class="alert alert-error"><?= htmlspecialchars($error) ?></div><?php endif; ?>
 
-    <!-- Select Event -->
     <?php if (!$selected_event): ?>
     <div class="form-section">
         <div class="form-section-title">Select Donation Event</div>
@@ -102,11 +109,6 @@ if (isset($_GET['event_id'])) {
             </div>
 
             <button type="button" class="btn btn-outline btn-sm" onclick="addRow()" style="margin-bottom:15px">+ Add Item</button>
-
-            <div class="form-section-title" style="margin-top:10px">Selected Items</div>
-            <div id="selectedItems">
-                <div class="item-added-row">Item - packs <input type="text" style="width:80px;background:#fff;border:1px solid #ccc;border-radius:4px;padding:3px 8px" placeholder="qty" readonly></div>
-            </div>
         </div>
 
         <button type="submit" class="btn btn-primary">Confirm Donation</button>
@@ -114,9 +116,7 @@ if (isset($_GET['event_id'])) {
     </form>
 
     <script>
-    let rowCount = 1;
     const itemsData = <?= json_encode($items) ?>;
-
     function addRow() {
         const container = document.getElementById('itemRows');
         const div = document.createElement('div');
@@ -135,41 +135,22 @@ if (isset($_GET['event_id'])) {
                 <button type="button" onclick="this.closest('div').parentElement.remove()" style="background:#f5c8c8;border:none;border-radius:6px;padding:5px 10px;cursor:pointer;margin-left:8px">Remove</button>
             </div>`;
         container.appendChild(div);
-        rowCount++;
+    }
+    function validateDonation() {
+        const items = document.querySelectorAll('select[name="item_id[]"]');
+        const qtys  = document.querySelectorAll('input[name="quantity[]"]');
+        let valid   = true;
+        if (items.length === 0) { alert('Please add at least one item!'); return false; }
+        items.forEach((sel, i) => {
+            if (sel.value === '') { alert('Please select an item for row ' + (i + 1) + '!'); valid = false; }
+            if (qtys[i].value <= 0 || qtys[i].value === '') { alert('Please enter a valid quantity for row ' + (i + 1) + '!'); valid = false; }
+        });
+        return valid;
     }
     </script>
-
-    <script>
-function validateDonation() {
-    const items = document.querySelectorAll('select[name="item_id[]"]');
-    const qtys  = document.querySelectorAll('input[name="quantity[]"]');
-    let valid   = true;
-
-    if (items.length === 0) {
-        alert('Please add at least one item!');
-        return false;
-    }
-
-    items.forEach((sel, i) => {
-        if (sel.value === '') {
-            alert('Please select an item for row ' + (i + 1) + '!');
-            valid = false;
-        }
-        if (qtys[i].value <= 0 || qtys[i].value === '') {
-            alert('Please enter a valid quantity for row ' + (i + 1) + '!');
-            valid = false;
-        }
-    });
-
-    return valid;
-}
-</script>
-
     <?php endif; ?>
 </div>
 
-<div class="page-footer">
-    Hand2Hand<br>Contact Us:<br>Email: hand2hand@support.com
-</div>
+<div class="page-footer">Hand2Hand<br>Contact Us:<br>Email: hand2hand@support.com</div>
 </body>
 </html>

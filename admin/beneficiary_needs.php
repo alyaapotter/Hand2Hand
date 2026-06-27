@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once '../includes/db.php';
+require_once '../includes/connect.php';
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 'Admin') {
     header("Location: ../login.php"); exit();
 }
@@ -10,41 +10,41 @@ $success = ""; $error = "";
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'])) {
     if ($_POST['action'] == 'add_request') {
         $user_id     = intval($_POST['user_id']);
-        $description = trim($_POST['description']);
+        $description = mysqli_real_escape_string($conn, trim($_POST['description']));
         $date        = date('Y-m-d');
         if (!$user_id || !$description) {
             $error = "Please fill in all fields.";
         } else {
-            $stmt = $pdo->prepare("INSERT INTO REQUEST (date, status, description, user_id) VALUES (?, 'Pending', ?, ?)");
-            $stmt->execute([$date, $description, $user_id]);
+            mysqli_query($conn, "INSERT INTO REQUEST (date, status, description, user_id) VALUES ('$date', 'Pending', '$description', $user_id)");
             $success = "Beneficiary need added!";
         }
     }
     if ($_POST['action'] == 'approve') {
-        $stmt = $pdo->prepare("UPDATE REQUEST SET status='Approved' WHERE request_id=?");
-        $stmt->execute([intval($_POST['request_id'])]);
+        $id = intval($_POST['request_id']);
+        mysqli_query($conn, "UPDATE REQUEST SET status='Approved' WHERE request_id=$id");
         $success = "Request approved!";
     }
     if ($_POST['action'] == 'reject') {
-        $stmt = $pdo->prepare("UPDATE REQUEST SET status='Rejected' WHERE request_id=?");
-        $stmt->execute([intval($_POST['request_id'])]);
+        $id = intval($_POST['request_id']);
+        mysqli_query($conn, "UPDATE REQUEST SET status='Rejected' WHERE request_id=$id");
         $success = "Request rejected.";
     }
     if ($_POST['action'] == 'delete') {
-        $stmt = $pdo->prepare("DELETE FROM REQUEST WHERE request_id=?");
-        $stmt->execute([intval($_POST['request_id'])]);
+        $id = intval($_POST['request_id']);
+        mysqli_query($conn, "DELETE FROM REQUEST WHERE request_id=$id");
         $success = "Request deleted.";
     }
 }
 
-$beneficiaries = $pdo->query("SELECT user_id, username, email, contact_number, address FROM USER WHERE role='Requester' ORDER BY username")->fetchAll();
-$search = isset($_GET['search']) ? trim($_GET['search']) : '';
+$ben_result    = mysqli_query($conn, "SELECT user_id, username, email, contact_number, address FROM USER WHERE role='Requester' ORDER BY username");
+$beneficiaries = mysqli_fetch_all($ben_result, MYSQLI_ASSOC);
+
+$search = isset($_GET['search']) ? mysqli_real_escape_string($conn, trim($_GET['search'])) : '';
 $query  = "SELECT r.*, u.username, u.email FROM REQUEST r JOIN USER u ON r.user_id=u.user_id WHERE 1=1";
-$params = [];
-if ($search) { $query .= " AND (u.username LIKE ? OR r.description LIKE ?)"; $params[] = "%$search%"; $params[] = "%$search%"; }
-$query .= " ORDER BY r.date DESC";
-$stmt = $pdo->prepare($query); $stmt->execute($params);
-$requests = $stmt->fetchAll();
+if ($search) $query .= " AND (u.username LIKE '%$search%' OR r.description LIKE '%$search%')";
+$query   .= " ORDER BY r.date DESC";
+$result   = mysqli_query($conn, $query);
+$requests = mysqli_fetch_all($result, MYSQLI_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -62,7 +62,6 @@ $requests = $stmt->fetchAll();
     <?php if ($success): ?><div class="alert alert-success"><?= htmlspecialchars($success) ?></div><?php endif; ?>
     <?php if ($error):   ?><div class="alert alert-error"><?= htmlspecialchars($error) ?></div><?php endif; ?>
 
-    <!-- Add Form -->
     <div class="form-section">
         <div class="form-section-title">Beneficiary Information</div>
         <form method="POST" onsubmit="return validateForm()">
@@ -73,11 +72,11 @@ $requests = $stmt->fetchAll();
                     <option value="">-- Select --</option>
                     <?php foreach ($beneficiaries as $b): ?>
                         <option value="<?= $b['user_id'] ?>"
-                        data-contact="<?= htmlspecialchars($b['contact_number'] ?? '') ?>"
-                        data-address="<?= htmlspecialchars($b['address'] ?? '') ?>">
-                        <?= htmlspecialchars($b['username']) ?>
-                    </option>
-                <?php endforeach; ?>
+                            data-contact="<?= htmlspecialchars($b['contact_number'] ?? '') ?>"
+                            data-address="<?= htmlspecialchars($b['address'] ?? '') ?>">
+                            <?= htmlspecialchars($b['username']) ?>
+                        </option>
+                    <?php endforeach; ?>
                 </select>
             </div>
             <div class="form-group">
@@ -86,34 +85,33 @@ $requests = $stmt->fetchAll();
             </div>
             <div class="form-group form-group-full">
                 <label>Address:</label>
-                <input type="text" placeholder="(from profile)" style="width:100%">
+                <input type="text" name="address" placeholder="(from profile)" readonly style="width:100%;background:#e8d5d5">
             </div>
-        </div>
+    </div>
 
-        <div class="form-section">
-            <div class="form-section-title">Needed Items</div>
-            <div class="form-group">
-                <label>Description of Need:</label>
-                <textarea name="description" rows="3" placeholder="Describe what items are needed..." required style="width:300px"></textarea>
-            </div>
+    <div class="form-section">
+        <div class="form-section-title">Needed Items</div>
+        <div class="form-group">
+            <label>Description of Need:</label>
+            <textarea name="description" rows="3" placeholder="Describe what items are needed..." required style="width:300px"></textarea>
         </div>
+    </div>
 
-        <div class="form-section">
-            <div class="form-section-title">Priority Level</div>
-            <div class="form-group">
-                <label>Priority:</label>
-                <select name="priority">
-                    <option value="Low">Low</option>
-                    <option value="Medium">Medium</option>
-                    <option value="High">High</option>
-                </select>
-            </div>
-            <button type="submit" class="btn btn-primary">Add</button>
+    <div class="form-section">
+        <div class="form-section-title">Priority Level</div>
+        <div class="form-group">
+            <label>Priority:</label>
+            <select name="priority">
+                <option value="Low">Low</option>
+                <option value="Medium">Medium</option>
+                <option value="High">High</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Add</button>
         </form>
     </div>
 
-    <!-- List -->
-    <input type="text" class="search-bar" placeholder="Search..." 
+    <input type="text" class="search-bar" placeholder="Search..."
            onkeyup="filterTable(this.value)" id="searchInput"
            value="<?= htmlspecialchars($search) ?>">
 
@@ -122,13 +120,7 @@ $requests = $stmt->fetchAll();
         <table class="data-table" id="mainTable">
             <thead>
                 <tr>
-                    <th>#</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Date</th>
-                    <th>Description</th>
-                    <th>Status</th>
-                    <th>Actions</th>
+                    <th>#</th><th>Name</th><th>Email</th><th>Date</th><th>Description</th><th>Status</th><th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -172,11 +164,7 @@ $requests = $stmt->fetchAll();
     </div>
 </div>
 
-<div class="page-footer">
-    Hand2Hand<br>
-    Contact Us:<br>
-    Email: hand2hand@support.com
-</div>
+<div class="page-footer">Hand2Hand<br>Contact Us:<br>Email: hand2hand@support.com</div>
 
 <script>
 function filterTable(val) {
@@ -185,42 +173,19 @@ function filterTable(val) {
         row.style.display = row.innerText.toLowerCase().includes(val) ? '' : 'none';
     });
 }
-</script>
-
-<script>
 function validateForm() {
     const user = document.querySelector('select[name="user_id"]').value;
     const desc = document.querySelector('textarea[name="description"]').value.trim();
-
-    if (user === '') {
-        alert('Please select a beneficiary!');
-        return false;
-    }
-    if (desc === '') {
-        alert('Please enter description of need!');
-        return false;
-    }
-    if (desc.length < 10) {
-        alert('Description is too short. Please be more specific!');
-        return false;
-    }
+    if (user === '') { alert('Please select a beneficiary!'); return false; }
+    if (desc === '') { alert('Please enter description of need!'); return false; }
+    if (desc.length < 10) { alert('Description is too short!'); return false; }
     return true;
-    //this is a test comment
 }
-
-
-</script>
-
-<script>
 function fillInfo(select) {
     const selected = select.options[select.selectedIndex];
-    const contact  = selected.dataset.contact;
-    const address  = selected.dataset.address;
-
-    document.querySelector('input[name="contact_number"]').value = contact || '';
-    document.querySelector('input[name="address"]').value = address || '';
+    document.querySelector('input[name="contact_number"]').value = selected.dataset.contact || '';
+    document.querySelector('input[name="address"]').value = selected.dataset.address || '';
 }
 </script>
-
 </body>
 </html>

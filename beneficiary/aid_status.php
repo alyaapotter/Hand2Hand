@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once '../includes/db.php';
+require_once '../includes/connect.php';
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 'Requester') {
     header("Location: ../login.php"); exit();
 }
@@ -10,27 +10,27 @@ $success = ""; $error = "";
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'])) {
     if ($_POST['action'] == 'submit_request') {
-        $description = trim($_POST['description']);
-        if (empty($description)) { $error = "Please describe what you need."; }
-        else {
-            $pdo->prepare("INSERT INTO REQUEST (date, status, description, user_id) VALUES (?, 'Pending', ?, ?)")
-                ->execute([date('Y-m-d'), $description, $user_id]);
+        $description = mysqli_real_escape_string($conn, trim($_POST['description']));
+        if (empty($description)) {
+            $error = "Please describe what you need.";
+        } else {
+            $date = date('Y-m-d');
+            mysqli_query($conn, "INSERT INTO REQUEST (date, status, description, user_id) VALUES ('$date', 'Pending', '$description', $user_id)");
             $success = "Request submitted!";
         }
     }
 }
 
-$search = isset($_GET['search']) ? trim($_GET['search']) : '';
-$query = "SELECT d.quantity, d.date, i.name AS item_name, r.status
-          FROM DISTRIBUTION d
-          JOIN REQUEST r ON d.request_id=r.request_id
-          JOIN ITEM i ON d.item_id=i.item_id
-          WHERE r.user_id=?";
-$params = [$user_id];
-if ($search) { $query .= " AND i.name LIKE ?"; $params[] = "%$search%"; }
-$query .= " ORDER BY d.date DESC";
-$stmt = $pdo->prepare($query); $stmt->execute($params);
-$distributions = $stmt->fetchAll();
+$search = isset($_GET['search']) ? mysqli_real_escape_string($conn, trim($_GET['search'])) : '';
+$query  = "SELECT d.quantity, d.date, i.name AS item_name, r.status
+           FROM DISTRIBUTION d
+           JOIN REQUEST r ON d.request_id=r.request_id
+           JOIN ITEM i ON d.item_id=i.item_id
+           WHERE r.user_id=$user_id";
+if ($search) $query .= " AND i.name LIKE '%$search%'";
+$query        .= " ORDER BY d.date DESC";
+$result        = mysqli_query($conn, $query);
+$distributions = mysqli_fetch_all($result, MYSQLI_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -48,7 +48,6 @@ $distributions = $stmt->fetchAll();
     <?php if ($success): ?><div class="alert alert-success"><?= htmlspecialchars($success) ?></div><?php endif; ?>
     <?php if ($error):   ?><div class="alert alert-error"><?= htmlspecialchars($error) ?></div><?php endif; ?>
 
-    <!-- Submit Request -->
     <div class="form-section" style="margin-bottom:20px">
         <div class="form-section-title">Submit New Request</div>
         <form method="POST" onsubmit="return validateRequest()">
@@ -67,12 +66,7 @@ $distributions = $stmt->fetchAll();
     <div class="table-wrapper">
         <table class="data-table" id="mainTable">
             <thead>
-                <tr>
-                    <th>Item Name</th>
-                    <th>Quantity Available</th>
-                    <th>Date</th>
-                    <th>Status</th>
-                </tr>
+                <tr><th>Item Name</th><th>Quantity Available</th><th>Date</th><th>Status</th></tr>
             </thead>
             <tbody>
                 <?php if (empty($distributions)): ?>
@@ -92,9 +86,7 @@ $distributions = $stmt->fetchAll();
     </div>
 </div>
 
-<div class="page-footer">
-    Hand2Hand<br>Contact Us:<br>Email: hand2hand@support.com
-</div>
+<div class="page-footer">Hand2Hand<br>Contact Us:<br>Email: hand2hand@support.com</div>
 
 <script>
 function filterTable(val) {
@@ -103,19 +95,10 @@ function filterTable(val) {
         row.style.display = row.innerText.toLowerCase().includes(val) ? '' : 'none';
     });
 }
-</script>
-<script>
 function validateRequest() {
     const desc = document.querySelector('textarea[name="description"]').value.trim();
-
-    if (desc === '') {
-        alert('Please describe what items you need!');
-        return false;
-    }
-    if (desc.length < 10) {
-        alert('Description is too short. Please provide more details!');
-        return false;
-    }
+    if (desc === '') { alert('Please describe what items you need!'); return false; }
+    if (desc.length < 10) { alert('Description is too short. Please provide more details!'); return false; }
     return true;
 }
 </script>
