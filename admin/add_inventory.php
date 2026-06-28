@@ -42,21 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Inventory Page: Add (Admin)</title>
 </head>
 <body>
-    <header>
-        <div class="logo">
-            <img src="logo.png" alt="Hand2Hand logo" width="80">
-            <h1>Hand2Hand</h1>
-        </div>
-        <nav>
-            |
-            <a href="dashboard.php">Dashboard</a> |
-            <a href="beneficiary.php">Beneficiaries</a> |
-            <a href="event_management.php">Events</a> |
-            <a href="inventory.php">Inventory</a> |
-            <a href="distribution.php">Distribution</a>
-        </nav>
-        <a href="logout.php" class="logout-btn">Logout</a>
-    </header>
+    <?php include '../includes/navbar.php'; ?>
 
     <div class="title">
         <h1>Inventory</h1>

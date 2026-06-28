@@ -31,7 +31,7 @@ header img {
     display: flex;
 }
 
-/* NAV */
+/* NAV
 nav {
     align-items: center;
     gap: 5px;
@@ -50,7 +50,7 @@ nav a:hover {
     color: #a86b8c;
 }
 
-/* LOGOUT BUTTON */
+ LOGOUT BUTTON
 .logout-btn {
     background-color: #FFE4EF;
     color: #443025;
@@ -65,7 +65,7 @@ nav a:hover {
 
 .logout-btn:hover {
     background-color: #a45a66;
-}
+} */
 
 
 button {
