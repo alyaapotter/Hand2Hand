@@ -1,7 +1,7 @@
 <?php
 // includes/db.php
 $host = "localhost";
-$port = "3301";
+$port = "3307";
 $dbname = "hand2hand";
 $username = "root";
 $password = "";
