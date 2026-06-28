@@ -10,6 +10,7 @@ require_once "connect.php";
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Hand2Hand - Home</title>
   <link rel="stylesheet" href="css/homeStyle.css" />
+  <link rel="stylesheet" href="css/navbar_footer.css" />
 </head>
 <body>
 
@@ -76,11 +77,7 @@ require_once "connect.php";
 
   <div class="divider"></div>
 
-  <!-- Footer -->
-  <footer>
-    <div class="footer-brand">Hand2Hand</div>
-    <p>Contact Us:<br/>Email: hand2hand@support.com</p>
-  </footer>
+  <?php include 'includes/footer.php'; ?>
 
 </body>
 </html>

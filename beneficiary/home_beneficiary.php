@@ -5,7 +5,7 @@ require_once '../includes/db.php';
 $user_id = $_SESSION['user_id'] ?? null;
 
 // Get beneficiary profile info
-$stmt = $pdo->prepare("SELECT family_size, priority_level FROM user WHERE user_id = ?");
+$stmt = $pdo->prepare("SELECT family_size, priority_level, address FROM user WHERE user_id = ?");
 $stmt->execute([$user_id]);
 $profile = $stmt->fetch();
 
@@ -98,6 +98,7 @@ $aidStatus = $stmt3->fetchAll();
     <div class="section-box">
       <h3>Upcoming Distribution</h3>
       <p>Next Distribution Date: <?= $nextDistribution['next_date'] ? htmlspecialchars($nextDistribution['next_date']) : 'No upcoming distribution' ?></p>
+      <p>Address: <?= !empty($profile['address']) ? htmlspecialchars($profile['address']) : 'Not set' ?></p>
     </div>
 
   </div>

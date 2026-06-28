@@ -18,6 +18,7 @@ $stmt = $pdo->prepare($sql);
 $stmt->execute();
 $rows = $stmt->fetchAll();
 
+// Stat badge queries
 $totalEvents = $pdo->query("SELECT COUNT(*) FROM donationevent")->fetchColumn();
 $activeEvents = $pdo->query("SELECT COUNT(*) FROM donationevent WHERE status = 'Active'")->fetchColumn();
 $itemsCollected = $pdo->query("SELECT COALESCE(SUM(quantity), 0) FROM donation_item")->fetchColumn();
@@ -31,22 +32,31 @@ $beneficiaries = $pdo->query("SELECT COUNT(DISTINCT user_id) FROM request")->fet
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Hand2Hand - Dashboard (Admin)</title>
   <link rel="stylesheet" href="../css/dashboard_admin.css" />
-  <link rel="stylesheet" href="../css/navbar_footer.css" />
 </head>
 <body>
 
-  <?php include '../includes/navbar.php'; ?>
+  <!-- Navbar -->
+  <nav>
+    <div class="nav-left">
+      <img src="../image/logo.png" alt="Hand2Hand Logo" class="logo-circle">
+      <div class="nav-text">
+        <h1>Hand2Hand</h1>
+        <p> <a href="dashboard.php">Dashboard</a> | <a href="beneficiary.php">Beneficiaries</a> | <a href="event_management.php">Events</a> | <a href="inventory.php">Inventory</a> | <a href="distribution.php">Distribution</a></p>
+      </div>
+    </div>
+    <button class="btn-logout" onclick="window.location.href='../logout.php'">Logout</button>
+  </nav>
 
   <!-- Main -->
   <div class="main">
     <h2>Target Tracking Dashboard</h2>
 
-    <div class="stats">
-      <span class="badge">Total events: <?= $totalEvents ?></span>
-      <span class="badge">Active events: <?= $activeEvents ?></span>
-      <span class="badge">Items collected: <?= $itemsCollected ?></span>
-      <span class="badge">Beneficiaries: <?= $beneficiaries ?></span>
-    </div>
+  <div class="stats">
+  <span class="badge">Total events: <?= $totalEvents ?></span>
+  <span class="badge">Active events: <?= $activeEvents ?></span>
+  <span class="badge">Items collected: <?= $itemsCollected ?></span>
+  <span class="badge">Beneficiaries: <?= $beneficiaries ?></span>
+</div>
 
     <div class="divider"></div>
 
@@ -82,8 +92,6 @@ $beneficiaries = $pdo->query("SELECT COUNT(DISTINCT user_id) FROM request")->fet
       </table>
     </div>
   </div>
-
-  <?php include '../includes/footer.php'; ?>
 
 </body>
 </html>
