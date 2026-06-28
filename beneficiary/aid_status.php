@@ -13,8 +13,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'])) {
         $description = trim($_POST['description']);
         if (empty($description)) { $error = "Please describe what you need."; }
         else {
-            $pdo->prepare("INSERT INTO REQUEST (date, status, description, user_id) VALUES (?, 'Pending', ?, ?)")
-                ->execute([date('Y-m-d'), $description, $user_id]);
+            $date = date('Y-m-d');
+            $stmt = $conn->prepare("INSERT INTO REQUEST (date, status, description, user_id) VALUES (?, 'Pending', ?, ?)");
+            $stmt->bind_param("ssi", $date, $description, $user_id);
+            $stmt->execute();
             $success = "Request submitted!";
         }
     }
@@ -26,11 +28,21 @@ $query = "SELECT d.quantity, d.date, i.name AS item_name, r.status
           JOIN REQUEST r ON d.request_id=r.request_id
           JOIN ITEM i ON d.item_id=i.item_id
           WHERE r.user_id=?";
-$params = [$user_id];
-if ($search) { $query .= " AND i.name LIKE ?"; $params[] = "%$search%"; }
-$query .= " ORDER BY d.date DESC";
-$stmt = $pdo->prepare($query); $stmt->execute($params);
-$distributions = $stmt->fetchAll();
+
+if ($search) {
+    $query .= " AND i.name LIKE ?";
+    $query .= " ORDER BY d.date DESC";
+    $searchParam = "%$search%";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("is", $user_id, $searchParam);
+} else {
+    $query .= " ORDER BY d.date DESC";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("i", $user_id);
+}
+$stmt->execute();
+$result = $stmt->get_result();
+$distributions = $result->fetch_all(MYSQLI_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="en">

@@ -1,58 +1,57 @@
 <?php
 session_start();
-//echo "DEBUG role: [" . ($_SESSION['role'] ?? 'NOT SET') . "], user_id: [" . ($_SESSION['user_id'] ?? 'NOT SET') . "]";
 require_once '../includes/db.php';
 
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 'Requester') {
     header("Location: ../login.php"); exit();
-
 }
 
 $user_id = $_SESSION['user_id'];
 $success = ""; $error = "";
 
 // Get all items for the dropdown
-$items = $pdo->query("SELECT item_id, name FROM item ORDER BY name")->fetchAll();
+$itemsResult = $conn->query("SELECT item_id, name FROM item ORDER BY name");
+$items = $itemsResult->fetch_all(MYSQLI_ASSOC);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $item_id = $_POST['item_id'] ?? '';
     $quantity = $_POST['quantity'] ?? '';
     $delivery_option = $_POST['delivery_option'] ?? '';
     $reason = trim($_POST['reason'] ?? '');
+    $preferred_date = $_POST['preferred_date'] ?? '';
 
-    if (empty($item_id) || empty($quantity) || empty($delivery_option)) {
+    if (empty($item_id) || empty($quantity) || empty($delivery_option) || empty($preferred_date)) {
         $error = "Please fill in all required fields.";
     } elseif ($delivery_option == 'Delivery' && empty($reason)) {
         $error = "Reason for delivery is required when choosing Delivery.";
     } else {
-        $stmt = $pdo->prepare("
-            INSERT INTO request (date, status, description, user_id, item_id, quantity, delivery_option, reason)
-            VALUES (?, 'Pending', ?, ?, ?, ?, ?, ?)
+        $reasonValue = $delivery_option == 'Delivery' ? $reason : null;
+        $date = date('Y-m-d');
+        $description = 'Request via distribution form';
+
+        $stmt = $conn->prepare("
+            INSERT INTO request (date, status, description, user_id, item_id, quantity, delivery_option, reason, preferred_date)
+            VALUES (?, 'Pending', ?, ?, ?, ?, ?, ?, ?)
         ");
-        $stmt->execute([
-            date('Y-m-d'),
-            'Request via distribution form',
-            $user_id,
-            $item_id,
-            $quantity,
-            $delivery_option,
-            $delivery_option == 'Delivery' ? $reason : null
-        ]);
+        $stmt->bind_param("ssiiisss", $date, $description, $user_id, $item_id, $quantity, $delivery_option, $reasonValue, $preferred_date);
+        $stmt->execute();
         $success = "Request submitted! Waiting for admin review.";
     }
 }
 
 // Get this beneficiary's past requests (for tracking)
-$stmt2 = $pdo->prepare("
+$stmt2 = $conn->prepare("
     SELECT r.request_id, i.name AS item_name, r.quantity, r.delivery_option, r.reason, 
-           r.status, r.distribution_date, r.distribution_location
+           r.status, r.preferred_date, r.distribution_date, r.distribution_location
     FROM request r
     LEFT JOIN item i ON r.item_id = i.item_id
     WHERE r.user_id = ?
     ORDER BY r.request_id DESC
 ");
-$stmt2->execute([$user_id]);
-$myRequests = $stmt2->fetchAll();
+$stmt2->bind_param("i", $user_id);
+$stmt2->execute();
+$result2 = $stmt2->get_result();
+$myRequests = $result2->fetch_all(MYSQLI_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -105,6 +104,11 @@ $myRequests = $stmt2->fetchAll();
                 <input type="number" name="quantity" min="1" required>
             </div>
 
+            <div class="form-group">
+                <label>Preferred Date</label>
+                <input type="date" name="preferred_date" required min="<?= date('Y-m-d') ?>">
+            </div>
+
             <div class="form-group form-group-full">
                 <label>Option</label>
                 <div style="display:flex; gap:20px; margin-top:6px;">
@@ -133,13 +137,14 @@ $myRequests = $stmt2->fetchAll();
                     <th>Option</th>
                     <th>Reason</th>
                     <th>Status</th>
+                    <th>Preferred Date</th>
                     <th>Distribution Date</th>
                     <th>Location</th>
                 </tr>
             </thead>
             <tbody>
                 <?php if (empty($myRequests)): ?>
-                    <tr><td colspan="7" class="empty-row">No requests submitted yet.</td></tr>
+                    <tr><td colspan="8" class="empty-row">No requests submitted yet.</td></tr>
                 <?php else: ?>
                     <?php foreach ($myRequests as $r): ?>
                     <tr>
@@ -148,6 +153,7 @@ $myRequests = $stmt2->fetchAll();
                         <td><?= htmlspecialchars($r['delivery_option'] ?? '-') ?></td>
                         <td><?= htmlspecialchars($r['reason'] ?? '-') ?></td>
                         <td><span class="badge badge-<?= strtolower($r['status']) ?>"><?= htmlspecialchars($r['status']) ?></span></td>
+                        <td><?= $r['preferred_date'] ? htmlspecialchars($r['preferred_date']) : '-' ?></td>
                         <td><?= $r['distribution_date'] ? htmlspecialchars($r['distribution_date']) : '-' ?></td>
                         <td><?= $r['distribution_location'] ? htmlspecialchars($r['distribution_location']) : '-' ?></td>
                     </tr>

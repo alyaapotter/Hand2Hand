@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once '../includes/db.php';
+
 $sql = "SELECT 
             de.name AS event_name,
             i.name AS item_name,
@@ -14,15 +15,14 @@ $sql = "SELECT
         GROUP BY t.target_id, de.name, i.name, t.quantity
         ORDER BY de.event_id, i.item_id";
 
-$stmt = $pdo->prepare($sql);
-$stmt->execute();
-$rows = $stmt->fetchAll();
+$result = $conn->query($sql);
+$rows = $result->fetch_all(MYSQLI_ASSOC);
 
 // Stat badge queries
-$totalEvents = $pdo->query("SELECT COUNT(*) FROM donationevent")->fetchColumn();
-$activeEvents = $pdo->query("SELECT COUNT(*) FROM donationevent WHERE status = 'Active'")->fetchColumn();
-$itemsCollected = $pdo->query("SELECT COALESCE(SUM(quantity), 0) FROM donation_item")->fetchColumn();
-$beneficiaries = $pdo->query("SELECT COUNT(DISTINCT user_id) FROM request")->fetchColumn();
+$totalEvents = $conn->query("SELECT COUNT(*) FROM donationevent")->fetch_row()[0];
+$activeEvents = $conn->query("SELECT COUNT(*) FROM donationevent WHERE status = 'Active'")->fetch_row()[0];
+$itemsCollected = $conn->query("SELECT COALESCE(SUM(quantity), 0) FROM donation_item")->fetch_row()[0];
+$beneficiaries = $conn->query("SELECT COUNT(DISTINCT user_id) FROM request")->fetch_row()[0];
 ?>
 
 <!DOCTYPE html>

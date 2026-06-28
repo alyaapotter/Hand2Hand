@@ -5,22 +5,26 @@ require_once '../includes/db.php';
 $user_id = $_SESSION['user_id'] ?? null;
 
 // Get beneficiary profile info
-$stmt = $pdo->prepare("SELECT family_size, priority_level, address FROM user WHERE user_id = ?");
-$stmt->execute([$user_id]);
-$profile = $stmt->fetch();
+$stmt = $conn->prepare("SELECT family_size, priority_level, address FROM user WHERE user_id = ?");
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$result = $stmt->get_result();
+$profile = $result->fetch_assoc();
 
 // Get next upcoming distribution date for this beneficiary
-$stmt2 = $pdo->prepare("
+$stmt2 = $conn->prepare("
     SELECT MIN(d.date) AS next_date
     FROM distribution d
     JOIN request r ON d.request_id = r.request_id
     WHERE r.user_id = ? AND d.date >= CURDATE()
 ");
-$stmt2->execute([$user_id]);
-$nextDistribution = $stmt2->fetch();
+$stmt2->bind_param("i", $user_id);
+$stmt2->execute();
+$result2 = $stmt2->get_result();
+$nextDistribution = $result2->fetch_assoc();
 
 // Get latest aid status (items distributed to this beneficiary)
-$stmt3 = $pdo->prepare("
+$stmt3 = $conn->prepare("
     SELECT 
         i.name AS item_name,
         d.quantity,
@@ -31,8 +35,10 @@ $stmt3 = $pdo->prepare("
     WHERE r.user_id = ?
     ORDER BY d.date DESC
 ");
-$stmt3->execute([$user_id]);
-$aidStatus = $stmt3->fetchAll();
+$stmt3->bind_param("i", $user_id);
+$stmt3->execute();
+$result3 = $stmt3->get_result();
+$aidStatus = $result3->fetch_all(MYSQLI_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -59,8 +65,8 @@ $aidStatus = $stmt3->fetchAll();
     <!-- Beneficiary Dashboard -->
     <div class="section-box">
       <h3>Beneficiary Dashboard</h3>
-      <p>Family Size: <?= $profile['family_size'] !== null ? htmlspecialchars($profile['family_size']) : 'Not set' ?></p>
-      <p>Priority Level: <?= $profile['priority_level'] !== null ? htmlspecialchars($profile['priority_level']) : 'Not set' ?></p>
+      <p><b>Family Size:</b> <?= $profile['family_size'] !== null ? htmlspecialchars($profile['family_size']) : 'Not set' ?></p>
+      <p><b>Priority Level: </b><?= $profile['priority_level'] !== null ? htmlspecialchars($profile['priority_level']) : 'Not set' ?></p>
     </div>
 
     <div class="divider"></div>
@@ -97,8 +103,8 @@ $aidStatus = $stmt3->fetchAll();
     <!-- Upcoming Distribution -->
     <div class="section-box">
       <h3>Upcoming Distribution</h3>
-      <p>Next Distribution Date: <?= $nextDistribution['next_date'] ? htmlspecialchars($nextDistribution['next_date']) : 'No upcoming distribution' ?></p>
-      <p>Address: <?= !empty($profile['address']) ? htmlspecialchars($profile['address']) : 'Not set' ?></p>
+      <p><b>Next Distribution Date: </b><?= $nextDistribution['next_date'] ? htmlspecialchars($nextDistribution['next_date']) : 'No upcoming distribution' ?></p>
+      <p><b>Address: </b><?= !empty($profile['address']) ? htmlspecialchars($profile['address']) : 'Not set' ?></p>
     </div>
 
   </div>
