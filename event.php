@@ -38,7 +38,6 @@ function getEventClass($name)
 ?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -50,7 +49,7 @@ function getEventClass($name)
     <header class="header1">
 
         <div class="logo">
-            <img src="image/logo.png" alt="Hand2Hand logo" width="80">
+        <img src="logo.png" alt="Hand2Hand logo" width="80">
         </div>
 
         <nav>
@@ -68,10 +67,13 @@ function getEventClass($name)
     </div>
 
     <div class="search-box">
-        <input type="text" class="search-bar" id="searchInput" placeholder="Search Event" onkeyup="searchEvents()">
+        <input type="text" class="search-bar" placeholder="Search Event">
     </div>
 
     <section class="event-grid">
+        <div class="event-card foodbank">
+            <div class="card-content">
+                <h2>Food Bank</h2>
 
         <?php if (count($events) > 0): ?>
             <?php foreach ($events as $event): ?>
@@ -87,55 +89,272 @@ function getEventClass($name)
                     <div class="card-content">
                         <h2><?= htmlspecialchars($event['name']) ?></h2>
 
-                        <p>Duration: <?= htmlspecialchars($event['start_date']) ?> - <?= htmlspecialchars($event['end_date']) ?></p>
-                        <p>Status: <?= htmlspecialchars($event['status']) ?></p>
+                <div class="item">
+                    <p>Sugar</p>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 20%;"></div>
+                    </div>
+                </div>
 
-                        <?php if (count($targets) > 0): ?>
-                            <h3>Progress</h3>
-                            <?php foreach ($targets as $item): ?>
-                                <?php
-                                $percent = $item['target'] > 0
-                                    ? min(($item['current'] / $item['target']) * 100, 100)
-                                    : 0;
-                                ?>
-                                <div class="item">
-                                    <p><?= htmlspecialchars($item['name']) ?></p>
-                                    <div class="progress-container">
-                                        <div class="progress-bar" style="width: <?= round($percent) ?>%;"></div>
-                                    </div>
-                                </div>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
+                <div class="item">
+                    <p>Flour</p>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 10%;"></div>
+                    </div>
+                </div>
+                <div class="item">
+                    <p>Instant Noodles</p>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 80%;"></div>
+                    </div>
+                </div>
 
+            </div>
+            <button class="donate-btn">Donate Now</button>
+        </div>
+
+        <div class="event-card backtoschool">
+            <div class="card-content">
+                <h2>Back To School</h2>
+
+                <p>Duration: 1 May 2026 - 30 Jun 2026</p>
+                <p>Status: Active</p>
+
+                <h3>Progress</h3>
+                <div class="item">
+                    <p>School Bag</p>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 20%;"></div>
+                    </div>
+                </div>
+                    
+                <div class="item">
+                    <p>Exercise Books</p>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 40%;"></div>
+                    </div>
+                </div>
+
+                <div class="item">
+                    <p>Pencil Case</p>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 23%;"></div>
                     </div>
                     <button class="donate-btn" onclick="window.location.href='login.php'">
                         Donate Now
                     </button>
                 </div>
 
-            <?php endforeach; ?>
-        <?php else: ?>
-            <p class="no-data">No events found.</p>
-        <?php endif; ?>
+                <div class="item">
+                    <p>Stationery Set</p>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 30%;"></div>
+                    </div>
+                </div>
+                <div class="item">
+                    <p>School Shoes</p>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 70%;"></div>
+                    </div>
+                </div>
+
+            </div>
+            <button class="donate-btn">Donate Now</button>
+        </div>
+
+        <div class="event-card babycare">
+            <div class="card-content">
+                <h2>Baby Care</h2>
+
+                <p>Duration: 1 May 2026 - 30 Jun 2026</p>
+                <p>Status: Active</p>
+
+                <h3>Progress</h3>
+                <div class="item">
+                    <p>Baby Diapers</p>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 10%;"></div>
+                    </div>
+                </div>
+                    
+                <div class="item">
+                    <p>Baby Wipes</p>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 90%;"></div>
+                    </div>
+                </div>
+
+                <div class="item">
+                    <p>Baby Formula</p>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 5%;"></div>
+                    </div>
+                </div>
+
+                <div class="item">
+                    <p>Baby Bottles</p>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 20%;"></div>
+                    </div>
+                </div>
+                <div class="item">
+                    <p>Baby Clothes</p>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 90%;"></div>
+                    </div>
+                </div>
+
+            </div>
+            <button class="donate-btn">Donate Now</button>
+        </div>
+
+        <div class="event-card heressentials">
+            <div class="card-content">
+                <h2>Her Essentials</h2>
+
+                <p>Duration: 1 May 2026 - 30 Jun 2026</p>
+                <p>Status: Active</p>
+
+                <h3>Progress</h3>
+                <div class="item">
+                    <p>Sanitary Pads</p>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 60%;"></div>
+                    </div>
+                </div>
+                    
+                <div class="item">
+                    <p>Pantyliners</p>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 50%;"></div>
+                    </div>
+                </div>
+
+                <div class="item">
+                    <p>Wet Wipes</p>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 10%;"></div>
+                    </div>
+                </div>
+
+                <div class="item">
+                    <p>Shampoo</p>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 3%;"></div>
+                    </div>
+                </div>
+                <div class="item">
+                    <p>Soap</p>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 27%;"></div>
+                    </div>
+                </div>
+
+            </div>
+            <button class="donate-btn">Donate Now</button>
+        </div>
+
+        <div class="event-card medicalaid">
+            <div class="card-content">
+                <h2>Medical Aid</h2>
+
+                <p>Duration: 1 May 2026 - 30 Jun 2026</p>
+                <p>Status: Active</p>
+
+                <h3>Progress</h3>
+                <div class="item">
+                    <p>First Aid Kit</p>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 30%;"></div>
+                    </div>
+                </div>
+                    
+                <div class="item">
+                    <p>Paracetamol</p>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 100%;"></div>
+                    </div>
+                </div>
+
+                <div class="item">
+                    <p>Adhesive Bandages</p>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 40%;"></div>
+                    </div>
+                </div>
+
+                <div class="item">
+                    <p>Antiseptic Solution</p>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 2%;"></div>
+                    </div>
+                </div>
+                <div class="item">
+                    <p>Face Masks</p>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 40%;"></div>
+                    </div>
+                </div>
+
+            </div>
+            <button class="donate-btn">Donate Now</button>
+        </div>
+
+        <div class="event-card wearshare">
+            <div class="card-content">
+                <h2>Wear & Share</h2>
+
+                <p>Duration: 1 May 2026 - 30 Jun 2026</p>
+                <p>Status: Active</p>
+
+                <h3>Progress</h3>
+                <div class="item">
+                    <p>T-Shirts</p>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 98%;"></div>
+                    </div>
+                </div>
+                    
+                <div class="item">
+                    <p>Pants</p>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 40%;"></div>
+                    </div>
+                </div>
+
+                <div class="item">
+                    <p>Jackets</p>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 10%;"></div>
+                    </div>
+                </div>
+
+                <div class="item">
+                    <p>Shoes</p>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 50%;"></div>
+                    </div>
+                </div>
+                <div class="item">
+                    <p>Blankets</p>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 30%;"></div>
+                    </div>
+                </div>
+
+            </div>
+            <button class="donate-btn">Donate Now</button>
+        </div>
 
     </section>
 
     <footer>
         <h4>Hand2Hand</h4>
+
         <p>Contact Us:</p>
         <p>Email: hand2hand@support.com</p>
+
     </footer>
 
-    <script>
-        function searchEvents() {
-            const input = document.getElementById('searchInput').value.toLowerCase();
-            const cards = document.querySelectorAll('.event-card');
-            cards.forEach(card => {
-                const name = card.querySelector('h2').textContent.toLowerCase();
-                card.style.display = name.includes(input) ? '' : 'none';
-            });
-        }
-    </script>
 </body>
-
 </html>
