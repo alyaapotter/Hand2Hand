@@ -1,4 +1,9 @@
 <?php
+session_start();
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../login.php");
+    exit();
+}
 include('../includes/connect.php');
 
 $error = '';
@@ -97,7 +102,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 return false;
             }
 
-            alert("Add Item Successful!");
+            // alert("Add Item Successful!");
             return true;
         }
     </script>

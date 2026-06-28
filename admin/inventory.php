@@ -1,4 +1,9 @@
 <?php
+session_start();
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../login.php");
+    exit();
+}
 include('../includes/connect.php');
 // Handle search
 $search = isset($_GET['search']) ? $_GET['search'] : '';
@@ -29,7 +34,7 @@ $result = $conn->query($sql);
 </head>
 <body>
     <?php include '../includes/navbar.php'; ?>
-    
+
     <div class="search">
         <h1>Inventory</h1>
     </div>
@@ -75,6 +80,17 @@ $result = $conn->query($sql);
         <button onclick="window.location.href='update_inventory.php'">Update Stock</button>
         <button onclick="window.location.href='add_inventory.php'">Add New Item</button>
     </section>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('added') === '1') {
+            alert("Add Item Successful!");
+        }
+        if (urlParams.get('updated') === '1') {
+            alert("Stock Updated Successfully!");
+        }
+    </script>
+    
 </body>
 </html>
 <?php $conn->close(); ?>
