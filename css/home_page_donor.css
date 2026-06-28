@@ -1,0 +1,169 @@
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: #b59b8a; /* Muted brown background */
+    color: #443025;
+}
+
+/* Header Styles */
+.donor-header {
+    background-color: #3b2a1a; /* Dark brown */
+    padding: 30px 40px;
+}
+
+.top-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.logo h1 {
+    color: #ffffff;
+    font-size: 36px;
+    font-weight: bold;
+}
+
+.logo-circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: #ffe4ef;
+    object-fit: cover;
+}
+
+/* Logout Button */
+.logout-btn {
+    background-color: #ffe4ef;
+    color: #3b2a1a;
+    text-decoration: none;
+    padding: 8px 24px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+}
+
+.logout-btn:hover {
+    background-color: #ffd6e0;
+}
+
+/* Navigation Links */
+.donor-nav {
+    color: #ffe4ef;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.donor-nav a {
+    color: #ffe4ef;
+    text-decoration: none;
+    margin: 0 4px;
+}
+
+.donor-nav a:hover, .donor-nav a.active {
+    text-decoration: underline;
+    color: #ffd6e0;
+}
+
+/* Main Content Area */
+.content-container {
+    padding: 30px 40px;
+}
+
+.welcome-title {
+    color: #ffffff;
+    font-size: 32px;
+    margin-bottom: 25px;
+}
+
+.section-title {
+    font-size: 24px;
+    color: #3b2a1a;
+    margin-bottom: 25px;
+}
+
+/* Grid Layout for Donation Events */
+.events-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 10px); /* Membina 3 lajur sekata */
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.event-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.image-placeholder {
+    width: 100%;
+    aspect-ratio: 1 / 1; /* Kekalkan bentuk kotak 1:1 */
+    border: 4px solid #755543;
+    background-color: #d1c0b5; /* Warna gantian sekiranya gambar tiada */
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.image-placeholder img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.event-label {
+    margin-top: 15px;
+    font-size: 18px;
+    color: #3b2a1a;
+    text-align: center;
+}
+
+/* Footer Styles */
+.main-footer {
+    padding: 20px 40px 40px 40px;
+}
+
+.footer-divider {
+    border: 0;
+    height: 10px;
+    background-color: #3b2a1a;
+    margin-bottom: 20px;
+}
+
+.footer-content h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
+    color: #3b2a1a;
+}
+
+.footer-content p {
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+.footer-content a {
+    color: #3b2a1a;
+    text-decoration: none;
+}
+
+.footer-content a:hover {
+    text-decoration: underline;
+}

@@ -1,12 +1,12 @@
 <?php
 session_start();
-require_once 'includes/db.php';
+require_once 'includes/connect.php';
 
-$events = $pdo->query("SELECT * FROM DONATIONEVENT ORDER BY start_date ASC")->fetchAll();
+$result = $conn->query("SELECT * FROM DONATIONEVENT WHERE status = 'Active' ORDER BY start_date ASC");
+$events = $result->fetch_all(MYSQLI_ASSOC);
 
-function getTargets($pdo, $event_id)
-{
-    $stmt = $pdo->prepare("
+function getTargets($conn, $event_id) {
+    $stmt = $conn->prepare("
         SELECT i.name, t.quantity AS target,
                COALESCE(SUM(di.quantity), 0) AS current
         FROM TARGET t
@@ -16,7 +16,24 @@ function getTargets($pdo, $event_id)
         WHERE t.event_id = ?
         GROUP BY t.target_id, i.name, t.quantity
     ");
-    $stmt->execute([$event_id]);
+    $stmt->bind_param("i", $event_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    return $result->fetch_all(MYSQLI_ASSOC);
+}
+
+function getEventClass($name)
+{
+    $map = [
+        'food bank'      => 'foodbank',
+        'back to school' => 'backtoschool',
+        'baby care'      => 'babycare',
+        'her essentials' => 'heressentials',
+        'medical aid'    => 'medicalaid',
+        'wear & share'   => 'wearshare',
+    ];
+    $key = strtolower(trim($name));
+    return $map[$key] ?? '';
 }
 ?>
 <!DOCTYPE html>
@@ -26,8 +43,7 @@ function getTargets($pdo, $event_id)
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Donation Events Page</title>
-    <link rel="stylesheet" type="text/css" href="css/format.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="css/formatBulan.css">
 </head>
 
 <body>
@@ -59,9 +75,15 @@ function getTargets($pdo, $event_id)
 
         <?php if (count($events) > 0): ?>
             <?php foreach ($events as $event): ?>
-                <?php $targets = getTargets($pdo, $event['event_id']); ?>
+                <?php $targets = getTargets($conn, $event['event_id']); ?>
 
-                <div class="event-card">
+                <?php
+                $bg = $event['image_path']
+                    ? "image/" . htmlspecialchars($event['image_path'])
+                    : "";
+                ?>
+                <div class="event-card <?= getEventClass($event['name']) ?>"
+                    <?= $bg ? "style=\"background-image: url('$bg');\"" : "" ?>>
                     <div class="card-content">
                         <h2><?= htmlspecialchars($event['name']) ?></h2>
 
@@ -86,7 +108,9 @@ function getTargets($pdo, $event_id)
                         <?php endif; ?>
 
                     </div>
-                    <button class="donate-btn">Donate Now</button>
+                    <button class="donate-btn" onclick="window.location.href='login.php'">
+                        Donate Now
+                    </button>
                 </div>
 
             <?php endforeach; ?>

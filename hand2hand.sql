@@ -134,5 +134,37 @@ INSERT INTO TARGET (event_id, item_id, quantity) VALUES
 (2, 5, 40), 
 (3, 10, 10), 
 (4, 9, 3),  
+(5, 8, 70),
 (6, 6, 98), 
 (6, 7, 40);  
+
+ALTER TABLE DONATION_ITEM 
+ADD quantity INT(11) NOT NULL DEFAULT 1;
+
+INSERT INTO donation (event_id, user_id, date, status) VALUES
+(1, 1, '2026-05-10', 'Received'),
+(1, 1, '2026-05-15', 'Received'),
+(2, 1, '2026-05-20', 'Received');
+
+INSERT INTO donation_item (donation_id, item_id, quantity) VALUES
+(1, 1, 40),
+(1, 2, 20),
+(2, 1, 25),
+(3, 4, 10);
+
+ALTER TABLE user ADD COLUMN family_size INT DEFAULT NULL;
+ALTER TABLE user ADD COLUMN priority_level ENUM('Low','Medium','High') DEFAULT NULL;
+
+UPDATE user SET family_size = 4, priority_level = 'High' WHERE user_id = 3;
+
+ALTER TABLE DONATIONEVENT
+MODIFY COLUMN status ENUM('Active', 'Completed', 'Scheduled') NOT NULL;
+
+ALTER TABLE DONATIONEVENT ADD COLUMN image_path VARCHAR(255) DEFAULT NULL;
+
+UPDATE DONATIONEVENT SET image_path = 'food.webp' WHERE name = 'Food Bank';
+UPDATE DONATIONEVENT SET image_path = 'school.webp' WHERE name = 'Back To School';
+UPDATE DONATIONEVENT SET image_path = 'baby.jpg' WHERE name = 'Baby Care';
+UPDATE DONATIONEVENT SET image_path = 'women.jpg' WHERE name = 'Her Essentials';
+UPDATE DONATIONEVENT SET image_path = 'medical.jpg' WHERE name = 'Medical Aid';
+UPDATE DONATIONEVENT SET image_path = 'clothes.jpg' WHERE name = 'Wear & Share';
