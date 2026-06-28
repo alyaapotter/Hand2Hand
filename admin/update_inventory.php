@@ -41,7 +41,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<<<<<<< HEAD
     <link rel="stylesheet" type="text/css" href="../css/format2.css"> 
+=======
+    <link rel="stylesheet" type="text/css" href="../css/updateInventory_admin.css"> 
+>>>>>>> origin/main
     <title>Inventory Page: Update (Admin)</title>
 </head>
 <body>

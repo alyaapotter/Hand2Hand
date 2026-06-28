@@ -54,7 +54,7 @@ nav {
     gap: 5px;
 }
 
-.header1 nav a {
+nav a {
     font-size: 30px;
     color: #FFE4EF;
     text-decoration: none;
@@ -62,33 +62,9 @@ nav {
     font-weight: bold;
 }
 
-.header1 nav a:hover {
+nav a:hover {
     color: #A86B6C;
 }
-
-/* ALERT */
-.alert {
-    padding: 12px 18px;
-    margin: 12px 0 15px 20px;
-    border-radius: 8px;
-    font-size: 0.88rem;
-    display: block;
-    width: 30%;
-    text-align: left;  
-}
-.alert-success { background: #d1f5d1; color: #1a5c1a; }
-.alert-error   { background: #f5d1d1; color: #5c1a1a; }
-
-.alert2 {
-    padding: 12px 18px;
-    margin: 12px 0 15px 40px;
-    border-radius: 8px;
-    font-size: 0.88rem;
-    display: block;
-    width: 30%;
-    text-align: left;  
-}
-
 
 /* PAGE TITLE */
 .page-title {
@@ -99,13 +75,12 @@ nav {
     padding: 20px;
 }
 
-.page-title h1 {
+.page-title p, h1 {
     text-align: left;
-    margin: 0 0 10px 20px;
-}
-
-.page-title p {
-    margin: 0 0 10px 20px;
+    margin-top: 10px;
+    margin-left: 20px;
+    margin-bottom: 10px;
+    padding: 2px;
 }
 
 .page-title2 {
@@ -115,16 +90,7 @@ nav {
     margin-left: 20px;
 }
 
-.page-title2 h1 {
-    text-align: left;
-    margin: 0 0 10px 20px;
-}
-
-.page-title2 p {
-    margin: 0 0 10px 20px;
-}
-
-/* SEARCH BAR (EVENT PAGE) */
+/* SEARCH BAR */
 .search-bar {
     width: 40%;
     padding: 10px;
@@ -134,20 +100,16 @@ nav {
     background-color: #FFE4EF;
 }
 
-.search-icon {
-    position: absolute;
-    left: 40%;
-    top: 43%;
-    transform: translateY(-50%);
-    color: #A86B6C;
-}
-
+/* ========================= */
 /* EVENT GRID */
+/* ========================= */
+
 .event-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-    padding: 20px 40px;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+    gap: 25px;
+    padding: 30px;
+    align-items: stretch;
 }
 
 /* EVENT CARD */
@@ -156,10 +118,13 @@ nav {
     border: 5px solid #7F5836;
     border-radius: 15px;
     overflow: hidden;
-    height: 425px;
-    position: relative;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    transition: transform 0.3s;
+    min-height: 520px; 
+    height: auto; 
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+    transition: transform 0.3s ease;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -167,85 +132,98 @@ nav {
 }
 
 .event-card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-6px);
 }
 
-.event-card h3 {
-    margin: 12px 0 8px 10px;
+/* Ditambah untuk fungsi carian JavaScript */
+.event-card.hide {
+    display: none !important;
 }
 
-.event-card p {
-    padding: 0 10px;
-}
+/* BACKGROUNDS */
+.foodbank { background-image: url("image/food.webp"); }
+.backtoschool { background-image: url("image/school.webp"); }
+.babycare { background-image: url("image/baby.jpg"); }
+.heressentials { background-image: url("image/women.jpg"); }
+.medicalaid { background-image: url("image/medical.jpg"); }
+.wearshare { background-image: url("image/clothes.jpg"); }
 
+/* CARD CONTENT */
 .card-content {
-    position: absolute;
-    top: 40px;
-    bottom: 85px;
-    left: 20px;
-    right: 20px;
-    background-color: #B39989D9 ; /* D9 opacity */
+    margin: 15px;
     padding: 15px;
-    color: #443025;
+
+    background-color: rgba(179, 153, 137, 0.92);
     border-radius: 10px;
+
+    flex-grow: 1;
+
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 .card-content h2 {
     font-weight: bolder;
     text-align: center;
     margin-bottom: 10px;
+    font-size: 22px;
 }
 
-.donate-btn {
-    position: absolute;
-    bottom: 15px;
-    left: 50%;
-    transform: translateX(-50%);
-    border: none;
-    padding: 12px 30px;
-    border-radius: 20px;
-    cursor: pointer;
-}
-
-/* ITEM*/
+/* ITEM ROW */
 .item {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 30px;
-    margin-bottom: 10px;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.item p {
+    flex: 1; 
+    font-size: 14px;
+    word-break: break-word; 
 }
 
 /* PROGRESS */
 .progress-container {
-    width: 40%;
+    flex: 1.2; 
+    height: 12px; 
     background-color: #7F5836;
     border-radius: 20px;
     overflow: hidden;
-    height: 20px;
     border: 2px solid #443025;
 }
 
 .progress-bar {
     height: 100%;
     background-color: #443025;
-    text-align: center;
     color: #FFE4EF;
     font-size: 10px;
-    line-height: 20px;
 }
 
 /* BUTTON */
-button {
+.donate-btn {
+    position: relative;
+    bottom: auto;
+    left: auto;
+    transform: none;
+
+    width: calc(100% - 30px);
+    margin: 15px;
+    padding: 12px;
+
+    border-radius: 15px;
     background-color: #A86B6C;
     color: #FFE4EF;
-    border: none;
-    padding: 10px 15px;
-    margin: 10px;
-    border-radius: 20px;
+
+    font-weight: bold;
     cursor: pointer;
+    border: none;
+    font-size: 16px; /* DIUBAH: Saiz butang yang mesra jari di mobile */
 }
 
-button:hover {
+.donate-btn:hover {
     background-color: #a45a66;
 }
 
@@ -266,10 +244,7 @@ footer p {
     font-size: 14px;
 }
 
-/* ========================= */
-/* LOGIN & REGISTER FORM */
-/* ========================= */
-
+/* LOGIN / REGISTER */
 .logbackground {
     background-color: #f3e7dc;
     margin-top: 20px;
@@ -389,12 +364,12 @@ footer p {
     font-weight: bold;
 }
 
-.status.completed {
+.status.ended {
     color: red;
     font-weight: bold;
 }
 
-.status.scheduled {
+.status.upcoming {
     color: darkgoldenrod;
     font-weight: bold;
 }
@@ -407,23 +382,26 @@ footer p {
     cursor: pointer;
     line-height: 10px;
     font-weight: bold;
+    padding: 6px 10px;
 }
 
 .edit-btn:hover {
     background-color: #a45a66;
 }
 
-.delete-btn {
-    background-color: #A86B6C;
-    color: #FFE4EF;
-    border: none;
-    border-radius: 6px;
+.logout-btn {
+    background-color: #FFE4EF;
+    color: #443025;
+    border: 2px solid #A86B6C;
+    padding: 10px 25px;
+    border-radius: 20px;
     cursor: pointer;
-    line-height: 10px;
     font-weight: bold;
+    margin-top: -29px;
+    margin-right: -15px;
 }
 
-.delete-btn:hover {
+.logout-btn:hover {
     background-color: #a45a66;
 }
 
@@ -441,6 +419,15 @@ header {
     margin-top: -24px;
 }
 
+.header2 nav {
+    margin-left: 95px; 
+    margin-top: -34px;
+}
+
+.header2 a {
+    font-size: 19px;
+}
+
 /* ========================= */
 /* EVENTS ADMIN */
 /* ========================= */
@@ -456,7 +443,7 @@ header {
 .event-management {
     margin-top: 30px;
     padding-top: 20px;
-    padding-right: 10px;
+    padding-left: 45px; 
     background-color: #f3e7dc;
 }
 
@@ -559,6 +546,10 @@ header {
     width: 200px;
 }
 
+.action-btns {
+    margin-left: auto;
+}
+
 .item-name {
     width: 150px;
 }
@@ -590,25 +581,10 @@ header {
     border-radius: 20px;
     cursor: pointer;
     font-weight: bold;
+    margin-bottom: 10px;
 }
 
 .submit-btn:hover {
-    background-color: #a45a66;
-}
-
-.back-btn {
-    width: auto;
-    background-color: #A86B6C;
-    color: #FFE4EF;
-    border: none;
-    padding: 12px 30px;
-    border-radius: 20px;
-    cursor: pointer;
-    font-weight: bold;
-    text-decoration: none;
-}
-
-.back-btn:hover {
     background-color: #a45a66;
 }
 
@@ -635,4 +611,229 @@ header {
     margin-left: auto;
     display: flex;
     gap: 10px;
+}
+
+.remove-btn {
+    background-color: #A86B6C;
+    color: #FFE4EF;
+}
+
+/* ========================= */
+/* RESPONSIVE DESIGN */
+/* ========================= */
+
+@media (max-width: 1024px) {
+    .event-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .search-bar {
+        width: 70%;
+        margin: 20px auto;
+    }
+}
+
+@media (max-width: 768px) {
+
+    header {
+        padding: 15px;
+        text-align: center;
+        margin-bottom: 10px;
+    }
+
+    .top-header {
+        gap: 15px;
+        align-items: center;
+        width: 100%;
+    }
+
+    .logbackground {
+        background-color: #f3e7dc;
+        margin-top: 20px;
+        padding: 20px;
+    }
+
+    .logo {
+        display: flex !important;
+        flex-direction: row !important; 
+        align-items: center;
+        gap: 20px;
+    }
+
+    /* Pastikan tulisan Hand2Hand tidak terkesan margin global */
+    .logo h1 {
+        font-size: 26px !important; /* Saiz yang muat untuk phone */
+        margin: 0 3px !important;       /* Padam margin luar yang menolak tulisan ke bawah */
+        display: inline-block;
+    }
+
+    .header1 nav {
+        width: 80% !important;
+        margin-bottom: 10px;
+    }
+
+    .header2 nav {
+        width: 100% !important;
+        margin-left: 0 !important;
+        margin-top: 15px !important;
+        margin-bottom: -5px;
+    }
+
+    /* --- FIX LOGOUT BUTTON --- */
+    .logout-btn {
+        position: relative;
+        margin: 20px auto 20px auto !important; /* Letak di tengah-tengah di bawah logo */
+        width: auto;              
+        padding: 8px 20px;            
+        font-size: 14px;     
+        display: inline-block;
+    }
+
+    .event-grid {
+        grid-template-columns: 1fr; 
+        padding: 15px;
+        gap: 15px;
+    }
+
+    .event-card {
+        width: 100%;
+        min-height: auto; 
+        height: auto;
+    }
+
+    .search-bar {
+        width: 90%;
+        margin: 20px 0 20px 17px;
+    }
+
+    .page-title p, h1 {
+        margin: 10px 0 10px 0;
+    }
+
+    .page-title2 p, h1 {
+        margin: 10px 0 10px 0;
+    }
+
+    nav {
+        display: flex;
+        flex-wrap: wrap; 
+        width: 100%;
+        align-items: center;
+        gap: 5px;
+    }
+
+    nav a {
+        font-size: 20px; 
+        margin: 0 10px;
+    }
+
+    .admin-table {
+        padding: 20px 10px !important; 
+    }
+
+    .admin-table h2 {
+        margin-left: 10px;
+    }
+
+
+    .admin-table button {
+        padding: 15px 30px;
+        border-radius: 10px;
+        margin-left: 10px;
+    }
+
+    .event-list {
+        margin-top: 20px;
+    }
+
+    .event-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        background-color: #FFE4EF;
+        border: 2px solid #A86B6C;
+        padding: 15px 20px;
+        margin-left: 5px;
+        margin-bottom: 12px;
+        border-radius: 10px;
+
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .event-management {
+        padding: 20px 15px !important; /* Kurangkan padding tepi skrin mobile */
+        margin-top: 10px;
+    }
+
+    /* Tukar borang kiri-kanan (desktop) kepada susunan menegak atas-bawah */
+    .event-form {
+        flex-direction: column !important;
+        gap: 30px !important; /* Jarak antara panel maklumat & panel barang */
+        width: 100%;
+    }
+
+    /* Paksa panel kiri & kanan ambil lebar penuh skrin */
+    .left-panel, 
+    .right-panel {
+        width: 100% !important;
+        max-width: 100% !important;
+        flex: none !important;
+    }
+
+    /* Susun slot input nama barang, kuantiti & butang 'Add' menegak ke bawah */
+    .target-input {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 10px !important;
+        margin-bottom: 15px;
+        margin-top: 10px;
+    }
+
+    .target-input input {
+        width: 100% !important; /* Lebar penuh butang & input */
+        margin: 0 !important;
+    }
+
+    /* Susun maklumat senarai barang yang ditambah ke bawah supaya tak renyuk */
+    .target-row {
+        gap: 10px !important;
+        padding: 15px !important;
+    }
+
+    /* Reset width tegar 200px dari desktop lama */
+    .target-row span,
+    .item-name,
+    .item-qty {
+        width: 100% !important; 
+        display: block !important;
+    }
+
+    /* Butang Remove ambil lebar penuh kotak */
+    .remove-btn {
+        width: 100% !important;
+        padding: 10px !important;
+    }
+
+    /* Butang 'Create' di bawah sekali jadi besar & penuh */
+    .submit-btn {
+        text-align: center !important;
+        margin-left: 5px;
+    }
+
+    .add-item-btn {
+        text-align: center !important;
+        margin-left: 5px;
+        border-radius: 20px;
+    }
+
+    .action-btns .edit-btn {
+        width: 100% !important;        /* Paksa butang ambil lebar penuh dalam baris di mobile */
+        padding: 6px 10px !important; /* Besarkan ruang tekan (mesra jari) */
+        line-height: 10px !important;/* Reset balik line-height tegar desktop yang mengepit tulisan */
+        border-radius: 8px !important; /* Bucu butang bulat sikit secara kemas */
+        display: block !important;     /* Tukar sifat ke block supaya susunan menegak stabil */
+        text-align: center;
+    }
+
 }

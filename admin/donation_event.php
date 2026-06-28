@@ -1,179 +1,160 @@
 <?php
-
-$event = [
-    "name" => "Food Bank",
-    "start_date" => "2026-05-01",
-    "end_date" => "2026-06-30",
-    "description" => "Provide food essentials to families in need.",
-    "status" => "Active"
-];
-
-$targets = [
-    [
-        "name" => "Rice 5kg",
-        "target" => 100,
-        "current" => 80
-    ],
-    [
-        "name" => "Cooking Oil",
-        "target" => 60,
-        "current" => 45
-    ],
-    [
-        "name" => "Milk Powder",
-        "target" => 40,
-        "current" => 20
-    ]
-];
-
-function displayProgress($item)
-{
-    $percent = ($item['current'] / $item['target']) * 100;
-?>
-
-    <div class="progress-item">
-
-        <div class="progress-header">
-            <span><?php echo $item['name']; ?></span>
-            <span>
-                <?php echo $item['current']; ?>
-                /
-                <?php echo $item['target']; ?>
-            </span>
-        </div>
-
-        <div class="progress-container">
-            <div class="progress-bar" style="width: <?php echo $percent; ?>%;">
-                <?php echo round($percent); ?>%
-            </div>
-        </div>
-
-    </div>
-
-<?php
+session_start();
+require_once '../includes/connect.php';
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 'Admin') {
+    header("Location: ../login.php"); exit();
 }
 
-function displayTargetRow($item)
-{
-?>
+$success = "";
+$error = "";
 
-    <div class="target-row">
-
-        <span><?php echo $item['name']; ?></span>
-        <span>Target: <?php echo $item['target']; ?></span>
-        <span>Current: <?php echo $item['current']; ?></span>
-
-        <div class="action-btns">
-            <button type="button" class="edit-btn">Edit</button>
-            <button type="button" class="remove-btn">Remove</button>
-        </div>
-
-    </div>
-
-<?php
+if (isset($_SESSION['success'])) {
+    $success = $_SESSION['success'];
+    unset($_SESSION['success']);
 }
+
+if (isset($_SESSION['error'])) {
+    $error = $_SESSION['error'];
+    unset($_SESSION['error']);
+}
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['action'] == 'delete') {
+
+    $event_id = intval($_POST['event_id']);
+
+    $conn->begin_transaction();
+    try {
+        $stmt1 = $conn->prepare("DELETE FROM TARGET WHERE event_id = ?");
+        $stmt1->bind_param("i", $event_id);
+        $stmt1->execute();
+
+        $stmt2 = $conn->prepare("DELETE FROM DONATIONEVENT WHERE event_id = ?");
+        $stmt2->bind_param("i", $event_id);
+        $stmt2->execute();
+
+        $conn->commit();
+        $_SESSION['success'] = "Event deleted successfully!";
+        header("Location: donation_event.php");
+        exit();
+    } catch (Exception $e) {
+        $conn->rollback();
+        $_SESSION['error'] = "Delete failed!";
+    }
+}
+
+$stmt = $conn->query("
+    SELECT *
+    FROM DONATIONEVENT
+    ORDER BY
+        CASE status
+            WHEN 'Active' THEN 1
+            WHEN 'Scheduled' THEN 2
+            WHEN 'Completed' THEN 3
+        END,
+        start_date DESC
+");
+$events = $stmt->fetch_all(MYSQLI_ASSOC);
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <title>Admin Event Management</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donation Events - Hand2Hand</title>
     <link rel="stylesheet" href="../css/formatBulan.css">
 </head>
 
 <body>
+    <?php include '../includes/navbar.php'; ?>
 
-    <?php include('header.php'); ?>
+    <div class="page-container">
+        <div class="page-title2">
+            <h1>Donation Events</h1>
+        </div>
 
-    <div class="page-title2">
-        <h1>Event Management</h1>
+        <div class="search-box">
+            <input type="text" class="search-bar" id="searchInput" placeholder="Search Event" onkeyup="searchEvents()">
+        </div>
+
+        <section class="admin-table">
+            <h2>Donation Events List</h2>
+
+            <?php if ($success): ?>
+                <div class="alert alert-success">
+                    <?= htmlspecialchars($success) ?>
+                </div>
+            <?php endif; ?>
+
+            <?php if ($error): ?>
+                <div class="alert alert-error">
+                    <?= htmlspecialchars($error) ?>
+                </div>
+            <?php endif; ?>
+
+            <div class="event-list" id="eventList">
+                <?php if (count($events) > 0): ?>
+                    <?php foreach ($events as $event): ?>
+                        <div class="event-row">
+                            <div class="event-info">
+                                <h3><?= htmlspecialchars($event['name']) ?></h3>
+                                <p>
+                                    <?= htmlspecialchars($event['start_date']) ?>
+                                    -
+                                    <?= htmlspecialchars($event['end_date']) ?>
+                                </p>
+                                <span class="status <?= strtolower(htmlspecialchars($event['status'])) ?>">
+                                    <?= htmlspecialchars($event['status']) ?>
+                                </span>
+                            </div>
+                            <div class="action-btns">
+                                <a href="edit_donation_event.php?id=<?= $event['event_id'] ?>">
+                                    <button type="button" class="edit-btn">Edit</button>
+                                </a>
+
+                                <form method="POST" onsubmit="return confirm('Delete this event?')">
+                                    <input type="hidden" name="action" value="delete">
+                                    <input type="hidden" name="event_id" value="<?= $event['event_id'] ?>">
+                                    <button type="submit" class="delete-btn">Delete</button>
+                                </form>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <p class="no-data">No event found.</p>
+                <?php endif; ?>
+            </div>
+
+            <a href="event_management.php">
+                <button type="button" class="submit-btn">
+                    <h3>Create Event</h3>
+                </button>
+            </a>
+        </section>
     </div>
 
-    <section class="event-management">
+    <div class="page-footer">
+        Hand2Hand<br>Contact Us:<br>Email: hand2hand@support.com
+    </div>
 
-        <form class="event-form">
+    <script>
+        function searchEvents() {
+            const input = document.getElementById('searchInput').value.toLowerCase();
+            const rows = document.querySelectorAll('.event-row');
+            rows.forEach(row => {
+                const name = row.querySelector('h3').textContent.toLowerCase();
+                row.style.display = name.includes(input) ? '' : 'none';
+            });
+        }
 
-            <!-- LEFT PANEL -->
-            <div class="left-panel">
-
-                <label>Event Name</label>
-                <input type="text" value="<?php echo $event['name']; ?>">
-
-                <label>Start Date</label>
-                <input type="date" value="<?php echo $event['start_date']; ?>">
-
-                <label>End Date</label>
-                <input type="date" value="<?php echo $event['end_date']; ?>">
-
-                <label>Description</label>
-                <textarea rows="4"><?php echo $event['description']; ?></textarea>
-
-                <label>Status</label>
-
-                <select>
-
-                    <option <?php if ($event['status'] == "Active") echo "selected"; ?>>
-                        Active
-                    </option>
-
-                    <option <?php if ($event['status'] == "Upcoming") echo "selected"; ?>>
-                        Upcoming
-                    </option>
-
-                    <option <?php if ($event['status'] == "Ended") echo "selected"; ?>>
-                        Ended
-                    </option>
-
-                </select>
-
-                <button type="submit" class="submit-btn">
-                    Save Changes
-                </button>
-
-            </div>
-
-            <!-- RIGHT PANEL -->
-            <div class="right-panel">
-
-                <label>Add Target Item</label>
-
-                <div class="target-input">
-                    <input type="text" placeholder="Item Name">
-                    <input type="number" placeholder="Target Quantity">
-                    <button type="button" class="add-item-btn">Add</button>
-                </div>
-
-                <div class="target-list">
-
-                    <h3>Target Progress</h3>
-
-                    <?php
-                    foreach ($targets as $item) {
-                        displayProgress($item);
-                    }
-                    ?>
-
-                </div>
-
-                <div class="target-list">
-
-                    <h3>Target Item List</h3>
-
-                    <?php
-                    foreach ($targets as $item) {
-                        displayTargetRow($item);
-                    }
-                    ?>
-
-                </div>
-
-            </div>
-
-        </form>
-
-    </section>
-
+        setTimeout(function() {
+            const alert = document.querySelector('.alert');
+            if (alert) {
+                alert.style.display = 'none';
+            }
+        }, 3000);
+    </script>
 </body>
 
 </html>

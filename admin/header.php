@@ -25,7 +25,7 @@
         <nav>
             <a href="dashboard.php">Dashboard</a> |
             <a href="beneficiary.php">Beneficiaries</a> |
-            <a href="event_management.php">Events</a> |
+            <a href="donation_event.php">Events</a> |
             <a href="inventory.php">Inventory</a> |
             <a href="distribution.php">Distribution</a>
         </nav>
