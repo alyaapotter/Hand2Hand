@@ -54,7 +54,7 @@ nav {
     gap: 5px;
 }
 
-nav a {
+.header1 nav a {
     font-size: 30px;
     color: #FFE4EF;
     text-decoration: none;
@@ -62,9 +62,33 @@ nav a {
     font-weight: bold;
 }
 
-nav a:hover {
+.header1 nav a:hover {
     color: #A86B6C;
 }
+
+/* ALERT */
+.alert {
+    padding: 12px 18px;
+    margin: 12px 0 15px 20px;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    display: block;
+    width: 30%;
+    text-align: left;  
+}
+.alert-success { background: #d1f5d1; color: #1a5c1a; }
+.alert-error   { background: #f5d1d1; color: #5c1a1a; }
+
+.alert2 {
+    padding: 12px 18px;
+    margin: 12px 0 15px 40px;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    display: block;
+    width: 30%;
+    text-align: left;  
+}
+
 
 /* PAGE TITLE */
 .page-title {
@@ -152,30 +176,6 @@ nav a:hover {
 
 .event-card p {
     padding: 0 10px;
-}
-
-.foodbank {
-    background-image: url("image/food.webp");
-}
-
-.backtoschool {
-    background-image: url("image/school.webp");
-}
-
-.babycare {
-    background-image: url("image/baby.jpg");
-}
-
-.heressentials {
-    background-image: url("image/women.jpg");
-}
-
-.medicalaid {
-    background-image: url("image/medical.jpg");
-}
-
-.wearshare {
-    background-image: url("image/clothes.jpg");
 }
 
 .card-content {
@@ -389,12 +389,12 @@ footer p {
     font-weight: bold;
 }
 
-.status.ended {
+.status.completed {
     color: red;
     font-weight: bold;
 }
 
-.status.upcoming {
+.status.scheduled {
     color: darkgoldenrod;
     font-weight: bold;
 }
@@ -413,19 +413,17 @@ footer p {
     background-color: #a45a66;
 }
 
-.logout-btn {
-    background-color: #FFE4EF;
-    color: #443025;
-    border: 2px solid #A86B6C;
-    padding: 10px 25px;
-    border-radius: 20px;
+.delete-btn {
+    background-color: #A86B6C;
+    color: #FFE4EF;
+    border: none;
+    border-radius: 6px;
     cursor: pointer;
+    line-height: 10px;
     font-weight: bold;
-    margin-top: -29px;
-    margin-right: -15px;
 }
 
-.logout-btn:hover {
+.delete-btn:hover {
     background-color: #a45a66;
 }
 
@@ -443,15 +441,6 @@ header {
     margin-top: -24px;
 }
 
-.header2 nav {
-    margin-left: 95px; 
-    margin-top: -34px;
-}
-
-.header2 a {
-    font-size: 19px;
-}
-
 /* ========================= */
 /* EVENTS ADMIN */
 /* ========================= */
@@ -467,7 +456,7 @@ header {
 .event-management {
     margin-top: 30px;
     padding-top: 20px;
-    padding-left: 45px; 
+    padding-right: 10px;
     background-color: #f3e7dc;
 }
 
@@ -570,10 +559,6 @@ header {
     width: 200px;
 }
 
-.action-btns {
-    margin-left: auto;
-}
-
 .item-name {
     width: 150px;
 }
@@ -611,6 +596,22 @@ header {
     background-color: #a45a66;
 }
 
+.back-btn {
+    width: auto;
+    background-color: #A86B6C;
+    color: #FFE4EF;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.back-btn:hover {
+    background-color: #a45a66;
+}
+
 .progress-item {
     margin-bottom: 20px;
 }
@@ -634,9 +635,4 @@ header {
     margin-left: auto;
     display: flex;
     gap: 10px;
-}
-
-.remove-btn {
-    background-color: #A86B6C;
-    color: #FFE4EF;
 }

@@ -1,8 +1,17 @@
 <?php
 session_start();
-require_once '../includes/db.php';
+require_once '../includes/connect.php';
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 'Admin') {
+    header("Location: ../login.php"); exit();
+}
 
 $error = "";
+$success = "";
+
+if (isset($_SESSION['success'])) {
+    $success = $_SESSION['success'];
+    unset($_SESSION['success']);
+}
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['action'] == 'create_event') {
     $name       = trim($_POST['name']);
@@ -14,25 +23,58 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
 
     if (!$name || !$start_date || !$end_date || !$status) {
         $error = "Please fill in all event fields.";
+    } else if ($end_date < $start_date) {
+        $error = "End date cannot be earlier than start date.";
+    } else if (empty($item_ids)) {
+        $error = "Please add at least one target item.";
     } else {
-        $stmt = $pdo->prepare("INSERT INTO DONATIONEVENT (name, start_date, end_date, status) VALUES (?, ?, ?, ?)");
-        $stmt->execute([$name, $start_date, $end_date, $status]);
-        $new_event_id = $pdo->lastInsertId();
 
-        foreach ($item_ids as $i => $item_id) {
-            $qty = intval($quantities[$i]);
-            if ($item_id && $qty > 0) {
-                $pdo->prepare("INSERT INTO TARGET (event_id, item_id, quantity) VALUES (?, ?, ?)")
-                    ->execute([$new_event_id, $item_id, $qty]);
+        // Handle image upload
+        $image_path = null;
+
+        if (isset($_FILES['event_image']) && $_FILES['event_image']['error'] === 0) {
+            $allowed = ['jpg', 'jpeg', 'png', 'webp'];
+            $ext = strtolower(pathinfo($_FILES['event_image']['name'], PATHINFO_EXTENSION));
+
+            if (in_array($ext, $allowed)) {
+                $filename = time() . '_' . basename($_FILES['event_image']['name']);
+                $uploadDir = '../image/';
+
+                if (!is_dir($uploadDir)) {
+                    mkdir($uploadDir, 0755, true);
+                }
+
+                if (move_uploaded_file($_FILES['event_image']['tmp_name'], $uploadDir . $filename)) {
+                    $image_path = $filename;
+                }
+            } else {
+                $error = "Invalid image format. Only jpg, jpeg, png, webp allowed.";
             }
         }
 
-        header("Location: donation_events.php");
-        exit();
+        if (!$error) {
+            $stmt = $conn->prepare("INSERT INTO DONATIONEVENT (name, start_date, end_date, status, image_path) VALUES (?, ?, ?, ?, ?)");
+            $stmt->bind_param("sssss", $name, $start_date, $end_date, $status, $image_path);
+            $stmt->execute();
+            $new_event_id = $conn->insert_id;
+
+            foreach ($item_ids as $i => $item_id) {
+                $qty = intval($quantities[$i]);
+                if ($item_id && $qty > 0) {
+                    $stmt2 = $conn->prepare("INSERT INTO TARGET (event_id, item_id, quantity) VALUES (?, ?, ?)");
+                    $stmt2->bind_param("iii", $new_event_id, $item_id, $qty);
+                    $stmt2->execute();
+                }
+            }
+
+            $_SESSION['success'] = "Event created successfully!";
+            header("Location: event_management.php");
+            exit();
+        }
     }
 }
 
-$items = $pdo->query("SELECT item_id, name, category FROM ITEM ORDER BY name")->fetchAll();
+$items = $conn->query("SELECT item_id, name, category FROM ITEM ORDER BY name")->fetch_all(MYSQLI_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -53,11 +95,15 @@ $items = $pdo->query("SELECT item_id, name, category FROM ITEM ORDER BY name")->
         </div>
 
         <?php if ($error): ?>
-            <div class="alert alert-error"><?= htmlspecialchars($error) ?></div>
+            <div class="alert2 alert-error"><?= htmlspecialchars($error) ?></div>
+        <?php endif; ?>
+
+        <?php if ($success): ?>
+            <div class="alert2 alert-success"><?= htmlspecialchars($success) ?></div>
         <?php endif; ?>
 
         <section class="event-management">
-            <form method="POST" class="event-form" id="mainForm">
+            <form method="POST" class="event-form" id="mainForm" enctype="multipart/form-data">
                 <input type="hidden" name="action" value="create_event">
                 <div id="hidden-targets"></div>
 
@@ -78,10 +124,17 @@ $items = $pdo->query("SELECT item_id, name, category FROM ITEM ORDER BY name")->
                         <option value="">-- Select Status --</option>
                         <option value="Active">Active</option>
                         <option value="Completed">Completed</option>
-                        <option value="Cancelled">Cancelled</option>
+                        <option value="Scheduled">Scheduled</option>
                     </select>
 
+                    <label>Event Image</label>
+                    <input type="file" name="event_image" accept="image/*">
+
                     <button type="submit" class="submit-btn">Create Event</button>
+
+                    <button type="button" class="back-btn" onclick="window.location.href='donation_event.php'">
+                        Back
+                    </button>
 
                 </div>
 
@@ -151,7 +204,11 @@ $items = $pdo->query("SELECT item_id, name, category FROM ITEM ORDER BY name")->
                 return;
             }
 
-            targets.push({ item_id, name, quantity: qty });
+            targets.push({
+                item_id,
+                name,
+                quantity: qty
+            });
 
             sel.value = '';
             document.getElementById('qtyInput').value = '';
@@ -235,6 +292,13 @@ $items = $pdo->query("SELECT item_id, name, category FROM ITEM ORDER BY name")->
                 `;
             });
         }
+
+        setTimeout(function() {
+            const alert = document.querySelector('.alert2');
+            if (alert) {
+                alert.style.display = 'none';
+            }
+        }, 3000);
     </script>
 </body>
 

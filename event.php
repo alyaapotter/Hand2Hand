@@ -1,11 +1,48 @@
+<?php
+session_start();
+require_once 'includes/connect.php';
+
+$result = $conn->query("SELECT * FROM DONATIONEVENT WHERE status = 'Active' ORDER BY start_date ASC");
+$events = $result->fetch_all(MYSQLI_ASSOC);
+
+function getTargets($conn, $event_id) {
+    $stmt = $conn->prepare("
+        SELECT i.name, t.quantity AS target,
+               COALESCE(SUM(di.quantity), 0) AS current
+        FROM TARGET t
+        JOIN ITEM i ON t.item_id = i.item_id
+        LEFT JOIN DONATION d ON d.event_id = t.event_id AND d.status = 'Received'
+        LEFT JOIN DONATION_ITEM di ON di.donation_id = d.donation_id AND di.item_id = t.item_id
+        WHERE t.event_id = ?
+        GROUP BY t.target_id, i.name, t.quantity
+    ");
+    $stmt->bind_param("i", $event_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    return $result->fetch_all(MYSQLI_ASSOC);
+}
+
+function getEventClass($name)
+{
+    $map = [
+        'food bank'      => 'foodbank',
+        'back to school' => 'backtoschool',
+        'baby care'      => 'babycare',
+        'her essentials' => 'heressentials',
+        'medical aid'    => 'medicalaid',
+        'wear & share'   => 'wearshare',
+    ];
+    $key = strtolower(trim($name));
+    return $map[$key] ?? '';
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Donation Events Page</title>
-    <link rel="stylesheet" type="text/css" href="css/format.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="css/formatBulan.css">
 </head>
 
 <body>
@@ -38,23 +75,19 @@
             <div class="card-content">
                 <h2>Food Bank</h2>
 
-                <p>Duration: 1 May 2026 - 30 Jun 2026</p>
-                <p>Status: Active</p>
+        <?php if (count($events) > 0): ?>
+            <?php foreach ($events as $event): ?>
+                <?php $targets = getTargets($conn, $event['event_id']); ?>
 
-                <h3>Progress</h3>
-                <div class="item">
-                    <p>Rice</p>
-                    <div class="progress-container">
-                        <div class="progress-bar" style="width: 70%;"></div>
-                    </div>
-                </div>
-                    
-                <div class="item">
-                    <p>Cooking Oil</p>
-                    <div class="progress-container">
-                        <div class="progress-bar" style="width: 30%;"></div>
-                    </div>
-                </div>
+                <?php
+                $bg = $event['image_path']
+                    ? "image/" . htmlspecialchars($event['image_path'])
+                    : "";
+                ?>
+                <div class="event-card <?= getEventClass($event['name']) ?>"
+                    <?= $bg ? "style=\"background-image: url('$bg');\"" : "" ?>>
+                    <div class="card-content">
+                        <h2><?= htmlspecialchars($event['name']) ?></h2>
 
                 <div class="item">
                     <p>Sugar</p>
@@ -107,6 +140,9 @@
                     <div class="progress-container">
                         <div class="progress-bar" style="width: 23%;"></div>
                     </div>
+                    <button class="donate-btn" onclick="window.location.href='login.php'">
+                        Donate Now
+                    </button>
                 </div>
 
                 <div class="item">

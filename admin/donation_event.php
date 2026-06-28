@@ -1,10 +1,59 @@
 <?php
 session_start();
-require_once '../includes/db.php';
+require_once '../includes/connect.php';
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 'Admin') {
+    header("Location: ../login.php"); exit();
+}
 
+$success = "";
+$error = "";
 
-$stmt = $pdo->query("SELECT * FROM DONATIONEVENT ORDER BY start_date ASC");
-$events = $stmt->fetchAll();
+if (isset($_SESSION['success'])) {
+    $success = $_SESSION['success'];
+    unset($_SESSION['success']);
+}
+
+if (isset($_SESSION['error'])) {
+    $error = $_SESSION['error'];
+    unset($_SESSION['error']);
+}
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['action'] == 'delete') {
+
+    $event_id = intval($_POST['event_id']);
+
+    $conn->begin_transaction();
+    try {
+        $stmt1 = $conn->prepare("DELETE FROM TARGET WHERE event_id = ?");
+        $stmt1->bind_param("i", $event_id);
+        $stmt1->execute();
+
+        $stmt2 = $conn->prepare("DELETE FROM DONATIONEVENT WHERE event_id = ?");
+        $stmt2->bind_param("i", $event_id);
+        $stmt2->execute();
+
+        $conn->commit();
+        $_SESSION['success'] = "Event deleted successfully!";
+        header("Location: donation_event.php");
+        exit();
+    } catch (Exception $e) {
+        $conn->rollback();
+        $_SESSION['error'] = "Delete failed!";
+    }
+}
+
+$stmt = $conn->query("
+    SELECT *
+    FROM DONATIONEVENT
+    ORDER BY
+        CASE status
+            WHEN 'Active' THEN 1
+            WHEN 'Scheduled' THEN 2
+            WHEN 'Completed' THEN 3
+        END,
+        start_date DESC
+");
+$events = $stmt->fetch_all(MYSQLI_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -21,7 +70,9 @@ $events = $stmt->fetchAll();
     <?php include '../includes/navbar.php'; ?>
 
     <div class="page-container">
-        <div class="page-title">Donation Events</div>
+        <div class="page-title2">
+            <h1>Donation Events</h1>
+        </div>
 
         <div class="search-box">
             <input type="text" class="search-bar" id="searchInput" placeholder="Search Event" onkeyup="searchEvents()">
@@ -29,6 +80,18 @@ $events = $stmt->fetchAll();
 
         <section class="admin-table">
             <h2>Donation Events List</h2>
+
+            <?php if ($success): ?>
+                <div class="alert alert-success">
+                    <?= htmlspecialchars($success) ?>
+                </div>
+            <?php endif; ?>
+
+            <?php if ($error): ?>
+                <div class="alert alert-error">
+                    <?= htmlspecialchars($error) ?>
+                </div>
+            <?php endif; ?>
 
             <div class="event-list" id="eventList">
                 <?php if (count($events) > 0): ?>
@@ -45,9 +108,17 @@ $events = $stmt->fetchAll();
                                     <?= htmlspecialchars($event['status']) ?>
                                 </span>
                             </div>
-                            <a href="edit_donation_event.php?id=<?= $event['event_id'] ?>">
-                                <button class="edit-btn">Edit</button>
-                            </a>
+                            <div class="action-btns">
+                                <a href="edit_donation_event.php?id=<?= $event['event_id'] ?>">
+                                    <button type="button" class="edit-btn">Edit</button>
+                                </a>
+
+                                <form method="POST" onsubmit="return confirm('Delete this event?')">
+                                    <input type="hidden" name="action" value="delete">
+                                    <input type="hidden" name="event_id" value="<?= $event['event_id'] ?>">
+                                    <button type="submit" class="delete-btn">Delete</button>
+                                </form>
+                            </div>
                         </div>
                     <?php endforeach; ?>
                 <?php else: ?>
@@ -76,6 +147,13 @@ $events = $stmt->fetchAll();
                 row.style.display = name.includes(input) ? '' : 'none';
             });
         }
+
+        setTimeout(function() {
+            const alert = document.querySelector('.alert');
+            if (alert) {
+                alert.style.display = 'none';
+            }
+        }, 3000);
     </script>
 </body>
 

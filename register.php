@@ -1,82 +1,138 @@
 <?php
-
 session_start();
+require_once 'includes/connect.php';
 
-if (isset($_POST['submit'])) {
-    $email = $_POST['email'];
-    $username = $_POST['username'];
-    $password = $_POST['password'];
+$error = "";
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $email           = trim($_POST['email']);
+    $username        = trim($_POST['username']);
+    $password        = $_POST['password'];
     $confirmPassword = $_POST['confirmPassword'];
-    $role = $_POST['role'];
+    $role            = $_POST['role'];
 
-    if ($password != $confirmPassword) {
-        echo "Password and Confirm Password do not match.";
+    if (empty($email) || empty($username) || empty($password) || empty($role)) {
+        $error = "Please fill in all fields.";
+    } else if ($password != $confirmPassword) {
+        $error = "Password and Confirm Password do not match.";
     } else {
-        $_SESSION['email'] = $email;
-        $_SESSION['username'] = $username;
-        $_SESSION['password'] = $password;
-        $_SESSION['role'] = $role;
+        $stmt = $conn->prepare("SELECT user_id FROM USER WHERE email = ?");
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $result = $stmt->get_result();
 
-        echo "Registration successful!";
+        if ($result->num_rows > 0) {
+            $error = "Email already registered.";
+        } else {
+            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+            $stmt = $conn->prepare("INSERT INTO USER (email, username, password, role) VALUES (?, ?, ?, ?)");
+            $stmt->bind_param("ssss", $email, $username, $hashedPassword, $role);
+
+            if ($stmt->execute()) {
+                header("Location: login.php");
+                exit();
+            } else {
+                $error = "Registration failed. Please try again.";
+            }
+        }
     }
 }
-
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
-    <title>Register</title>
-    <link rel="stylesheet" type="text/css" href="css/format.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hand2Hand - Register</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
+    <div class="auth-container">
+        <div class="auth-box">
+            <div class="auth-header">
+                <h1><img src="image/logo.png" style="width:50px;height:50px;object-fit:cover;border-radius:50%;vertical-align:middle;"> Hand2Hand</h1>
+                <p>Community Aid Management System</p>
+            </div>
 
-    <?php include('header.php'); ?>
+            <?php if ($error): ?>
+                <div class="alert alert-error"><?= htmlspecialchars($error) ?></div>
+            <?php endif; ?>
 
-    <section class="logbackground">
-        <div class="form-container reg">
-
-            <h2>Register</h2>
-
-            <form action="" method="post">
-
-                <label>Email:</label><br>
-                <input type="text" name="email"><br><br>
-
-                <label>Username:</label><br>
-                <input type="text" name="username"><br><br>
-
-                <label>Password:</label><br>
-                <input type="password" name="password"><br><br>
-
-                <label>Confirm Password:</label><br>
-                <input type="password" name="confirmPassword"><br><br>
-
-                <label>Role:</label><br>
-
-                <input type="radio" name="role" value="admin">
-                Admin<br>
-
-                <input type="radio" name="role" value="donor">
-                Donor<br>
-
-                <input type="radio" name="role" value="beneficiary">
-                Beneficiary<br><br>
-
-                <input type="submit" value="Register">
-
+            <form method="POST" onsubmit="return validateRegister()">
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" name="email" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" name="username" placeholder="Enter your username" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" name="password" placeholder="Enter your password" required>
+                </div>
+                <div class="form-group">
+                    <label>Confirm Password</label>
+                    <input type="password" name="confirmPassword" placeholder="Confirm your password" required>
+                </div>
+                <div class="form-group">
+                    <label>Role</label>
+                    <select name="role" required>
+                        <option value="">-- Select Role --</option>
+                        <option value="Donor">Donor</option>
+                        <option value="Requester">Requester</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Register</button>
             </form>
 
-            <p>
-                Already have an account?
-                <a href="login.php">Login here</a>
-            </p>
-
+            <p class="auth-footer">Already have an account? <a href="login.php">Login here</a></p>
         </div>
-    </section>
+    </div>
+
+    <script>
+        function validateRegister() {
+            const email = document.querySelector('input[name="email"]').value.trim();
+            const username = document.querySelector('input[name="username"]').value.trim();
+            const password = document.querySelector('input[name="password"]').value;
+            const confirmPassword = document.querySelector('input[name="confirmPassword"]').value;
+            const role = document.querySelector('select[name="role"]').value;
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            if (email === '') {
+                alert('Please enter your email!');
+                return false;
+            }
+            if (!emailRegex.test(email)) {
+                alert('Please enter a valid email address!');
+                return false;
+            }
+            if (username === '') {
+                alert('Please enter your username!');
+                return false;
+            }
+            if (password === '') {
+                alert('Please enter your password!');
+                return false;
+            }
+            if (password.length < 6) {
+                alert('Password must be at least 6 characters!');
+                return false;
+            }
+            if (password !== confirmPassword) {
+                alert('Password and Confirm Password do not match!');
+                return false;
+            }
+            if (role === '') {
+                alert('Please select a role!');
+                return false;
+            }
+            return true;
+        }
+    </script>
 </body>
 
 </html>
