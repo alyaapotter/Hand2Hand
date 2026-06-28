@@ -1,29 +1,28 @@
 <?php
 session_start();
-require_once '../includes/db.php';
+require_once '../includes/connect.php';
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 'Donor') {
     header("Location: ../login.php"); exit();
 }
 
 $user_id = $_SESSION['user_id'];
-$search  = isset($_GET['search']) ? trim($_GET['search']) : '';
+$search  = isset($_GET['search']) ? mysqli_real_escape_string($conn, trim($_GET['search'])) : '';
 
 $query = "SELECT d.donation_id, d.date, d.status, e.name AS event_name
           FROM DONATION d JOIN DONATIONEVENT e ON d.event_id=e.event_id
-          WHERE d.user_id=?";
-$params = [$user_id];
-if ($search) { $query .= " AND e.name LIKE ?"; $params[] = "%$search%"; }
-$query .= " ORDER BY d.date DESC";
-$stmt = $pdo->prepare($query); $stmt->execute($params);
-$donations = $stmt->fetchAll();
+          WHERE d.user_id=$user_id";
+if ($search) $query .= " AND e.name LIKE '%$search%'";
+$query    .= " ORDER BY d.date DESC";
+$result    = mysqli_query($conn, $query);
+$donations = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
 $donation_items = [];
 if (!empty($donations)) {
-    $ids = array_column($donations, 'donation_id');
-    $ph  = implode(',', array_fill(0, count($ids), '?'));
-    $stmt = $pdo->prepare("SELECT di.donation_id, di.quantity, i.name AS item_name FROM DONATION_ITEM di JOIN ITEM i ON di.item_id=i.item_id WHERE di.donation_id IN ($ph)");
-    $stmt->execute($ids);
-    foreach ($stmt->fetchAll() as $row) $donation_items[$row['donation_id']][] = $row;
+    $ids = implode(',', array_column($donations, 'donation_id'));
+    $res = mysqli_query($conn, "SELECT di.donation_id, di.quantity, i.name AS item_name FROM DONATION_ITEM di JOIN ITEM i ON di.item_id=i.item_id WHERE di.donation_id IN ($ids)");
+    while ($row = mysqli_fetch_assoc($res)) {
+        $donation_items[$row['donation_id']][] = $row;
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -45,20 +44,14 @@ if (!empty($donations)) {
     <div class="table-wrapper">
         <table class="data-table" id="mainTable">
             <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Event Name</th>
-                    <th>Item</th>
-                    <th>Quantity</th>
-                    <th>Status</th>
-                </tr>
+                <tr><th>Date</th><th>Event Name</th><th>Item</th><th>Quantity</th><th>Status</th></tr>
             </thead>
             <tbody>
                 <?php if (empty($donations)): ?>
                     <tr><td colspan="5" class="empty-row">No donation history yet.</td></tr>
                 <?php else: ?>
                 <?php foreach ($donations as $don):
-                    $its = $donation_items[$don['donation_id']] ?? [['item_name'=>'—','quantity'=>'—']];
+                    $its   = $donation_items[$don['donation_id']] ?? [['item_name'=>'—','quantity'=>'—']];
                     $first = true;
                     foreach ($its as $it): ?>
                 <tr>
@@ -80,9 +73,7 @@ if (!empty($donations)) {
     </div>
 </div>
 
-<div class="page-footer">
-    Hand2Hand<br>Contact Us:<br>Email: hand2hand@support.com
-</div>
+<div class="page-footer">Hand2Hand<br>Contact Us:<br>Email: hand2hand@support.com</div>
 
 <script>
 function filterTable(val) {
