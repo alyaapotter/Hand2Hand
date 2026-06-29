@@ -21,6 +21,7 @@ session_start();
           <nav class="admin-nav">
             <a href="dashboard.php">Dashboard</a> | 
             <a href="beneficiary.php" class="active">Beneficiaries</a> | 
+            <a href="beneficiary_needs.php">Requests</a> | 
             <a href="event_management.php">Events</a> | 
             <a href="inventory.php">Inventory</a> | 
             <a href="distribution_management.php">Distribution</a>
