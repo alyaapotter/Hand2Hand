@@ -44,10 +44,20 @@ $events         = mysqli_fetch_all($ev_result, MYSQLI_ASSOC);
 $item_result    = mysqli_query($conn, "SELECT item_id, name, category FROM ITEM ORDER BY category, name");
 $items          = mysqli_fetch_all($item_result, MYSQLI_ASSOC);
 $selected_event = null;
+$target_items   = [];
 if (isset($_GET['event_id'])) {
     $eid = intval($_GET['event_id']);
     $res = mysqli_query($conn, "SELECT * FROM DONATIONEVENT WHERE event_id=$eid");
     $selected_event = mysqli_fetch_assoc($res);
+    
+    // Fetch items needed for this specific event
+    if ($selected_event) {
+        $target_res = mysqli_query($conn, "SELECT t.quantity AS target_qty, i.item_id, i.name, i.category FROM TARGET t JOIN ITEM i ON t.item_id=i.item_id WHERE t.event_id=$eid ORDER BY i.category, i.name");
+        $target_items = mysqli_fetch_all($target_res, MYSQLI_ASSOC);
+        if (!empty($target_items)) {
+            $items = $target_items; // override the dropdown items to only show needed items
+        }
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -96,6 +106,20 @@ if (isset($_GET['event_id'])) {
                         -
                         <?= date('d M Y', strtotime($selected_event['end_date'])) ?>
                     </div>
+                    <?php if (!empty($target_items)): ?>
+                    <div class="event-info-line" style="margin-top: 10px;">
+                        <strong>Items Needed:</strong>
+                        <ul style="margin: 5px 0 0 20px;">
+                            <?php foreach ($target_items as $t): ?>
+                                <li><?= htmlspecialchars($t['name']) ?> (Target: <?= $t['target_qty'] ?>)</li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </div>
+                    <?php else: ?>
+                    <div class="event-info-line" style="margin-top: 10px; color: #5a3520;">
+                        <em>Any item donations are welcomed for this event.</em>
+                    </div>
+                    <?php endif; ?>
                 </div>
 
                 <div class="form-section">
