@@ -16,12 +16,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $description    = mysqli_real_escape_string($conn, trim($_POST['description']));
     $date           = date('Y-m-d');
 
+    $delivery_address = isset($_POST['delivery_address']) ? mysqli_real_escape_string($conn, trim($_POST['delivery_address'])) : '';
+
     if (!$item_id || $quantity <= 0 || empty($delivery_type) || empty($reason) || empty($description)) {
         $error = "Please fill in all required fields.";
-    } elseif (strlen($reason) < 10) {
-        $error = "Reason is too short. Please provide more details.";
     } else {
-        $full_description = "Item requested: See item field. Delivery type: $delivery_type. Reason: $reason. Additional info: $description";
+        $full_description = "Item requested: See item field. Delivery type: $delivery_type. Delivery Address: $delivery_address. Reason: $reason. Additional info: $description";
         mysqli_query($conn, "INSERT INTO REQUEST (date, status, description, user_id) VALUES ('$date', 'Pending', '$full_description', $user_id)");
         $request_id = mysqli_insert_id($conn);
         $success = "Your request has been submitted! The admin will review it soon.";

@@ -12,7 +12,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
     $item_id    = intval($_POST['item_id']);
     $quantity   = intval($_POST['quantity']);
     $dist_date  = $_POST['dist_date'] ?? '';
-    if (!$request_id || !$item_id || $quantity <= 0 || empty($dist_date)) {
+    $location   = mysqli_real_escape_string($conn, trim($_POST['location'] ?? ''));
+    if (!$request_id || !$item_id || $quantity <= 0 || empty($dist_date) || empty($location)) {
         $error = "Please fill in all fields.";
     } else {
         $stmt = $conn->prepare("SELECT quantity FROM INVENTORY WHERE item_id=?");
@@ -23,8 +24,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
         if (!$inv || $inv['quantity'] < $quantity) {
             $error = "Not enough stock! Available: " . ($inv['quantity'] ?? 0);
         } else {
-            $ins_stmt = $conn->prepare("INSERT INTO DISTRIBUTION (request_id, item_id, quantity, date) VALUES (?,?,?,?)");
-            $ins_stmt->bind_param("iiis", $request_id, $item_id, $quantity, $dist_date);
+            $ins_stmt = $conn->prepare("INSERT INTO DISTRIBUTION (request_id, item_id, quantity, date, location) VALUES (?,?,?,?,?)");
+            $ins_stmt->bind_param("iiiss", $request_id, $item_id, $quantity, $dist_date, $location);
             $ins_stmt->execute();
             
             $upd_inv_stmt = $conn->prepare("UPDATE INVENTORY SET quantity=quantity-? WHERE item_id=?");
@@ -43,10 +44,37 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
 $request_id_param = isset($_GET['request_id']) ? intval($_GET['request_id']) : 0;
 $selected_request = null;
 if ($request_id_param) {
-    $stmt = $conn->prepare("SELECT r.*, u.username, u.email FROM REQUEST r JOIN USER u ON r.user_id=u.user_id WHERE r.request_id=?");
+    $stmt = $conn->prepare("SELECT r.*, u.username, u.email, u.address, u.family_size, u.priority_level FROM REQUEST r JOIN USER u ON r.user_id=u.user_id WHERE r.request_id=?");
     $stmt->bind_param("i", $request_id_param);
     $stmt->execute();
     $selected_request = $stmt->get_result()->fetch_assoc();
+}
+
+$delivery_type_extracted = 'Pickup'; // default
+$reason_extracted = 'N/A';
+$delivery_address_extracted = '';
+$need_extracted = '';
+
+if ($selected_request) {
+    $desc = $selected_request['description'];
+    // Extract Delivery type
+    if (preg_match('/Delivery type:\s*([^\.]+)/i', $desc, $matches)) {
+        $delivery_type_extracted = trim($matches[1]);
+    }
+    // Extract Delivery Address
+    if (preg_match('/Delivery Address:\s*([^\.]+)/i', $desc, $matches)) {
+        $delivery_address_extracted = trim($matches[1]);
+    }
+    // Extract Reason
+    if (preg_match('/Reason:\s*([^\.]+)/i', $desc, $matches)) {
+        $reason_extracted = trim($matches[1]);
+    }
+    // Extract Need description
+    if (preg_match('/Additional info:\s*(.*)/is', $desc, $matches)) {
+        $need_extracted = trim($matches[1]);
+    } else {
+        $need_extracted = $desc; // fallback
+    }
 }
 
 $ar_result = $conn->query("SELECT r.request_id, r.description, u.username FROM REQUEST r JOIN USER u ON r.user_id=u.user_id WHERE r.status IN ('Pending','Approved') ORDER BY r.date DESC");
@@ -88,14 +116,38 @@ $items = $items_result->fetch_all(MYSQLI_ASSOC);
                     <?php endforeach; ?>
                 </select>
             </div>
-            <?php if ($selected_request): ?>
-            <div class="dist-info-row">Family Size: <span>—</span></div>
-            <div class="dist-info-row">Priority: <span>—</span></div>
-            <div class="dist-info-row">Need: <span><?= htmlspecialchars($selected_request['description']) ?></span></div>
+             <?php if ($selected_request): ?>
+            <div class="dist-info-row">Family Size: <span><?= htmlspecialchars($selected_request['family_size'] ?? '—') ?></span></div>
+            <div class="dist-info-row">Priority: <span><?= htmlspecialchars($selected_request['priority_level'] ?? '—') ?></span></div>
+            <div class="dist-info-row">Requested Delivery Option: <span id="requestedDeliveryType"><?= htmlspecialchars($delivery_type_extracted) ?></span></div>
+            <div class="dist-info-row">Reason for Request: <span><?= htmlspecialchars($reason_extracted) ?></span></div>
+            <div class="dist-info-row">Full Need Details: <span><?= htmlspecialchars($need_extracted) ?></span></div>
+            <?php if ($delivery_type_extracted == 'Delivery'): ?>
+                <div class="dist-info-row">Delivery Address: <span><?= htmlspecialchars(!empty($delivery_address_extracted) ? $delivery_address_extracted : ($selected_request['address'] ?? 'No address registered')) ?></span></div>
+            <?php else: ?>
+                <div class="dist-info-row">Delivery Address: <span>N/A (Pickup at Warehouse)</span></div>
+            <?php endif; ?>
+            <span id="beneAddress" style="display:none"><?= htmlspecialchars(!empty($delivery_address_extracted) ? $delivery_address_extracted : ($selected_request['address'] ?? '')) ?></span>
             <?php else: ?>
             <div class="dist-info-row">Family Size:</div>
             <div class="dist-info-row">Priority:</div>
             <?php endif; ?>
+        </div>
+
+        <!-- Delivery & Location Decision -->
+        <div class="form-section">
+            <div class="form-section-title">Delivery & Location Decision</div>
+            <div class="form-group">
+                <label>Is Reason Valid?:</label>
+                <select name="reason_validity" id="validitySelect" onchange="checkValidity(this.value)" required>
+                    <option value="Valid">Valid - Proceed with Delivery</option>
+                    <option value="Invalid">Invalid - Pickup at Warehouse</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Distribution Location:</label>
+                <input type="text" name="location" id="locationInput" style="width:300px" required>
+            </div>
         </div>
 
         <!-- Item Information -->
@@ -130,6 +182,10 @@ $items = $items_result->fetch_all(MYSQLI_ASSOC);
             <div class="dist-info-row">Item: <span id="sumItem">—</span></div>
             <div class="dist-info-row">Quantity: <span id="sumQty">—</span></div>
             <div class="dist-info-row">Date: <span id="sumDate">—</span></div>
+<<<<<<< HEAD
+=======
+            <div class="dist-info-row">Location: <span id="sumLocation">—</span></div>
+>>>>>>> origin/main
         </div>
 
         <button type="submit" class="btn btn-primary">Confirm Distribution</button>
@@ -155,11 +211,33 @@ function updateStock(sel) {
 function updateSummary() {
     const qty = document.getElementById('qtyInput').value;
     const date = document.getElementById('dateInput').value;
+    const loc = document.getElementById('locationInput').value;
     document.getElementById('sumQty').textContent = qty || '—';
     document.getElementById('sumDate').textContent = date || '—';
+    document.getElementById('sumLocation').textContent = loc || '—';
+}
+function checkValidity(val) {
+    const deliveryType = document.getElementById('requestedDeliveryType')?.textContent.trim() || 'Pickup';
+    const address = document.getElementById('beneAddress')?.textContent.trim() || '';
+    const locationInput = document.getElementById('locationInput');
+
+    if (val === 'Valid' && deliveryType === 'Delivery') {
+        locationInput.value = address !== 'No address registered' ? address : '';
+    } else {
+        locationInput.value = 'Warehouse';
+    }
+    updateSummary();
 }
 document.getElementById('qtyInput')?.addEventListener('input', updateSummary);
 document.getElementById('dateInput')?.addEventListener('change', updateSummary);
+document.getElementById('locationInput')?.addEventListener('input', updateSummary);
+
+window.addEventListener('DOMContentLoaded', () => {
+    const valSelect = document.getElementById('validitySelect');
+    if (valSelect) {
+        checkValidity(valSelect.value);
+    }
+});
 </script>
 
 <script>
@@ -168,6 +246,7 @@ function validateDist() {
     const item    = document.querySelector('select[name="item_id"]').value;
     const qty     = document.querySelector('input[name="quantity"]').value;
     const date    = document.querySelector('input[name="dist_date"]').value;
+    const loc     = document.getElementById('locationInput').value.trim();
     const stock   = document.getElementById('stockDisplay').textContent;
 
     if (request === '') {
@@ -188,6 +267,10 @@ function validateDist() {
     }
     if (date === '') {
         alert('Please select a distribution date!');
+        return false;
+    }
+    if (loc === '') {
+        alert('Please enter a distribution location!');
         return false;
     }
     return true;
