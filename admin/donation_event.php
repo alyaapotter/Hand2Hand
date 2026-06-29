@@ -134,7 +134,9 @@ $events = $stmt->fetch_all(MYSQLI_ASSOC);
         </section>
     </div>
 
-    <?php include '../includes/footer.php'; ?>
+    <div class="page-footer">
+        Hand2Hand<br>Contact Us:<br>Email: hand2hand@support.com
+    </div>
 
     <script>
         function searchEvents() {

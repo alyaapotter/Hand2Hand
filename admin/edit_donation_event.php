@@ -231,7 +231,9 @@ $items = $conn->query("SELECT item_id, name, category FROM ITEM ORDER BY name")-
         </section>
     </div>
 
-    <?php include '../includes/footer.php'; ?>
+    <div class="page-footer">
+        Hand2Hand<br>Contact Us:<br>Email: hand2hand@support.com
+    </div>
 
     <script>
         let targets = <?= json_encode(array_map(fn($t) => [
