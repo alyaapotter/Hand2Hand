@@ -11,7 +11,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
     $request_id = intval($_POST['request_id']);
     $item_id    = intval($_POST['item_id']);
     $quantity   = intval($_POST['quantity']);
-    if (!$request_id || !$item_id || $quantity <= 0) {
+    $dist_date  = $_POST['dist_date'] ?? '';
+    if (!$request_id || !$item_id || $quantity <= 0 || empty($dist_date)) {
         $error = "Please fill in all fields.";
     } else {
         $stmt = $pdo->prepare("SELECT quantity FROM INVENTORY WHERE item_id=?");
@@ -20,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
             $error = "Not enough stock! Available: " . ($inv['quantity'] ?? 0);
         } else {
             $pdo->prepare("INSERT INTO DISTRIBUTION (request_id, item_id, quantity, date) VALUES (?,?,?,?)")
-                ->execute([$request_id, $item_id, $quantity, date('Y-m-d')]);
+                ->execute([$request_id, $item_id, $quantity, $dist_date]);
             $pdo->prepare("UPDATE INVENTORY SET quantity=quantity-? WHERE item_id=?")->execute([$quantity, $item_id]);
             $pdo->prepare("UPDATE REQUEST SET status='Approved' WHERE request_id=?")->execute([$request_id]);
             $success = "Items distributed successfully!";
@@ -100,6 +101,10 @@ $items = $pdo->query("SELECT i.item_id, i.name, i.category, COALESCE(inv.quantit
                 <label>Quantity To Distribute:</label>
                 <input type="number" name="quantity" id="qtyInput" min="1" style="width:80px" required>
             </div>
+            <div class="form-group">
+                <label>Distribution Date:</label>
+                <input type="date" name="dist_date" id="dateInput" required min="<?= date('Y-m-d') ?>">
+            </div>
         </div>
 
         <!-- Distribution Summary -->
@@ -108,6 +113,7 @@ $items = $pdo->query("SELECT i.item_id, i.name, i.category, COALESCE(inv.quantit
             <div class="dist-info-row">Beneficiary: <span id="sumBeneficiary"><?= $selected_request ? htmlspecialchars($selected_request['username']) : '—' ?></span></div>
             <div class="dist-info-row">Item: <span id="sumItem">—</span></div>
             <div class="dist-info-row">Quantity: <span id="sumQty">—</span></div>
+            <div class="dist-info-row">Date: <span id="sumDate">—</span></div>
         </div>
 
         <button type="submit" class="btn btn-primary">Confirm Distribution</button>
@@ -132,9 +138,12 @@ function updateStock(sel) {
 }
 function updateSummary() {
     const qty = document.getElementById('qtyInput').value;
+    const date = document.getElementById('dateInput').value;
     document.getElementById('sumQty').textContent = qty || '—';
+    document.getElementById('sumDate').textContent = date || '—';
 }
 document.getElementById('qtyInput')?.addEventListener('input', updateSummary);
+document.getElementById('dateInput')?.addEventListener('change', updateSummary);
 </script>
 
 <script>
@@ -142,6 +151,7 @@ function validateDist() {
     const request = document.querySelector('select[name="request_id"]').value;
     const item    = document.querySelector('select[name="item_id"]').value;
     const qty     = document.querySelector('input[name="quantity"]').value;
+    const date    = document.querySelector('input[name="dist_date"]').value;
     const stock   = document.getElementById('stockDisplay').textContent;
 
     if (request === '') {
@@ -158,6 +168,10 @@ function validateDist() {
     }
     if (parseInt(qty) > parseInt(stock)) {
         alert('Quantity exceeds available stock! Stock available: ' + stock);
+        return false;
+    }
+    if (date === '') {
+        alert('Please select a distribution date!');
         return false;
     }
     return true;
