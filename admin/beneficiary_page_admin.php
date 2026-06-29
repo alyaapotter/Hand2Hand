@@ -3,15 +3,34 @@
 session_start();
 require_once '../includes/connect.php'; 
 
-// Auth check untuk Admin
+// Auth check untuk Admin sahaja
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'Admin') {
     header("Location: ../login.php");
     exit();
 }
 
-// Tarik data beneficiary menggunakan variable $conn yang sedia ada dalam connect.php
-$query = "SELECT b.*, u.email FROM beneficiaries b JOIN USER u ON b.user_id = u.user_id";
-$result = $conn->query($query);
+// 1. Ambil nilai carian jika ada
+$search = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['search']) : '';
+
+// 2. Bina SQL Query asas
+$query = "
+SELECT
+    r.request_id,                
+    u.username AS name,   
+    u.email,
+    r.description,
+    r.status
+FROM request r                   
+JOIN user u ON r.user_id = u.user_id
+";
+
+// 3. Tambah klausa WHERE jika pengguna membuat carian
+if ($search !== '') {
+    // Menapis mengikut request_id ATAU nama pengguna
+    $query .= " WHERE r.request_id = '$search' OR u.username LIKE '%$search%'";
+}
+
+$result = mysqli_query($conn, $query);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -19,50 +38,81 @@ $result = $conn->query($query);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hand2Hand - Admin Beneficiary Management</title>
+    <link rel="stylesheet" href="../css/beneficiary_page_admin.css"> 
 </head>
-<body style="font-family: Arial, sans-serif; margin: 0; padding: 0;">
-    <nav style="background: #333; color: #fff; padding: 15px; display: flex; justify-content: space-between; align-items: center;">
-        <h1 style="margin: 0; font-size: 20px;">Hand2Hand Admin</h1>
-        <div>
-            <a href="dashboard.php" style="color: #fff; text-decoration: none; margin-right: 15px;">Dashboard</a>
-            <a href="../logout.php" style="color: #fff; text-decoration: none;">Logout</a>
-        </div>
-    </nav>
+<body>
 
-    <main style="padding: 20px;">
-        <h2>Beneficiary List Management</h2>
-        <table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse:collapse; margin-top: 20px;">
-            <thead>
-                <tr style="background-color: #f2f2f2; text-align: left;">
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Contact</th>
-                    <th>Address</th>
-                    <th>Family Size</th>
-                    <th>Priority</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php if ($result && $result->num_rows > 0): ?>
-                    <?php while($row = $result->fetch_assoc()): ?>
-                        <tr>
-                            <td>BNF-<?= str_pad($row['beneficiary_id'], 5, '0', STR_PAD_LEFT) ?></td>
-                            <td><?= htmlspecialchars($row['name']) ?></td>
-                            <td><?= htmlspecialchars($row['email']) ?></td>
-                            <td><?= htmlspecialchars($row['contact']) ?></td>
-                            <td><?= htmlspecialchars($row['address']) ?></td>
-                            <td><?= htmlspecialchars($row['family_size']) ?></td>
-                            <td><span style="font-weight: bold;"><?= htmlspecialchars($row['priority']) ?></span></td>
-                        </tr>
-                    <?php endwhile; ?>
-                <?php else: ?>
+    <header class="admin-header">
+        <div class="header-top">
+            <div class="logo-brand-container">
+                <img src="../image/logo.png" alt="Logo" class="logo-circle">
+                <div class="brand-nav-box">
+                    <span class="brand-title">Hand2Hand</span>
+                    <nav class="admin-nav">
+                        <a href="dashboard.php">Dashboard</a> | 
+                        <a href="beneficiary_page_admin.php" class="active">Beneficiaries</a> | 
+                        <a href="event_management.php">Events</a> | 
+                        <a href="inventory.php">Inventory</a> | 
+                        <a href="distribution.php">Distribution</a>
+                    </nav>
+                </div>
+            </div>
+            <a href="../logout.php" class="btn-logout">Logout</a>
+        </div>
+        
+        <div class="header-title-section">
+            <h2>Beneficiaries</h2>
+            
+            <form action="" method="GET" class="search-container">
+                <span class="search-icon">🔍</span>
+                <input type="text" name="search" class="search-input" placeholder="Fill with id number or name.." value="<?= htmlspecialchars($search) ?>">
+                <button type="submit" style="display: none;"></button>
+            </form>
+            
+        </div>
+    </header>
+
+    <main class="content-container">
+        <h3 class="section-title">
+            <?= $search !== '' ? "Search.. \"" . htmlspecialchars($search) . "\"" : "Beneficiaries List" ?>
+            <?php if ($search !== ''): ?>
+                <a href="beneficiary_page_admin.php" style="font-size: 12px; margin-left: 10px; color: black;">Reset</a>
+            <?php endif; ?>
+        </h3>
+        
+        <div class="table-action-wrapper">
+            <table class="beneficiaries-table">
+                <thead>
                     <tr>
-                        <td colspan="7" style="text-align:center;">No beneficiaries found.</td>
+                      <th>Request ID</th>
+                      <th>Name</th>
+                      <th>Needs</th>
+                      <th>Status</th>
                     </tr>
-                <?php endif; ?>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    <?php if ($result && mysqli_num_rows($result) > 0): ?>
+                        <?php while($row = mysqli_fetch_assoc($result)): ?>
+                            <tr>
+                                <td>#<?= str_pad($row['request_id'], 5, '0', STR_PAD_LEFT) ?></td>
+                                <td><?= htmlspecialchars($row['name']) ?></td>
+                                <td><?= htmlspecialchars($row['description'] ?? '-') ?></td>
+                                <td><?= htmlspecialchars($row['status'] ?? '-') ?></td>
+                            </tr>
+                        <?php endwhile; ?>
+                    <?php else: ?>
+                        <tr>
+                            <td colspan="6" style="text-align:center;">No requests found.</td>
+                        </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="add-button-container">
+            <button class="btn-add" onclick="location.href='beneficiary_needs.php'">Add Beneficiary</button>
+        </div>
     </main>
+
 </body>
 </html>

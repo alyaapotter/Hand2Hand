@@ -1,6 +1,7 @@
 <?php
-// beneficiary/profile_page_bene
+// beneficiary/profile_page_bene.php
 session_start();
+// Sambung dengan fail connect.php kau yang dah berpassword "root123"
 require_once '../includes/connect.php'; 
 
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'Requester') {
@@ -11,7 +12,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'Requester') {
 $user_id = $_SESSION['user_id'];
 $profile = null;
 
-// Guna variable $conn terus daripada connect.php
+// Gunakan variable $conn yang sedia ada dari connect.php
 $stmt = $conn->prepare("
     SELECT b.beneficiary_id, b.name, b.contact, b.address, b.family_size, b.priority
     FROM   beneficiaries b

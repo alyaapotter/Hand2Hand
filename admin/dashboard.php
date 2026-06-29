@@ -18,7 +18,7 @@ session_start();
       <img src="../image/logo.png" alt="Hand2Hand Logo" class="logo-circle">
       <div class="nav-text">
         <h1>Hand2Hand</h1>
-        <p> <a href="dashboard.php">Dashboard</a> | <a href="beneficiary.php">Beneficiaries</a> | <a href="event_management.php">Events</a> | <a href="inventory.php">Inventory</a> | <a href="distribution.php">Distribution</a></p>
+        <p> <a href="dashboard.php">Dashboard</a> | <a href="beneficiary_page_admin.php">Beneficiaries</a> | <a href="event_management.php">Events</a> | <a href="inventory.php">Inventory</a> | <a href="distribution.php">Distribution</a></p>
       </div>
     </div>
     <button class="btn-logout" onclick="window.location.href='../logout.php'">Logout</button>
