@@ -33,6 +33,18 @@ nav {
   gap: 16px;
 }
 
+.nav-text p {
+  color: #FFE4EF; /* or whatever color you want the | and surrounding text to be */
+  font-size: 18px;
+}
+
+.nav-text h1 {
+  color: #FFE4EF;
+  font-size: 30px;
+  font-weight: bold;
+  margin: 0;
+}
+
 .logo-circle {
   width: 88px;
   height: 88px;
@@ -62,6 +74,8 @@ nav {
 .nav-text a {
   color: #FFE4EF;
   text-decoration: none;
+  font-size: 20px; 
+  font-weight: bold;
 }
 
 .nav-text a:hover {

@@ -1,5 +1,44 @@
 <?php
 session_start();
+require_once '../includes/db.php';
+
+$user_id = $_SESSION['user_id'] ?? null;
+
+// Get beneficiary profile info
+$stmt = $conn->prepare("SELECT family_size, priority_level, address FROM user WHERE user_id = ?");
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$result = $stmt->get_result();
+$profile = $result->fetch_assoc();
+
+// Get next upcoming distribution date for this beneficiary
+$stmt2 = $conn->prepare("
+    SELECT MIN(d.date) AS next_date
+    FROM distribution d
+    JOIN request r ON d.request_id = r.request_id
+    WHERE r.user_id = ? AND d.date >= CURDATE()
+");
+$stmt2->bind_param("i", $user_id);
+$stmt2->execute();
+$result2 = $stmt2->get_result();
+$nextDistribution = $result2->fetch_assoc();
+
+// Get latest aid status (items distributed to this beneficiary)
+$stmt3 = $conn->prepare("
+    SELECT 
+        i.name AS item_name,
+        d.quantity,
+        r.status
+    FROM distribution d
+    JOIN request r ON d.request_id = r.request_id
+    JOIN item i ON d.item_id = i.item_id
+    WHERE r.user_id = ?
+    ORDER BY d.date DESC
+");
+$stmt3->bind_param("i", $user_id);
+$stmt3->execute();
+$result3 = $stmt3->get_result();
+$aidStatus = $result3->fetch_all(MYSQLI_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -9,25 +48,11 @@ session_start();
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Hand2Hand - Beneficiary Home</title>
   <link rel="stylesheet" href="../css/home_beneficiary.css" />
+  <link rel="stylesheet" href="../css/navbar_footer.css" />
 </head>
 <body>
 
-  <!-- Page label -->
-  <div class="page-label">home page (beneficiary)</div>
-
-  <!-- Navbar -->
-  <nav>
-    <div class="nav-left">
-      <img src="../image/logo.png" alt="Hand2Hand Logo" class="logo-circle">
-      <div class="nav-text">
-        <h1>Hand2Hand</h1>
-        <a href="home_beneficiary.php">Home</a> |
-        <a href="aid_status.php">My Aid</a> |
-        <a href="profile_page_bene.php">Profile</a>
-      </div>
-    </div>
-    <button class="btn-logout" onclick="window.location.href='logout.php'">Logout</button>
-  </nav>
+  <?php include '../includes/navbar.php'; ?>
 
   <!-- Welcome Banner -->
   <div class="welcome-banner">
@@ -40,8 +65,8 @@ session_start();
     <!-- Beneficiary Dashboard -->
     <div class="section-box">
       <h3>Beneficiary Dashboard</h3>
-      <p>Family Size</p>
-      <p>Priority Level</p>
+      <p><b>Family Size:</b> <?= $profile['family_size'] !== null ? htmlspecialchars($profile['family_size']) : 'Not set' ?></p>
+      <p><b>Priority Level: </b><?= $profile['priority_level'] !== null ? htmlspecialchars($profile['priority_level']) : 'Not set' ?></p>
     </div>
 
     <div class="divider"></div>
@@ -58,10 +83,17 @@ session_start();
           </tr>
         </thead>
         <tbody>
-          <tr><td></td><td></td><td></td></tr>
-          <tr><td></td><td></td><td></td></tr>
-          <tr><td></td><td></td><td></td></tr>
-          <tr><td></td><td></td><td></td></tr>
+          <?php if (count($aidStatus) > 0): ?>
+            <?php foreach ($aidStatus as $aid): ?>
+              <tr>
+                <td><?= htmlspecialchars($aid['item_name']) ?></td>
+                <td><?= htmlspecialchars($aid['quantity']) ?></td>
+                <td><?= htmlspecialchars($aid['status']) ?></td>
+              </tr>
+            <?php endforeach; ?>
+          <?php else: ?>
+            <tr><td colspan="3">No aid records yet.</td></tr>
+          <?php endif; ?>
         </tbody>
       </table>
     </div>
@@ -71,19 +103,15 @@ session_start();
     <!-- Upcoming Distribution -->
     <div class="section-box">
       <h3>Upcoming Distribution</h3>
-      <p>Next Distribution Date</p>
-      <p>Location</p>
+      <p><b>Next Distribution Date: </b><?= $nextDistribution['next_date'] ? htmlspecialchars($nextDistribution['next_date']) : 'No upcoming distribution' ?></p>
+      <p><b>Address: </b><?= !empty($profile['address']) ? htmlspecialchars($profile['address']) : 'Not set' ?></p>
     </div>
 
   </div>
 
   <div class="divider"></div>
 
-  <!-- Footer -->
-  <footer>
-    <div class="footer-brand">Hand2Hand</div>
-    <p>Contact Us:<br/>Email: hand2hand@support.com</p>
-  </footer>
+  <?php include '../includes/footer.php'; ?>
 
 </body>
 </html>

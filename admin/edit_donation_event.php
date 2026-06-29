@@ -13,7 +13,38 @@ if (isset($_SESSION['success'])) {
     unset($_SESSION['success']);
 }
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['action'] == 'create_event') {
+// Get event id from URL
+if (!isset($_GET['id'])) {
+    header("Location: donation_events.php");
+    exit();
+}
+
+$event_id = $_GET['id'];
+
+// Fetch event data
+$stmt = $conn->prepare("SELECT * FROM DONATIONEVENT WHERE event_id = ?");
+$stmt->bind_param("i", $event_id);
+$stmt->execute();
+$event = $stmt->get_result()->fetch_assoc();
+
+if (!$event) {
+    header("Location: donation_events.php");
+    exit();
+}
+
+// Fetch existing targets for this event
+$stmt = $conn->prepare("
+    SELECT t.target_id, t.item_id, i.name, t.quantity
+    FROM TARGET t
+    JOIN ITEM i ON t.item_id = i.item_id
+    WHERE t.event_id = ?
+");
+$stmt->bind_param("i", $event_id);
+$stmt->execute();
+$existingTargets = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+
+// Handle Update
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['action'] == 'update_event') {
     $name       = trim($_POST['name']);
     $start_date = $_POST['start_date'];
     $end_date   = $_POST['end_date'];
@@ -23,14 +54,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
 
     if (!$name || !$start_date || !$end_date || !$status) {
         $error = "Please fill in all event fields.";
-    } else if ($end_date < $start_date) {
-        $error = "End date cannot be earlier than start date.";
-    } else if (empty($item_ids)) {
-        $error = "Please add at least one target item.";
     } else {
 
         // Handle image upload
-        $image_path = null;
+        $image_path = $event['image_path']; // keep existing by default
 
         if (isset($_FILES['event_image']) && $_FILES['event_image']['error'] === 0) {
             $allowed = ['jpg', 'jpeg', 'png', 'webp'];
@@ -53,27 +80,50 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
         }
 
         if (!$error) {
-            $stmt = $conn->prepare("INSERT INTO DONATIONEVENT (name, start_date, end_date, status, image_path) VALUES (?, ?, ?, ?, ?)");
-            $stmt->bind_param("sssss", $name, $start_date, $end_date, $status, $image_path);
+            // Update event
+            $stmt = $conn->prepare("UPDATE DONATIONEVENT SET name=?, start_date=?, end_date=?, status=?, image_path=? WHERE event_id=?");
+            $stmt->bind_param("sssssi", $name, $start_date, $end_date, $status, $image_path, $event_id);
             $stmt->execute();
-            $new_event_id = $conn->insert_id;
+
+            // Delete old targets then reinsert
+            $stmt = $conn->prepare("DELETE FROM TARGET WHERE event_id=?");
+            $stmt->bind_param("i", $event_id);
+            $stmt->execute();
 
             foreach ($item_ids as $i => $item_id) {
                 $qty = intval($quantities[$i]);
                 if ($item_id && $qty > 0) {
-                    $stmt2 = $conn->prepare("INSERT INTO TARGET (event_id, item_id, quantity) VALUES (?, ?, ?)");
-                    $stmt2->bind_param("iii", $new_event_id, $item_id, $qty);
-                    $stmt2->execute();
+                    $stmt = $conn->prepare("INSERT INTO TARGET (event_id, item_id, quantity) VALUES (?, ?, ?)");
+                    $stmt->bind_param("iii", $event_id, $item_id, $qty);
+                    $stmt->execute();
                 }
             }
 
-            $_SESSION['success'] = "Event created successfully!";
-            header("Location: event_management.php");
+            // Refetch updated event data
+            $stmt = $conn->prepare("SELECT * FROM DONATIONEVENT WHERE event_id = ?");
+            $stmt->bind_param("i", $event_id);
+            $stmt->execute();
+            $event = $stmt->get_result()->fetch_assoc();
+
+            // Refetch updated targets
+            $stmt = $conn->prepare("
+                SELECT t.target_id, t.item_id, i.name, t.quantity
+                FROM TARGET t
+                JOIN ITEM i ON t.item_id = i.item_id
+                WHERE t.event_id = ?
+            ");
+            $stmt->bind_param("i", $event_id);
+            $stmt->execute();
+            $existingTargets = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+
+            $_SESSION['success'] = "Event updated successfully!";
+            header("Location: edit_donation_event.php?id=" . $event_id);
             exit();
         }
     }
 }
 
+// All items for dropdown
 $items = $conn->query("SELECT item_id, name, category FROM ITEM ORDER BY name")->fetch_all(MYSQLI_ASSOC);
 ?>
 <!DOCTYPE html>
@@ -82,7 +132,7 @@ $items = $conn->query("SELECT item_id, name, category FROM ITEM ORDER BY name")-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Donation Event - Hand2Hand</title>
+    <title>Edit Donation Event - Hand2Hand</title>
     <link rel="stylesheet" href="../css/formatBulan.css">
 </head>
 
@@ -91,7 +141,7 @@ $items = $conn->query("SELECT item_id, name, category FROM ITEM ORDER BY name")-
 
     <div class="page-container">
         <div class="page-title2">
-            <h1>Create Donation Event</h1>
+            <h1>Edit Donation Event</h1>
         </div>
 
         <?php if ($error): ?>
@@ -103,34 +153,37 @@ $items = $conn->query("SELECT item_id, name, category FROM ITEM ORDER BY name")-
         <?php endif; ?>
 
         <section class="event-management">
-            <form method="POST" class="event-form" id="mainForm" enctype="multipart/form-data">
-                <input type="hidden" name="action" value="create_event">
+            <form method="POST" class="event-form" id="mainForm" action="?id=<?= $event_id ?>" enctype="multipart/form-data">
+                <input type="hidden" name="action" value="update_event">
                 <div id="hidden-targets"></div>
 
                 <!-- LEFT PANEL -->
                 <div class="left-panel">
 
                     <label>Event Name</label>
-                    <input type="text" name="name" required placeholder="Enter event name">
+                    <input type="text" name="name" required value="<?= htmlspecialchars($event['name']) ?>">
 
                     <label>Start Date</label>
-                    <input type="date" name="start_date" required>
+                    <input type="date" name="start_date" required value="<?= htmlspecialchars($event['start_date']) ?>">
 
                     <label>End Date</label>
-                    <input type="date" name="end_date" required>
+                    <input type="date" name="end_date" required value="<?= htmlspecialchars($event['end_date']) ?>">
 
                     <label>Status</label>
                     <select name="status" required>
                         <option value="">-- Select Status --</option>
-                        <option value="Active">Active</option>
-                        <option value="Completed">Completed</option>
-                        <option value="Scheduled">Scheduled</option>
+                        <option value="Active" <?= $event['status'] == 'Active' ? 'selected' : '' ?>>Active</option>
+                        <option value="Completed" <?= $event['status'] == 'Completed' ? 'selected' : '' ?>>Completed</option>
+                        <option value="Scheduled" <?= $event['status'] == 'Scheduled' ? 'selected' : '' ?>>Scheduled</option>
                     </select>
 
                     <label>Event Image</label>
+                    <?php if ($event['image_path']): ?>
+                        <p><img src="../image/<?= htmlspecialchars($event['image_path']) ?>" height="80" style="border-radius:8px; margin-bottom:8px;"></p>
+                    <?php endif; ?>
                     <input type="file" name="event_image" accept="image/*">
 
-                    <button type="submit" class="submit-btn">Create Event</button>
+                    <button type="submit" class="submit-btn">Save Changes</button>
 
                     <button type="button" class="back-btn" onclick="window.location.href='donation_event.php'">
                         Back
@@ -161,14 +214,14 @@ $items = $conn->query("SELECT item_id, name, category FROM ITEM ORDER BY name")-
                     <div class="target-list">
                         <h3>Target Progress</h3>
                         <div id="progressList">
-                            <p class="no-data" id="emptyProgress">No items added yet.</p>
+                            <p class="no-data" id="emptyProgress" style="display:none;">No items added yet.</p>
                         </div>
                     </div>
 
                     <div class="target-list">
                         <h3>Target Item List</h3>
                         <div id="targetList">
-                            <p class="no-data" id="emptyTarget">No items added yet.</p>
+                            <p class="no-data" id="emptyTarget" style="display:none;">No items added yet.</p>
                         </div>
                     </div>
 
@@ -183,7 +236,14 @@ $items = $conn->query("SELECT item_id, name, category FROM ITEM ORDER BY name")-
     </div>
 
     <script>
-        let targets = [];
+        let targets = <?= json_encode(array_map(fn($t) => [
+                            'item_id'  => $t['item_id'],
+                            'name'     => $t['name'],
+                            'quantity' => $t['quantity']
+                        ], $existingTargets)) ?>;
+
+        // Render on load
+        renderAll();
 
         function addTarget() {
             const sel = document.getElementById('itemSelect');
@@ -209,10 +269,8 @@ $items = $conn->query("SELECT item_id, name, category FROM ITEM ORDER BY name")-
                 name,
                 quantity: qty
             });
-
             sel.value = '';
             document.getElementById('qtyInput').value = '';
-
             renderAll();
         }
 
@@ -230,7 +288,6 @@ $items = $conn->query("SELECT item_id, name, category FROM ITEM ORDER BY name")-
         function renderProgress() {
             const container = document.getElementById('progressList');
             const emptyMsg = document.getElementById('emptyProgress');
-
             container.querySelectorAll('.progress-item').forEach(e => e.remove());
 
             if (targets.length === 0) {
@@ -258,7 +315,6 @@ $items = $conn->query("SELECT item_id, name, category FROM ITEM ORDER BY name")-
         function renderTargetList() {
             const container = document.getElementById('targetList');
             const emptyMsg = document.getElementById('emptyTarget');
-
             container.querySelectorAll('.target-row').forEach(e => e.remove());
 
             if (targets.length === 0) {
