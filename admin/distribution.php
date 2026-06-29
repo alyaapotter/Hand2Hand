@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once '../includes/db.php';
+require_once '../includes/connect.php';
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 'Admin') {
     header("Location: ../login.php"); exit();
 }
@@ -15,15 +15,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
     if (!$request_id || !$item_id || $quantity <= 0 || empty($dist_date)) {
         $error = "Please fill in all fields.";
     } else {
-        $stmt = $pdo->prepare("SELECT quantity FROM INVENTORY WHERE item_id=?");
-        $stmt->execute([$item_id]); $inv = $stmt->fetch();
+        $stmt = $conn->prepare("SELECT quantity FROM INVENTORY WHERE item_id=?");
+        $stmt->bind_param("i", $item_id);
+        $stmt->execute();
+        $inv = $stmt->get_result()->fetch_assoc();
+        
         if (!$inv || $inv['quantity'] < $quantity) {
             $error = "Not enough stock! Available: " . ($inv['quantity'] ?? 0);
         } else {
-            $pdo->prepare("INSERT INTO DISTRIBUTION (request_id, item_id, quantity, date) VALUES (?,?,?,?)")
-                ->execute([$request_id, $item_id, $quantity, $dist_date]);
-            $pdo->prepare("UPDATE INVENTORY SET quantity=quantity-? WHERE item_id=?")->execute([$quantity, $item_id]);
-            $pdo->prepare("UPDATE REQUEST SET status='Approved' WHERE request_id=?")->execute([$request_id]);
+            $ins_stmt = $conn->prepare("INSERT INTO DISTRIBUTION (request_id, item_id, quantity, date) VALUES (?,?,?,?)");
+            $ins_stmt->bind_param("iiis", $request_id, $item_id, $quantity, $dist_date);
+            $ins_stmt->execute();
+            
+            $upd_inv_stmt = $conn->prepare("UPDATE INVENTORY SET quantity=quantity-? WHERE item_id=?");
+            $upd_inv_stmt->bind_param("ii", $quantity, $item_id);
+            $upd_inv_stmt->execute();
+            
+            $upd_req_stmt = $conn->prepare("UPDATE REQUEST SET status='Approved' WHERE request_id=?");
+            $upd_req_stmt->bind_param("i", $request_id);
+            $upd_req_stmt->execute();
+            
             $success = "Items distributed successfully!";
         }
     }
@@ -32,12 +43,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
 $request_id_param = isset($_GET['request_id']) ? intval($_GET['request_id']) : 0;
 $selected_request = null;
 if ($request_id_param) {
-    $stmt = $pdo->prepare("SELECT r.*, u.username, u.email FROM REQUEST r JOIN USER u ON r.user_id=u.user_id WHERE r.request_id=?");
-    $stmt->execute([$request_id_param]); $selected_request = $stmt->fetch();
+    $stmt = $conn->prepare("SELECT r.*, u.username, u.email FROM REQUEST r JOIN USER u ON r.user_id=u.user_id WHERE r.request_id=?");
+    $stmt->bind_param("i", $request_id_param);
+    $stmt->execute();
+    $selected_request = $stmt->get_result()->fetch_assoc();
 }
 
-$approved_requests = $pdo->query("SELECT r.request_id, r.description, u.username FROM REQUEST r JOIN USER u ON r.user_id=u.user_id WHERE r.status IN ('Pending','Approved') ORDER BY r.date DESC")->fetchAll();
-$items = $pdo->query("SELECT i.item_id, i.name, i.category, COALESCE(inv.quantity,0) AS stock FROM ITEM i LEFT JOIN INVENTORY inv ON i.item_id=inv.item_id ORDER BY i.name")->fetchAll();
+$ar_result = $conn->query("SELECT r.request_id, r.description, u.username FROM REQUEST r JOIN USER u ON r.user_id=u.user_id WHERE r.status IN ('Pending','Approved') ORDER BY r.date DESC");
+$approved_requests = $ar_result->fetch_all(MYSQLI_ASSOC);
+
+$items_result = $conn->query("SELECT i.item_id, i.name, i.category, COALESCE(inv.quantity,0) AS stock FROM ITEM i LEFT JOIN INVENTORY inv ON i.item_id=inv.item_id ORDER BY i.name");
+$items = $items_result->fetch_all(MYSQLI_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="en">
