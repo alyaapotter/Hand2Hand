@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $error = "Please fill in all required fields.";
     } else {
         $full_description = "Item requested: See item field. Delivery type: $delivery_type. Delivery Address: $delivery_address. Reason: $reason. Additional info: $description";
-        mysqli_query($conn, "INSERT INTO REQUEST (date, status, description, user_id) VALUES ('$date', 'Pending', '$full_description', $user_id)");
+        mysqli_query($conn, "INSERT INTO REQUEST (date, status, description, user_id, item_id, quantity, delivery_option, reason) VALUES ('$date', 'Pending', '$full_description', $user_id, $item_id, $quantity, '$delivery_type', '$reason')");
         $request_id = mysqli_insert_id($conn);
         $success = "Your request has been submitted! The admin will review it soon.";
     }

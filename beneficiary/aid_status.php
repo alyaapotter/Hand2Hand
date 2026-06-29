@@ -8,13 +8,20 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 'Requester') {
 $user_id = $_SESSION['user_id'];
 $search  = isset($_GET['search']) ? mysqli_real_escape_string($conn, trim($_GET['search'])) : '';
 
-$query = "SELECT d.quantity, d.date, i.name AS item_name, r.status
-          FROM DISTRIBUTION d
-          JOIN REQUEST r ON d.request_id=r.request_id
-          JOIN ITEM i ON d.item_id=i.item_id
-          WHERE r.user_id=$user_id";
-if ($search) $query .= " AND i.name LIKE '%$search%'";
-$query        .= " ORDER BY d.date DESC";
+$query = "SELECT 
+            COALESCE(d.quantity, r.quantity, '-') AS quantity, 
+            COALESCE(d.date, r.date) AS date, 
+            COALESCE(i_dist.name, i_req.name, 'Pending/Unspecified Item') AS item_name, 
+            r.status
+          FROM REQUEST r
+          LEFT JOIN DISTRIBUTION d ON r.request_id = d.request_id
+          LEFT JOIN ITEM i_dist ON d.item_id = i_dist.item_id
+          LEFT JOIN ITEM i_req ON r.item_id = i_req.item_id
+          WHERE r.user_id = $user_id";
+if ($search) {
+    $query .= " AND (i_dist.name LIKE '%$search%' OR i_req.name LIKE '%$search%' OR 'Pending/Unspecified Item' LIKE '%$search%')";
+}
+$query .= " ORDER BY COALESCE(d.date, r.date) DESC";
 $result        = mysqli_query($conn, $query);
 $distributions = mysqli_fetch_all($result, MYSQLI_ASSOC);
 ?>
