@@ -65,31 +65,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <form method="POST" action="add_inventory.php" onsubmit="return validateForm(event)">
             <div class="form-container">
                 <label>Item:</label>
-                <input type="text" name="item" id="item" placeholder="Item">
+                <input type="text" name="item" id="item">
                 <div id="itemError" class="error-msg"></div>
             </div>
             <div class="form-container">
                 <label>Category:</label>
-                <input type="text" name="category" id="category" placeholder="Category">
+                <input type="text" name="category" id="category">
                 <div id="categoryError" class="error-msg"></div>
             </div>
             <div class="form-container">
                 <label>Quantity:</label>
-                <input type="text" name="quantity" id="quantity" placeholder="Quantity">
+                <input type="text" name="quantity" id="quantity">
                 <div id="qtyError" class="error-msg"></div>
             </div>
             <button type="submit" name="action" value="add">Add New Item</button>
+            <button type="button" onclick="window.location.href='inventory.php'">Back</button>
         </form>
     </section>
 
     <script>
         function validateForm(event) {
             let item     = document.getElementById("item").value.trim();
-            let category = document.getElementById("category").value.trim();
             let quantity = document.getElementById("quantity").value.trim();
 
             // Check empty fields
-            if (item === "" || category === "" || quantity === "") {
+            if (item === "" || quantity === "") {
                 alert("All fields are required.");
                 event.preventDefault();
                 return false;
