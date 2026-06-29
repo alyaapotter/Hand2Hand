@@ -1,5 +1,5 @@
 <?php
-// beneficiary/profile_page_bene.php
+// beneficiary/profile_page_bene
 session_start();
 require_once '../includes/connect.php'; 
 
