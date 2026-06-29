@@ -53,7 +53,6 @@ $requests = mysqli_fetch_all($result, MYSQLI_ASSOC);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Beneficiary Needs - Hand2Hand</title>
     <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/navbar_footer.css">
 </head>
 <body>
 <?php include '../includes/navbar.php'; ?>
