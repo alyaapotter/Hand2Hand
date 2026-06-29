@@ -38,7 +38,7 @@ $distributions = mysqli_fetch_all($result, MYSQLI_ASSOC);
 <div class="page-container">
     <div class="page-title">My Aid Status</div>
 
-    <div style="display:flex;justify-content:flex-end;margin-bottom:15px">
+    <div style="margin-bottom:15px">
         <a href="submit_request.php" class="btn btn-primary">+ New Request</a>
     </div>
 
