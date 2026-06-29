@@ -23,7 +23,7 @@ session_start();
             <a href="beneficiary.php" class="active">Beneficiaries</a> | 
             <a href="event_management.php">Events</a> | 
             <a href="inventory.php">Inventory</a> | 
-            <a href="distribution.php">Distribution</a>
+            <a href="distribution_management.php">Distribution</a>
           </nav>
         </div>
       </div>

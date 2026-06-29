@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'])) {
 }
 
 $search = isset($_GET['search']) ? mysqli_real_escape_string($conn, trim($_GET['search'])) : '';
-$query  = "SELECT d.distribution_id, d.date, d.quantity, u.username AS beneficiary, i.name AS item, r.request_id
+$query  = "SELECT d.distribution_id, d.date, d.quantity, d.location, u.username AS beneficiary, i.name AS item, r.request_id
            FROM DISTRIBUTION d
            JOIN REQUEST r ON d.request_id=r.request_id
            JOIN USER u ON r.user_id=u.user_id
@@ -52,12 +52,12 @@ $distributions = mysqli_fetch_all($result, MYSQLI_ASSOC);
         <table class="data-table" id="mainTable">
             <thead>
                 <tr>
-                    <th>Distribution ID</th><th>Beneficiary</th><th>Item</th><th>Quantity</th><th>Date</th><th>Actions</th>
+                    <th>Distribution ID</th><th>Beneficiary</th><th>Item</th><th>Quantity</th><th>Date</th><th>Location</th><th>Actions</th>
                 </tr>
             </thead>
             <tbody>
                 <?php if (empty($distributions)): ?>
-                    <tr><td colspan="6" class="empty-row">No distribution records yet.</td></tr>
+                    <tr><td colspan="7" class="empty-row">No distribution records yet.</td></tr>
                 <?php else: ?>
                 <?php foreach ($distributions as $d): ?>
                 <tr>
@@ -66,6 +66,7 @@ $distributions = mysqli_fetch_all($result, MYSQLI_ASSOC);
                     <td><?= htmlspecialchars($d['item']) ?></td>
                     <td><?= $d['quantity'] ?></td>
                     <td><?= date('d M Y', strtotime($d['date'])) ?></td>
+                    <td><?= htmlspecialchars($d['location'] ?? 'Warehouse') ?></td>
                     <td style="display:flex;gap:5px">
                         <a href="distribution.php?request_id=<?= $d['request_id'] ?>" class="btn-edit">Edit</a>
                         <form method="POST" style="display:inline" onsubmit="return confirm('Delete?')">
