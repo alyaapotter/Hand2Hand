@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once '../includes/db.php';
+require_once '../includes/connect.php';
 
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 'Requester') {
     header("Location: ../login.php"); exit();

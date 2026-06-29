@@ -20,7 +20,7 @@ session_start();
           <h1 class="brand-title">Hand2Hand</h1>
           <nav class="admin-nav">
             <a href="dashboard.php">Dashboard</a> | 
-            <a href="beneficiaries.php" class="active">Beneficiaries</a> | 
+            <a href="beneficiary.php" class="active">Beneficiaries</a> | 
             <a href="event_management.php">Events</a> | 
             <a href="inventory.php">Inventory</a> | 
             <a href="distribution.php">Distribution</a>

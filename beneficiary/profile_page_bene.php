@@ -8,31 +8,15 @@ session_start();
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Hand2Hand - Profile (Beneficiary)</title>
   <link rel="stylesheet" href="../css/profile_page_bene.css" />
+  <link rel="stylesheet" href="../css/navbar_footer.css" />
 </head>
 <body>
 
-  <header class="admin-header">
-    <div class="header-top">
-      <div class="logo-brand-container">
-        <img src="images/logo.png" alt="Logo" class="logo-circle" />
-        <div class="brand-nav-box">
-          <h1 class="brand-title">Hand2Hand</h1>
-          <nav class="admin-nav">
-            <a href="dashboard.php">Dashboard</a> | 
-            <a href="beneficiaries.php">Beneficiaries</a> | 
-            <a href="events.php">Events</a> | 
-            <a href="inventory.php">Inventory</a> | 
-            <a href="distribution.php">Distribution</a>
-          </nav>
-        </div>
-      </div>
-      <a href="../logout.php" class="btn-logout">Logout</a>
-    </div>
+  <?php include '../includes/navbar.php'; ?>
 
-    <div class="header-title-section">
-      <h2>Profile</h2>
-    </div>
-  </header>
+  <div style="padding: 20px 40px 0 40px;">
+    <h2 style="color: #443025; font-size: 32px;">Profile</h2>
+  </div>
 
   <main class="content-container">
     <form action="process_profile.php" method="POST" class="profile-form">
