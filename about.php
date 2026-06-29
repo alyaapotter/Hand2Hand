@@ -3,93 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
     <title>About Page</title>
 </head>
-
-<style>
-    * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
-    }
-
-    body {
-        background-color: #443025;
-    }
-
-    header {
-        background-color: #443025;
-        color: #ffe4ff;
-        padding: 15px 30px;
-        align-items: center;
-        gap: 15px;
-        display: flex;
-    }
-
-    header img {
-        border-radius: 50px;
-    }
-
-    .logo {
-        align-items: center;
-        gap: 20px;
-        display: flex;
-    }
-
-    nav {
-        align-items: center;
-        gap: 5px;
-        display: flex;
-    }
-
-    nav a {
-        color:#ffe4ff;
-        text-decoration: none;
-        font-size: 30px;
-        margin: 10px;
-        font-weight: bolder;
-    }
-
-    nav a:hover {
-        color: #a86b8c;
-    }
-
-    h2 , h3 {
-        text-align: left;
-        margin: 15px 0 5px;
-    }
-    .description {
-        background-color: #f3e7dc;
-        text-align: left;
-        color:#443025;
-        margin-top: 30px;
-        padding: 20px;
-        line-height: 30px
-    }
-
-    .sub-title {
-        margin: 20px 0 20px;
-        text-align: left;
-    }
-
-    footer {
-        background-color: #f3e7dc;
-        text-align: left;
-        color:#443025;
-        margin-top: 30px;
-        padding: 20px;
-    }
-
-    footer h4 {
-        margin-bottom: 15px;
-    }
-
-    footer p {
-        padding: 3px;
-        font-size: 14px;
-    }
-</style>
 
 <body>
     <header>
@@ -99,9 +15,9 @@
         </div>
         <nav>
             |
-            <a href="about.html">About Us</a> |
-            <a href="event.html">Events</a> |
-            <a href="login.html">Login</a>
+            <a href="about.php">About Us</a> |
+            <a href="event.php">Events</a> |
+            <a href="login.php">Login</a>
         </nav>
     </header>
 
@@ -161,6 +77,7 @@
         <h4>Hand2Hand</h4>
         <p>Contact Us:</p>
         <p>Email: hand2hand@support.com</p>
+        <p>&copy; <?php echo date("Y"); ?> Hand2Hand. All rights reserved.</p>
     </footer>
 </body>
 </html>

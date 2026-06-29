@@ -19,7 +19,7 @@ session_start();
         <h1>Hand2Hand</h1>
          <div class="nav-links">
         <a href="home.php">Home</a> |
-        <a href="aid.php">My Aid</a> |
+        <a href="aid_status.php">My Aid</a> |
         <a href="profile_page_bene.php">Profile </a> |
       </div>
     </div>
