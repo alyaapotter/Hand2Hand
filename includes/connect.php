@@ -4,7 +4,7 @@
 
 $servername = "localhost";
 $username = "root";
-$password = "";
+$password = "root123";
 $dbname = "hand2hand";
 $port = 3307;
 
