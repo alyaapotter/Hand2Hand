@@ -32,7 +32,6 @@ if (!empty($donations)) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Donations - Hand2Hand</title>
     <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/navbar_footer.css">
 </head>
 <body>
 <?php include '../includes/navbar.php'; ?>
@@ -74,7 +73,7 @@ if (!empty($donations)) {
     </div>
 </div>
 
-<div class="page-footer">Hand2Hand<br>Contact Us:<br>Email: hand2hand@support.com</div>
+<?php include '../includes/footer.php'; ?>
 
 <script>
 function filterTable(val) {
