@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once '../includes/connect.php';
+require_once '../includes/db.php';
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 'Admin') {
     header("Location: ../login.php"); exit();
 }
@@ -11,19 +11,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
     $request_id = intval($_POST['request_id']);
     $item_id    = intval($_POST['item_id']);
     $quantity   = intval($_POST['quantity']);
-    $dist_date  = mysqli_real_escape_string($conn, $_POST['dist_date'] ?? date('Y-m-d'));
-
     if (!$request_id || !$item_id || $quantity <= 0) {
         $error = "Please fill in all fields.";
     } else {
-        $res = mysqli_query($conn, "SELECT quantity FROM INVENTORY WHERE item_id=$item_id");
-        $inv = mysqli_fetch_assoc($res);
+        $stmt = $pdo->prepare("SELECT quantity FROM INVENTORY WHERE item_id=?");
+        $stmt->execute([$item_id]); $inv = $stmt->fetch();
         if (!$inv || $inv['quantity'] < $quantity) {
             $error = "Not enough stock! Available: " . ($inv['quantity'] ?? 0);
         } else {
-            mysqli_query($conn, "INSERT INTO DISTRIBUTION (request_id, item_id, quantity, date) VALUES ($request_id, $item_id, $quantity, '$dist_date')");
-            mysqli_query($conn, "UPDATE INVENTORY SET quantity=quantity-$quantity WHERE item_id=$item_id");
-            mysqli_query($conn, "UPDATE REQUEST SET status='Approved' WHERE request_id=$request_id");
+            $dist_date = $_POST['dist_date'];
+            $pdo->prepare("INSERT INTO DISTRIBUTION (request_id, item_id, quantity, date) VALUES (?,?,?,?)")
+            ->execute([$request_id, $item_id, $quantity, $dist_date]);
+            $pdo->prepare("UPDATE INVENTORY SET quantity=quantity-? WHERE item_id=?")->execute([$quantity, $item_id]);
+            $pdo->prepare("UPDATE REQUEST SET status='Approved' WHERE request_id=?")->execute([$request_id]);
             $success = "Items distributed successfully!";
         }
     }
@@ -32,15 +32,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
 $request_id_param = isset($_GET['request_id']) ? intval($_GET['request_id']) : 0;
 $selected_request = null;
 if ($request_id_param) {
-    $res = mysqli_query($conn, "SELECT r.*, u.username, u.email FROM REQUEST r JOIN USER u ON r.user_id=u.user_id WHERE r.request_id=$request_id_param");
-    $selected_request = mysqli_fetch_assoc($res);
+    $stmt = $pdo->prepare("SELECT r.*, u.username, u.email FROM REQUEST r JOIN USER u ON r.user_id=u.user_id WHERE r.request_id=?");
+    $stmt->execute([$request_id_param]); $selected_request = $stmt->fetch();
 }
 
-$req_result        = mysqli_query($conn, "SELECT r.request_id, r.description, u.username FROM REQUEST r JOIN USER u ON r.user_id=u.user_id WHERE r.status IN ('Pending','Approved') ORDER BY r.date DESC");
-$approved_requests = mysqli_fetch_all($req_result, MYSQLI_ASSOC);
-
-$item_result = mysqli_query($conn, "SELECT i.item_id, i.name, i.category, COALESCE(inv.quantity,0) AS stock FROM ITEM i LEFT JOIN INVENTORY inv ON i.item_id=inv.item_id ORDER BY i.name");
-$items       = mysqli_fetch_all($item_result, MYSQLI_ASSOC);
+$approved_requests = $pdo->query("SELECT r.request_id, r.description, u.username FROM REQUEST r JOIN USER u ON r.user_id=u.user_id WHERE r.status IN ('Pending','Approved') ORDER BY r.date DESC")->fetchAll();
+$items = $pdo->query("SELECT i.item_id, i.name, i.category, COALESCE(inv.quantity,0) AS stock FROM ITEM i LEFT JOIN INVENTORY inv ON i.item_id=inv.item_id ORDER BY i.name")->fetchAll();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -61,6 +58,7 @@ $items       = mysqli_fetch_all($item_result, MYSQLI_ASSOC);
     <form method="POST" onsubmit="return validateDist()">
         <input type="hidden" name="action" value="distribute">
 
+        <!-- Beneficiary Information -->
         <div class="form-section">
             <div class="form-section-title">Beneficiary Information</div>
             <div class="form-group">
@@ -84,6 +82,7 @@ $items       = mysqli_fetch_all($item_result, MYSQLI_ASSOC);
             <?php endif; ?>
         </div>
 
+        <!-- Item Information -->
         <div class="form-section">
             <div class="form-section-title">Item Information</div>
             <div class="form-group">
@@ -104,10 +103,11 @@ $items       = mysqli_fetch_all($item_result, MYSQLI_ASSOC);
             </div>
             <div class="form-group">
                 <label>Distribution Date:</label>
-                <input type="date" name="dist_date" required min="<?= date('Y-m-d') ?>" onchange="updateSummary()">
+                <input type="date" name="dist_date" required min="<?= date('Y-m-d') ?>">
             </div>
         </div>
 
+        <!-- Distribution Summary -->
         <div class="form-section">
             <div class="form-section-title">Distribution Summary</div>
             <div class="dist-info-row">Beneficiary: <span id="sumBeneficiary"><?= $selected_request ? htmlspecialchars($selected_request['username']) : '—' ?></span></div>
@@ -121,7 +121,9 @@ $items       = mysqli_fetch_all($item_result, MYSQLI_ASSOC);
     </form>
 </div>
 
-<div class="page-footer">Hand2Hand<br>Contact Us:<br>Email: hand2hand@support.com</div>
+<div class="page-footer">
+    Hand2Hand<br>Contact Us:<br>Email: hand2hand@support.com
+</div>
 
 <script>
 function loadRequest(id) {
@@ -138,23 +140,35 @@ function updateSummary() {
     const qty  = document.getElementById('qtyInput').value;
     const date = document.querySelector('input[name="dist_date"]').value;
     document.getElementById('sumQty').textContent  = qty  || '—';
+    document.querySelector('input[name="dist_date"]')?.addEventListener('change', updateSummary);
     document.getElementById('sumDate').textContent = date || '—';
 }
 document.getElementById('qtyInput')?.addEventListener('input', updateSummary);
-document.querySelector('input[name="dist_date"]')?.addEventListener('change', updateSummary);
+</script>
 
+<script>
 function validateDist() {
     const request = document.querySelector('select[name="request_id"]').value;
     const item    = document.querySelector('select[name="item_id"]').value;
     const qty     = document.querySelector('input[name="quantity"]').value;
-    const date    = document.querySelector('input[name="dist_date"]').value;
     const stock   = document.getElementById('stockDisplay').textContent;
 
-    if (request === '') { alert('Please select a beneficiary request!'); return false; }
-    if (item === '')    { alert('Please select an item!'); return false; }
-    if (qty === '' || qty <= 0) { alert('Please enter a valid quantity!'); return false; }
-    if (date === '')   { alert('Please select a distribution date!'); return false; }
-    if (parseInt(qty) > parseInt(stock)) { alert('Quantity exceeds available stock! Stock: ' + stock); return false; }
+    if (request === '') {
+        alert('Please select a beneficiary request!');
+        return false;
+    }
+    if (item === '') {
+        alert('Please select an item!');
+        return false;
+    }
+    if (qty === '' || qty <= 0) {
+        alert('Please enter a valid quantity!');
+        return false;
+    }
+    if (parseInt(qty) > parseInt(stock)) {
+        alert('Quantity exceeds available stock! Stock available: ' + stock);
+        return false;
+    }
     return true;
 }
 </script>
