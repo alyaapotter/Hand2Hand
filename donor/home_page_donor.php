@@ -17,7 +17,7 @@ session_start()
             <img src="../image/logo.png" alt="Hand2Hand logo" class="logo-circle" width="80">
             <h1>Hand2Hand</h1>
         </div>
-        <a href="logout.php" class="logout-btn">Logout</a>
+        <a href="../logout.php" class="logout-btn">Logout</a>
     </div>
 
     <nav class="donor-nav">
