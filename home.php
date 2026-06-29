@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once "connect.php";
 ?>
 
 <!DOCTYPE html>
@@ -9,11 +10,12 @@ session_start();
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Hand2Hand - Home</title>
   <link rel="stylesheet" href="css/homeStyle.css" />
+  <link rel="stylesheet" href="css/navbar_footer.css" />
 </head>
 <body>
 
   <!-- Navbar -->
-  <nav>
+   <nav>
     <img src="image/logo.png" alt="Logo" class="logo-circle" />
     <div class="nav-links">
       <a href="home.php">Hand2Hand</a> |
@@ -31,7 +33,7 @@ session_start();
       <a href="donate.php"><button class="btn-donate">Donate</button></a>
     </div>
     <div class="hero-divider"></div>
-    <img class="hero-image" src="image/hero.jpg" alt="Charity event" />
+    <img class="hero-image" src="image/donation.jpg" alt="Charity event" />
   </section>
 
   <div class="divider"></div>
@@ -51,21 +53,21 @@ session_start();
 
       <div>
         <div class="event-card">
-          <img src="image/foodbank.jpg" alt="Food Bank" />
+          <img src="image/food.webp" alt="Food Bank" />
         </div>
         <span class="event-label">Food Bank</span>
       </div>
 
       <div>
         <div class="event-card">
-          <img src="image/backtoschool.jpg" alt="Back To School" />
+          <img src="image/school.webp" alt="Back To School" />
         </div>
         <span class="event-label">Back To School</span>
       </div>
 
       <div>
         <div class="event-card">
-          <img src="image/babycare.jpg" alt="Baby Care" />
+          <img src="image/baby.jpg" alt="Baby Care" />
         </div>
         <span class="event-label">Baby Care</span>
       </div>
@@ -75,11 +77,7 @@ session_start();
 
   <div class="divider"></div>
 
-  <!-- Footer -->
-  <footer>
-    <div class="footer-brand">Hand2Hand</div>
-    <p>Contact Us:<br/>Email: hand2hand@support.com</p>
-  </footer>
+  <?php include 'includes/footer.php'; ?>
 
 </body>
 </html>

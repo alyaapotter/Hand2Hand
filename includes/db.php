@@ -1,16 +1,23 @@
 <?php
-
-$host = "localhost";
-$port = "3307"; // Default MySQL port — change to 3307 if connection still fails
-$dbname = "hand2hand";
+// includes/connect.php atau includes/db.php
+// Pastikan maklumat database melaka kau betul
+$servername = "localhost";
 $username = "root";
-$password = ""; // Change this to your MySQL password if needed
+$password = "";
+$dbname = "hand2hand"; // Ganti dengan nama DB kau yang betul
 
-try {
-    $pdo = new PDO("mysql:host=$host;port=$port;dbname=$dbname;charset=utf8", $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-} catch (PDOException $e) {
-    die("Connection failed: " . $e->getMessage());
+// 1. Guna cara global variable (Selesai error login/register/aid_request)
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// 2. Guna cara function (Selesai error beneficiary_page_admin/profile_page_bene)
+if (!function_exists('getConnection')) {
+    function getConnection() {
+        global $conn;
+        return $conn;
+    }
 }
 ?>

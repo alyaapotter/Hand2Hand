@@ -4,13 +4,13 @@ session_start();
 
 // If already logged in, redirect
 if (isset($_SESSION['user_id'])) {
-    if ($_SESSION['role'] == 'Admin') header("Location: admin/beneficiary_needs.php");
-    elseif ($_SESSION['role'] == 'Requester') header("Location: beneficiary/aid_status.php");
-    elseif ($_SESSION['role'] == 'Donor') header("Location: donor/donate_item.php");
+    if ($_SESSION['role'] == 'Admin') header("Location: admin/dashboard.php");
+    elseif ($_SESSION['role'] == 'Requester') header("Location: beneficiary/home_beneficiary.php");
+    elseif ($_SESSION['role'] == 'Donor') header("Location: donor/home_page_donor.php");
     exit();
 }
 
-require_once 'includes/db.php';
+require_once 'includes/connect.php';
 
 $error = "";
 
@@ -21,9 +21,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (empty($email) || empty($password)) {
         $error = "Please fill in all fields.";
     } else {
-        $stmt = $pdo->prepare("SELECT * FROM USER WHERE email = ?");
-        $stmt->execute([$email]);
-        $user = $stmt->fetch();
+        $stmt = $conn->prepare("SELECT * FROM USER WHERE email = ?");
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $user = $stmt->get_result()->fetch_assoc();
 
         if ($user && password_verify($password, $user['password'])) {
             $_SESSION['user_id'] = $user['user_id'];
@@ -76,30 +77,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </div>
     </div>
 
-<script>
-function validateLogin() {
-    const email    = document.querySelector('input[name="email"]').value.trim();
-    const password = document.querySelector('input[name="password"]').value;
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    <script>
+        function validateLogin() {
+            const email = document.querySelector('input[name="email"]').value.trim();
+            const password = document.querySelector('input[name="password"]').value;
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    if (email === '') {
-        alert('Please enter your email!');
-        return false;
-    }
-    if (!emailRegex.test(email)) {
-        alert('Please enter a valid email address!');
-        return false;
-    }
-    if (password === '') {
-        alert('Please enter your password!');
-        return false;
-    }
-    if (password.length < 6) {
-        alert('Password must be at least 6 characters!');
-        return false;
-    }
-    return true;
-}
-</script>
+            if (email === '') {
+                alert('Please enter your email!');
+                return false;
+            }
+            if (!emailRegex.test(email)) {
+                alert('Please enter a valid email address!');
+                return false;
+            }
+            if (password === '') {
+                alert('Please enter your password!');
+                return false;
+            }
+            if (password.length < 6) {
+                alert('Password must be at least 6 characters!');
+                return false;
+            }
+            return true;
+        }
+    </script>
 </body>
+
 </html>
