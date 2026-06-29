@@ -182,7 +182,10 @@ $items = $items_result->fetch_all(MYSQLI_ASSOC);
             <div class="dist-info-row">Item: <span id="sumItem">—</span></div>
             <div class="dist-info-row">Quantity: <span id="sumQty">—</span></div>
             <div class="dist-info-row">Date: <span id="sumDate">—</span></div>
+<<<<<<< HEAD
+=======
             <div class="dist-info-row">Location: <span id="sumLocation">—</span></div>
+>>>>>>> origin/main
         </div>
 
         <button type="submit" class="btn btn-primary">Confirm Distribution</button>

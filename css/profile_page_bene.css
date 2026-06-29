@@ -11,85 +11,76 @@ body {
   color: #443025;
 }
 
-/* Header dark brown */
-.admin-header {
-  background-color: #3b2a1a;
-  padding: 30px 40px;
-}
-
-.header-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-}
-
-.logo-brand-container {
+/* ── NAVBAR ── */
+nav {
+  background-color: #443025;
   display: flex;
   align-items: center;
-  gap: 20px;
+  justify-content: space-between;
+  padding: 25px 15px;
 }
-
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
 .logo-circle {
-  width: 90px;
-  height: 90px;
+  width: 88px;
+  height: 88px;
   border-radius: 50%;
-  background-color: #ffe4ef;
-  object-fit: cover;
+  background-color: #c8a882;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
 }
-
-.brand-nav-box {
+.nav-text {
   display: flex;
   flex-direction: column;
-  gap: 5px;
-}
-
-.brand-title {
-  color: #ffffff;
-  font-size: 36px;
+  align-items: flex-start;
+  gap: 4px;
+  font-size: 25px;
   font-weight: bold;
+  color: #FFE4EF;
 }
-
-/* Admin Navbar links */
-.admin-nav {
-  color: #ffe4ef;
+.nav-text h1 {
+  color: #FFE4EF;
+  font-size: 30px;
+  font-weight: bold;
+  margin-right: 0;
+  margin-bottom: 4px;
+}
+.nav-links {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0px;
+  color: #FFE4EF;
   font-size: 20px;
   font-weight: bold;
 }
-
-.admin-nav a {
-  color: #ffe4ef;
+.nav-text a {
+  color: #FFE4EF;
   text-decoration: none;
-  margin: 0 4px;
-}
-
-.admin-nav a:hover, .admin-nav a.active {
-  text-decoration: underline;
-  color: #ffd6e0;
-}
-
-.btn-logout {
-  background-color: #ffe4ef;
-  color: #3b2a1a;
-  text-decoration: none;
-  padding: 8px 24px;
-  border-radius: 20px;
+  font-size: 20px;
   font-weight: bold;
-  font-size: 14px;
+  margin: 0 6px;
 }
-
-.btn-logout:hover {
-  background-color: #ffd6e0;
+.nav-text a:hover {
+  text-decoration: underline;
+  color: #FFD6E0;
 }
-
-.header-title-section {
-  margin-top: 30px;
+.btn-logout {
+  background-color: #A86B6C;
+  color: #FFE4EF;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 22px;
+  font-size: 20px;
+  cursor: pointer;
+  margin-right: 5px;
 }
-
-.header-title-section h2 {
-  color: #ffffff;
-  font-size: 32px;
-}
-
 .content-container {
   padding: 30px 40px;
 }
