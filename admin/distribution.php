@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
 $request_id_param = isset($_GET['request_id']) ? intval($_GET['request_id']) : 0;
 $selected_request = null;
 if ($request_id_param) {
-    $stmt = $conn->prepare("SELECT r.*, u.username, u.email, u.address FROM REQUEST r JOIN USER u ON r.user_id=u.user_id WHERE r.request_id=?");
+    $stmt = $conn->prepare("SELECT r.*, u.username, u.email, u.address, u.family_size, u.priority_level FROM REQUEST r JOIN USER u ON r.user_id=u.user_id WHERE r.request_id=?");
     $stmt->bind_param("i", $request_id_param);
     $stmt->execute();
     $selected_request = $stmt->get_result()->fetch_assoc();
@@ -52,15 +52,28 @@ if ($request_id_param) {
 
 $delivery_type_extracted = 'Pickup'; // default
 $reason_extracted = 'N/A';
+$delivery_address_extracted = '';
+$need_extracted = '';
+
 if ($selected_request) {
     $desc = $selected_request['description'];
     // Extract Delivery type
     if (preg_match('/Delivery type:\s*([^\.]+)/i', $desc, $matches)) {
         $delivery_type_extracted = trim($matches[1]);
     }
+    // Extract Delivery Address
+    if (preg_match('/Delivery Address:\s*([^\.]+)/i', $desc, $matches)) {
+        $delivery_address_extracted = trim($matches[1]);
+    }
     // Extract Reason
     if (preg_match('/Reason:\s*([^\.]+)/i', $desc, $matches)) {
         $reason_extracted = trim($matches[1]);
+    }
+    // Extract Need description
+    if (preg_match('/Additional info:\s*(.*)/is', $desc, $matches)) {
+        $need_extracted = trim($matches[1]);
+    } else {
+        $need_extracted = $desc; // fallback
     }
 }
 
@@ -103,13 +116,18 @@ $items = $items_result->fetch_all(MYSQLI_ASSOC);
                     <?php endforeach; ?>
                 </select>
             </div>
-            <?php if ($selected_request): ?>
-            <div class="dist-info-row">Family Size: <span>—</span></div>
-            <div class="dist-info-row">Priority: <span>—</span></div>
+             <?php if ($selected_request): ?>
+            <div class="dist-info-row">Family Size: <span><?= htmlspecialchars($selected_request['family_size'] ?? '—') ?></span></div>
+            <div class="dist-info-row">Priority: <span><?= htmlspecialchars($selected_request['priority_level'] ?? '—') ?></span></div>
             <div class="dist-info-row">Requested Delivery Option: <span id="requestedDeliveryType"><?= htmlspecialchars($delivery_type_extracted) ?></span></div>
             <div class="dist-info-row">Reason for Request: <span><?= htmlspecialchars($reason_extracted) ?></span></div>
-            <div class="dist-info-row">Full Need Details: <span><?= htmlspecialchars($selected_request['description']) ?></span></div>
-            <div class="dist-info-row">Registered Address: <span id="beneAddress"><?= htmlspecialchars($selected_request['address'] ?? 'No address registered') ?></span></div>
+            <div class="dist-info-row">Full Need Details: <span><?= htmlspecialchars($need_extracted) ?></span></div>
+            <?php if ($delivery_type_extracted == 'Delivery'): ?>
+                <div class="dist-info-row">Delivery Address: <span><?= htmlspecialchars(!empty($delivery_address_extracted) ? $delivery_address_extracted : ($selected_request['address'] ?? 'No address registered')) ?></span></div>
+            <?php else: ?>
+                <div class="dist-info-row">Delivery Address: <span>N/A (Pickup at Warehouse)</span></div>
+            <?php endif; ?>
+            <span id="beneAddress" style="display:none"><?= htmlspecialchars(!empty($delivery_address_extracted) ? $delivery_address_extracted : ($selected_request['address'] ?? '')) ?></span>
             <?php else: ?>
             <div class="dist-info-row">Family Size:</div>
             <div class="dist-info-row">Priority:</div>
