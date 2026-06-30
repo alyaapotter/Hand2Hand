@@ -66,3 +66,4 @@ $conn->close();
 header('Location: donor/profile_page_donor.php');
 exit();
 ?>
+// settle part password
