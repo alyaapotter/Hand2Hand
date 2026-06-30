@@ -10,14 +10,14 @@ $search = isset($_GET['search']) ? $_GET['search'] : '';
 $search_clean = $conn->real_escape_string($search);
 if ($search_clean !== '') {
     $sql = "SELECT i.name, inv.quantity,
-                   CASE WHEN inv.quantity > 0 THEN 'Available' ELSE 'Out of Stock' END AS status
+                   CASE WHEN inv.quantity < 50 THEN 'Low on Stock' ELSE 'Available' END AS status
             FROM item i
             LEFT JOIN inventory inv ON i.item_id = inv.item_id
             WHERE i.name LIKE '%$search_clean%'
             ORDER BY i.name ASC";
 } else {
     $sql = "SELECT i.name, inv.quantity,
-                   CASE WHEN inv.quantity > 0 THEN 'Available' ELSE 'Out of Stock' END AS status
+                   CASE WHEN inv.quantity < 50 THEN 'Low on Stock' ELSE 'Available' END AS status
             FROM item i
             LEFT JOIN inventory inv ON i.item_id = inv.item_id
             ORDER BY i.name ASC";

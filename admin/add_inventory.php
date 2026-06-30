@@ -11,27 +11,31 @@ $error = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name     = $conn->real_escape_string(trim($_POST['item']));
     $category = $conn->real_escape_string(trim($_POST['category']));
-    $quantity = $_POST['quantity'];
+    $quantity = intval($_POST['quantity']);
 
-    // Check if item already exists
-    $check = $conn->query("SELECT item_id FROM item WHERE name = '$name'");
-    if ($check->num_rows > 0) {
-        $error = "Error: '$name' already exists. Use Update Stock instead.";
+    if ($quantity < 1 || $quantity > 1000) {
+        $error = "Error: Quantity must be between 1 and 1000.";
     } else {
-        // Insert into item table
-        $sql_item = "INSERT INTO item (name, category) VALUES ('$name', '$category')";
-        if ($conn->query($sql_item) === TRUE) {
-            $item_id = $conn->insert_id;
-            // Insert into inventory table
-            $sql_inv = "INSERT INTO inventory (item_id, quantity) VALUES ('$item_id', '$quantity')";
-            if ($conn->query($sql_inv) === TRUE) {
-                header('Location: inventory.php?added=1');
-                exit;
+        // Check if item already exists
+        $check = $conn->query("SELECT item_id FROM item WHERE name = '$name'");
+        if ($check->num_rows > 0) {
+            $error = "Error: '$name' already exists. Use Update Stock instead.";
+        } else {
+            // Insert into item table
+            $sql_item = "INSERT INTO item (name, category) VALUES ('$name', '$category')";
+            if ($conn->query($sql_item) === TRUE) {
+                $item_id = $conn->insert_id;
+                // Insert into inventory table
+                $sql_inv = "INSERT INTO inventory (item_id, quantity) VALUES ('$item_id', '$quantity')";
+                if ($conn->query($sql_inv) === TRUE) {
+                    header('Location: inventory.php?added=1');
+                    exit;
+                } else {
+                    $error = "Error: " . $conn->error;
+                }
             } else {
                 $error = "Error: " . $conn->error;
             }
-        } else {
-            $error = "Error: " . $conn->error;
         }
     }
     $conn->close();
@@ -75,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
             <div class="form-container">
                 <label>Quantity:</label>
-                <input type="text" name="quantity" id="quantity">
+                <input type="number" name="quantity" id="quantity" min="1" max="1000">
                 <div id="qtyError" class="error-msg"></div>
             </div>
             <button type="submit" name="action" value="add">Add New Item</button>
@@ -95,9 +99,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 return false;
             }
 
-            // Check quantity is a positive whole number
-            if (isNaN(quantity) || !Number.isInteger(Number(quantity)) || Number(quantity) <= 0) {
-                alert("Quantity must be a non-negative whole number.");
+            // Check quantity is between 1 and 1000
+            if (isNaN(quantity) || Number(quantity) < 1 || Number(quantity) > 1000) {
+                alert("Quantity must be a number between 1 and 1000.");
                 event.preventDefault();
                 return false;
             }
