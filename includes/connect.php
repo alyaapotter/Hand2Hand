@@ -1,7 +1,7 @@
 <?php
 $servername = "localhost";
 $username = "root";
-$password = "root123";
+$password = "";
 $dbname = "hand2hand";
 
 // Create connection
