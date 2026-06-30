@@ -5,7 +5,7 @@ $password = "";
 $dbname = "hand2hand";
 
 // Create connection
-$conn = new mysqli($servername, $username, $password, $dbname, 3307 );
+$conn = new mysqli($servername, $username, $password, $dbname, 3301);
  
 // Check connection
 if ($conn->connect_error) {
