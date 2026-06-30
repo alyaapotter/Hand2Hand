@@ -23,17 +23,17 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'Donor') {
 <header class="donor-header">
     <div class="top-header">
         <div class="logo">
-            <img src="../image/logo.png" alt="Hand2Hand logo" class="logo-circle" width="80">
+            <img src="../images/logo.png" alt="Hand2Hand logo" class="logo-circle" width="80">
             <h1>Hand2Hand</h1>
         </div>
         <a href="../logout.php" class="logout-btn">Logout</a>
     </div>
 
-    
-        <a href="donor/home_page_donor.php" class="active">Home</a> |
-        <a href="donor/donation_event_donor.php">My Events</a> |
-        <a href="donor/donate_item.php">My Donations</a>
-    
+    <nav class="donor-nav">
+    <a href="home_page_donor.php">Home</a> |
+    <a href="donation_event_donor.php">My Events</a> |
+    <a href="donate_item.php">My Donations</a>
+</nav>
 </header>
 
 <main class="content-container">
