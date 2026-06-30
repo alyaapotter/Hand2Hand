@@ -1,10 +1,9 @@
 <?php
-// beneficiary/profile_page_bene.php
+// donor/profile_page_donor.php
 session_start();
-// Sambung dengan fail connect.php kau yang dah berpassword "root123"
-require_once '../includes/connect.php'; 
+require_once '../includes/connect.php';
 
-if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'Requester') {
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'Donor') {
     header('Location: ../login.php');
     exit();
 }
@@ -17,10 +16,7 @@ $stmt = $conn->prepare("
         user_id,
         username,
         email,
-        contact_number,
-        address,
-        family_size,
-        priority_level
+        contact_number
     FROM user
     WHERE user_id = ?
     LIMIT 1
@@ -50,7 +46,7 @@ unset($_SESSION['success_msg'], $_SESSION['error_msg']);
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Hand2Hand - Profile (Beneficiary)</title>
+  <title>Hand2Hand - Profile (Donor)</title>
   <link rel="stylesheet" href="../css/formatBulan.css">
   <style>
     /* ===== Page background: milk/cream, same as Aid History page ===== */
@@ -143,9 +139,6 @@ unset($_SESSION['success_msg'], $_SESSION['error_msg']);
 
     .dynamic-width { width: 100%; max-width: 320px; }
     .short-width   { width: 100%; max-width: 220px; }
-    .long-width    { width: 100%; max-width: 420px; }
-    .tiny-width    { width: 90px; }
-    .dropdown-field { cursor: pointer; }
 
     .readonly-value {
         font-size: 14px;
@@ -239,9 +232,9 @@ unset($_SESSION['success_msg'], $_SESSION['error_msg']);
           <input type="text" id="name" name="name" class="input-field dynamic-width" value="<?= htmlspecialchars($profile['username'] ?? '') ?>" required />
         </div>
         <div class="form-group">
-          <label>Beneficiary ID:</label>
+          <label>Donor ID:</label>
           <span class="readonly-value">
-            <?= $profile ? 'USR-' . str_pad($profile['user_id'], 5, '0', STR_PAD_LEFT) : 'N/A' ?>
+            <?= $profile ? 'DNR-' . str_pad($profile['user_id'], 5, '0', STR_PAD_LEFT) : 'N/A' ?>
           </span>
         </div>
         <div class="form-group">
@@ -251,29 +244,6 @@ unset($_SESSION['success_msg'], $_SESSION['error_msg']);
         <div class="form-group">
           <label for="contact">Contact Number:</label>
           <input type="text" id="contact" name="contact" class="input-field short-width" value="<?= htmlspecialchars($profile['contact_number'] ?? '') ?>" />
-        </div>
-        <div class="form-group">
-          <label for="address">Address:</label>
-          <input type="text" id="address" name="address" class="input-field long-width" value="<?= htmlspecialchars($profile['address'] ?? '') ?>" />
-        </div>
-      </fieldset>
-
-      <hr class="section-divider">
-
-      <fieldset class="form-section">
-        <legend class="section-title">Aid Target Information</legend>
-        <div class="form-group">
-          <label for="family_size">Family Size:</label>
-          <input type="number" id="family_size" name="family_size" class="input-field tiny-width" min="1" max="99" value="<?= (int)($profile['family_size'] ?? 1) ?>" />
-        </div>
-        <div class="form-group">
-          <label for="priority">Priority Level:</label>
-          <select id="priority" name="priority" class="input-field short-width dropdown-field">
-            <option value="">-- Pilih --</option>
-            <?php foreach (['Low', 'Medium', 'High'] as $lvl): ?>
-              <option value="<?= $lvl ?>" <?= (($profile['priority_level'] ?? '') === $lvl) ? 'selected' : '' ?>><?= $lvl ?></option>
-            <?php endforeach; ?>
-          </select>
         </div>
       </fieldset>
 
@@ -314,7 +284,11 @@ unset($_SESSION['success_msg'], $_SESSION['error_msg']);
     </div>
   </div>
 
-  <?php include '../includes/footer.php'; ?>
+  <footer class="dark-footer">
+    <h4>Hand2Hand</h4>
+    <p>Contact Us:</p>
+    <p>Email: hand2hand@support.com</p>
+</footer>
 
   <script>
     function togglePasswordSection() {

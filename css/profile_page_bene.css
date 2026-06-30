@@ -7,8 +7,22 @@
 }
 
 body {
-  background-color: #b59b8a; /* Muted taupe brown */
+  background-color: #f3e7dc;
   color: #443025;
+}
+
+.input-field {
+  background-color: #fffaf6;
+  border: 2px solid #443025;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 16px;
+  color: #443025;
+}
+
+.input-field:focus {
+  border-color: #a46869;
+  box-shadow: 0 0 8px rgba(164, 104, 105, 0.3);
 }
 
 /* ── NAVBAR ── */
@@ -88,6 +102,13 @@ nav {
 .profile-form {
   display: flex;
   flex-direction: column;
+  background-color: #fffaf6;
+  border: 3px solid #443025;
+  border-radius: 15px;
+  padding: 35px;
+  max-width: 1000px;
+  margin: 20px auto;
+  box-shadow: 0 4px 15px rgba(68, 48, 37, 0.15);
 }
 
 .form-section {
@@ -96,10 +117,10 @@ nav {
 }
 
 .section-title {
-  font-size: 24px;
-  color: #3b2a1a;
-  margin-bottom: 20px;
-  font-weight: normal;
+  font-size: 30px;
+  font-weight: 600;
+  color: #443025;
+  margin-bottom: 25px;
 }
 
 .form-group {
@@ -112,15 +133,6 @@ nav {
 .form-group label {
   width: 160px; 
   color: #443025;
-}
-
-.input-field {
-  border: none;
-  background-color: #ffe4ef;
-  padding: 8px 12px;
-  font-size: 16px;
-  color: #3b2a1a;
-  outline: none;
 }
 
 .dynamic-width { width: 300px; }
@@ -136,33 +148,36 @@ nav {
   background-size: 20px;
   padding-right: 30px;
 }
-
 .section-divider {
   border: none;
-  border-top: 1px dotted #7a6b63;
-  margin: 20px 0;
+  border-top: 2px solid #443025;
+  margin: 30px 0;
 }
-
 .save-button-container {
   margin-top: 15px;
 }
 
 .btn-save {
-  background-color: #a46869; /* Muted reddish-brown button */
-  color: #ffe4ef;
+  background-color: #a46869;
+  color: white;
   border: none;
-  padding: 12px 40px;
-  font-size: 16px;
-  border-radius: 12px;
-  cursor: pointer;
+  padding: 12px 35px;
+  border-radius: 8px;
+  font-weight: bold;
+  transition: 0.3s;
 }
 
 .btn-save:hover {
-  background-color: #93595a;
+  background-color: #8f5758;
+  transform: translateY(-2px);
 }
 
 .main-footer {
   padding: 10px 40px 40px 40px;
+}
+
+.content-container {
+  padding: 40px;
 }
 
 .footer-divider {

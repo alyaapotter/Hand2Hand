@@ -41,7 +41,7 @@ require_once __DIR__ . '/includes/connect.php';
   <!-- About Section -->
   <section class="about-section">
     <h2 style="font-size: 22px;">About Hand2Hand</h2>
-    <p style="font-size: 16px;">Hand2Hand is a community-driven platform that connects donors with those in need through organized donation events.</p>
+    <p style="font-size: 16px;">Hand2Hand is more than just a donation platform — it's a bridge between generosity and genuine need. We connect everyday donors with families and individuals facing hardship, making sure every contribution, big or small, finds its way to someone who truly needs it. Through organized donation events covering essentials like food, school supplies, baby care items, and medical aid, we strive to build a community where no one is left behind.</p>
   </section>
 
   <div class="divider"></div>
