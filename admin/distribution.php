@@ -10,12 +10,15 @@ $success = ""; $error = "";
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['action'] == 'distribute') {
     $request_id = intval($_POST['request_id']);
     $dist_date  = $_POST['dist_date'] ?? '';
-    $location   = mysqli_real_escape_string($conn, trim($_POST['location'] ?? ''));
 
-    if (!$request_id || empty($dist_date) || empty($location)) {
-        $error = "Please fill in all fields.";
+    if (!$request_id || empty($dist_date)) {
+        $error = "Please select a distribution date.";
     } else {
-        $req_stmt = $conn->prepare("SELECT item_id, quantity FROM REQUEST WHERE request_id=? AND status='Approved'");
+        // Fetch item, quantity, delivery option and address from database automatically
+        $req_stmt = $conn->prepare("SELECT r.item_id, r.quantity, r.delivery_option, u.address 
+                                    FROM REQUEST r 
+                                    JOIN USER u ON r.user_id = u.user_id 
+                                    WHERE r.request_id=? AND r.status='Approved'");
         $req_stmt->bind_param("i", $request_id);
         $req_stmt->execute();
         $req_data = $req_stmt->get_result()->fetch_assoc();
@@ -25,6 +28,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
         } else {
             $item_id  = $req_data['item_id'];
             $quantity = $req_data['quantity'];
+            
+            // Connect location automatically: if Delivery -> use user address, else -> Warehouse
+            $location = ($req_data['delivery_option'] == 'Delivery') ? $req_data['address'] : 'Warehouse';
 
             $inv_stmt = $conn->prepare("SELECT quantity FROM INVENTORY WHERE item_id=?");
             $inv_stmt->bind_param("i", $item_id);
@@ -88,7 +94,6 @@ if ($selected_request && $selected_request['item_id']) {
     <style>
         .dist-form label { display:block; font-weight:bold; color:#443025; margin-bottom:5px; font-size:14px; }
         .dist-form input[type="date"],
-        .dist-form input[type="text"],
         .dist-form select { width:100%; padding:10px; margin-bottom:18px; border:2px solid #A86B6C; border-radius:10px; background:#FFE4EF; color:#443025; font-size:14px; box-sizing:border-box; outline:none; }
         .dist-form select { width:auto; min-width:350px; }
         .info-row { display:flex; gap:15px; flex-wrap:wrap; margin-bottom:15px; }
@@ -165,18 +170,14 @@ if ($selected_request && $selected_request['item_id']) {
             </div>
 
             <h2 style="margin:20px 0 12px; color:#443025;">Distribution Details</h2>
+            
             <label>Distribution Date: <span style="color:#ef4444">*</span></label>
             <input type="date" name="dist_date" required min="<?= date('Y-m-d') ?>" style="width:250px">
 
-            <label>Distribution Location: <span style="color:#ef4444">*</span></label>
-            <input type="text" name="location" required style="width:400px"
-                   value="<?= $selected_request['delivery_option'] == 'Delivery' ? htmlspecialchars($selected_request['address'] ?? '') : 'Warehouse' ?>"
-                   placeholder="Enter location...">
-            <?php if ($selected_request['delivery_option'] == 'Delivery'): ?>
-                <p style="font-size:12px;color:#A86B6C;margin-top:-12px;margin-bottom:15px;">Pre-filled with beneficiary's address. Edit if needed.</p>
-            <?php else: ?>
-                <p style="font-size:12px;color:#A86B6C;margin-top:-12px;margin-bottom:15px;">Pickup — default is Warehouse.</p>
-            <?php endif; ?>
+            <label>Distribution Location (Auto Connected):</label>
+            <p style="font-size:15px; font-weight:bold; color:#443025; margin-bottom:18px; padding-left:5px;">
+                📍 <?= $selected_request['delivery_option'] == 'Delivery' ? htmlspecialchars($selected_request['address'] ?? 'No address registered') : 'Warehouse (Collect at distribution centre)' ?>
+            </p>
 
             <button type="submit" class="submit-btn" <?= !$stock_ok ? 'disabled style="opacity:0.5;cursor:not-allowed"' : '' ?>>📦 Confirm Distribution</button>
             <a href="beneficiary_needs.php" class="back-btn" style="margin-left:10px; text-decoration:none;">← Back</a>
@@ -202,9 +203,7 @@ if ($selected_request && $selected_request['item_id']) {
 function loadRequest(id) { if (id) window.location.href = 'distribution.php?request_id=' + id; }
 function validateDist() {
     const date = document.querySelector('input[name="dist_date"]')?.value;
-    const loc  = document.querySelector('input[name="location"]')?.value.trim();
     if (!date) { alert('Please select a distribution date!'); return false; }
-    if (!loc)  { alert('Please enter a distribution location!'); return false; }
     return true;
 }
 </script>

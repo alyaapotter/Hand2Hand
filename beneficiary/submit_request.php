@@ -8,6 +8,11 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 'Requester') {
 $user_id = $_SESSION['user_id'];
 $success = ""; $error = "";
 
+// Fetch the beneficiary's registered address from their profile
+$user_res = mysqli_query($conn, "SELECT address FROM USER WHERE user_id = $user_id");
+$user_row = mysqli_fetch_assoc($user_res);
+$profile_address = $user_row['address'] ?? '';
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $item_id       = intval($_POST['item_id']);
     $quantity      = intval($_POST['quantity']);
@@ -46,11 +51,6 @@ $items       = mysqli_fetch_all($item_result, MYSQLI_ASSOC);
         .req-form textarea { resize:vertical; min-height:100px; }
         .req-form .small { width:100px; }
         .required { color:#ef4444; }
-
-        /* Dark Footer styling for Light background pages */
-        footer.dark-footer { background-color: #443025 !important; color: #FFE4EF !important; padding: 30px !important; margin-top: 0 !important; }
-        footer.dark-footer h4 { color: #FFE4EF !important; margin-bottom: 15px !important; }
-        footer.dark-footer p { color: #FFE4EF !important; margin-bottom: 2px !important; font-size: 14px !important; }
     </style>
 </head>
 <body>
@@ -94,7 +94,8 @@ $items       = mysqli_fetch_all($item_result, MYSQLI_ASSOC);
 
             <div id="addressField" style="display:none">
                 <label>Delivery Address: <span class="required">*</span></label>
-                <input type="text" name="delivery_address" id="deliveryAddress" placeholder="Enter your full address...">
+                <input type="text" name="delivery_address" id="deliveryAddress" value="<?= htmlspecialchars($profile_address) ?>" placeholder="Enter your full address...">
+                <p style="font-size:12px;color:#A86B6C;margin-top:-12px;margin-bottom:15px;">Auto-filled from your profile. You can edit this if needed.</p>
             </div>
 
             <label>Reason for Request: <span class="required">*</span></label>
