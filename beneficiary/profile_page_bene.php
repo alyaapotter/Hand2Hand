@@ -16,6 +16,7 @@ $stmt = $conn->prepare("
     SELECT
         user_id,
         username,
+        email,
         contact_number,
         address,
         family_size,
@@ -52,7 +53,11 @@ unset($_SESSION['success_msg'], $_SESSION['error_msg']);
   <title>Hand2Hand - Profile (Beneficiary)</title>
   <link rel="stylesheet" href="../css/formatBulan.css">
   <style>
-    /* ===== Page wrapper, matches aid_status.php theme ===== */
+    /* ===== Page background: milk/cream, same as Aid History page ===== */
+    body {
+        background-color: #F0E6D8;
+    }
+
     .content-container {
         max-width: 760px;
         margin: 30px auto 60px;
@@ -87,6 +92,7 @@ unset($_SESSION['success_msg'], $_SESSION['error_msg']);
         border-radius: 12px;
         padding: 30px 35px;
         box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+        margin-bottom: 25px;
     }
 
     .form-section {
@@ -161,11 +167,13 @@ unset($_SESSION['success_msg'], $_SESSION['error_msg']);
     .save-button-container {
         text-align: center;
         margin-top: 10px;
+        display: flex;
+        justify-content: center;
+        gap: 14px;
+        flex-wrap: wrap;
     }
 
-    .btn-save {
-        background-color: #443025;
-        color: #FFE4EF;
+    .btn-save, .btn-secondary {
         border: none;
         padding: 11px 38px;
         border-radius: 25px;
@@ -174,9 +182,30 @@ unset($_SESSION['success_msg'], $_SESSION['error_msg']);
         cursor: pointer;
         transition: background-color 0.2s, transform 0.1s;
     }
+    .btn-save {
+        background-color: #443025;
+        color: #FFE4EF;
+    }
     .btn-save:hover {
         background-color: #5c4434;
         transform: translateY(-1px);
+    }
+    .btn-secondary {
+        background-color: #ffffff;
+        color: #443025;
+        border: 2px solid #A86B6C;
+    }
+    .btn-secondary:hover {
+        background-color: #f7d6e4;
+        transform: translateY(-1px);
+    }
+
+    /* ===== Change Password (collapsible) ===== */
+    #passwordSection {
+        display: none;
+    }
+    #passwordSection.show {
+        display: block;
     }
 
     /* Dark footer styling, consistent with aid_status.php */
@@ -209,6 +238,7 @@ unset($_SESSION['success_msg'], $_SESSION['error_msg']);
       <div class="alert alert-error"><?= htmlspecialchars($error_msg) ?></div>
     <?php endif; ?>
 
+    <!-- ===== Profile Details Form ===== -->
     <form action="../process_profile.php" method="POST" class="profile-form">
       <input type="hidden" name="user_id" value="<?= (int)$user_id ?>">
 
@@ -223,6 +253,10 @@ unset($_SESSION['success_msg'], $_SESSION['error_msg']);
           <span class="readonly-value">
             <?= $profile ? 'USR-' . str_pad($profile['user_id'], 5, '0', STR_PAD_LEFT) : 'N/A' ?>
           </span>
+        </div>
+        <div class="form-group">
+          <label for="email">Email:</label>
+          <input type="email" id="email" name="email" class="input-field dynamic-width" value="<?= htmlspecialchars($profile['email'] ?? '') ?>" required />
         </div>
         <div class="form-group">
           <label for="contact">Contact Number:</label>
@@ -256,8 +290,38 @@ unset($_SESSION['success_msg'], $_SESSION['error_msg']);
       <hr class="section-divider">
       <div class="save-button-container">
         <button type="submit" class="btn-save">Save</button>
+        <button type="button" class="btn-secondary" onclick="togglePasswordSection()">Change Password</button>
       </div>
     </form>
+
+    <!-- ===== Change Password Form (hidden by default) ===== -->
+    <div id="passwordSection">
+      <form action="../process_password.php" method="POST" class="profile-form" onsubmit="return validatePasswordChange()">
+        <input type="hidden" name="user_id" value="<?= (int)$user_id ?>">
+
+        <fieldset class="form-section">
+          <legend class="section-title">Change Password</legend>
+          <div class="form-group">
+            <label for="current_password">Current Password:</label>
+            <input type="password" id="current_password" name="current_password" class="input-field dynamic-width" placeholder="Enter current password" required />
+          </div>
+          <div class="form-group">
+            <label for="new_password">New Password:</label>
+            <input type="password" id="new_password" name="new_password" class="input-field dynamic-width" placeholder="Enter new password" required />
+          </div>
+          <div class="form-group">
+            <label for="confirm_password">Confirm Password:</label>
+            <input type="password" id="confirm_password" name="confirm_password" class="input-field dynamic-width" placeholder="Confirm new password" required />
+          </div>
+        </fieldset>
+
+        <hr class="section-divider">
+        <div class="save-button-container">
+          <button type="submit" class="btn-save">Update Password</button>
+          <button type="button" class="btn-secondary" onclick="togglePasswordSection()">Cancel</button>
+        </div>
+      </form>
+    </div>
   </div>
 
   <footer class="dark-footer">
@@ -266,5 +330,27 @@ unset($_SESSION['success_msg'], $_SESSION['error_msg']);
       <p>Email: hand2hand@support.com</p>
   </footer>
 
+  <script>
+    function togglePasswordSection() {
+        document.getElementById('passwordSection').classList.toggle('show');
+    }
+
+    // Same validation pattern as register.php
+    function validatePasswordChange() {
+        const newPassword = document.getElementById('new_password').value;
+        const confirmPassword = document.getElementById('confirm_password').value;
+
+        if (newPassword.length < 6) {
+            alert('New password must be at least 6 characters!');
+            return false;
+        }
+        if (newPassword !== confirmPassword) {
+            alert('New Password and Confirm Password do not match!');
+            return false;
+        }
+        return true;
+    }
+  </script>
+
 </body>
-</html>
+</html>g
