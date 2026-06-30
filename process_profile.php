@@ -1,4 +1,7 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 session_start();
 require_once 'includes/connect.php';
 
@@ -46,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $stmt->close();
 
-    header("Location: profile_page_bene.php");
-    exit();
+    header("Location: beneficiary/profile_page_bene.php");
+exit();
 }
 ?>

@@ -56,7 +56,7 @@ unset($_SESSION['success_msg'], $_SESSION['error_msg']);
 
   <nav>
     <div class="nav-left">
-      <img src="images/logo.png" alt="Hand2Hand Logo" class="logo-circle">
+      <img src="../image/logo.png" alt="Hand2Hand Logo" class="logo-circle">
       <div class="nav-text">
         <h1>Hand2Hand</h1>
         <div class="nav-links">
