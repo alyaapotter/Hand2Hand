@@ -9,18 +9,20 @@ include('../includes/connect.php');
 $search = isset($_GET['search']) ? $_GET['search'] : '';
 $search_clean = $conn->real_escape_string($search);
 if ($search_clean !== '') {
-    $sql = "SELECT i.name, inv.quantity,
-                   CASE WHEN inv.quantity > 0 THEN 'Available' ELSE 'Out of Stock' END AS status
+    $sql = "SELECT i.item_id, i.name, i.category, i.description, inv.quantity
             FROM item i
             LEFT JOIN inventory inv ON i.item_id = inv.item_id
-            WHERE i.name LIKE '%$search_clean%'
-            ORDER BY i.name ASC";
+            WHERE i.item_id LIKE '%$search_clean%'
+               OR i.name LIKE '%$search_clean%'
+               OR i.category LIKE '%$search_clean%'
+               OR i.description LIKE '%$search_clean%'
+               OR inv.quantity LIKE '%$search_clean%'
+            ORDER BY i.item_id DESC";
 } else {
-    $sql = "SELECT i.name, inv.quantity,
-                   CASE WHEN inv.quantity > 0 THEN 'Available' ELSE 'Out of Stock' END AS status
+    $sql = "SELECT i.item_id, i.name, i.category, i.description, inv.quantity
             FROM item i
             LEFT JOIN inventory inv ON i.item_id = inv.item_id
-            ORDER BY i.name ASC";
+            ORDER BY i.item_id DESC";
 }
 $result = $conn->query($sql);
 ?>
@@ -34,13 +36,12 @@ $result = $conn->query($sql);
 </head>
 <body>
     <?php include '../includes/navbar.php'; ?>
-
     <div class="search">
         <h1>Inventory</h1>
     </div>
     <form method="GET" action="inventory.php">
         <input class="search-bar" type="text" name="search"
-               placeholder="Search"
+               placeholder="Search ID, Name, Category, Description or Quantity"
                value="<?php echo htmlspecialchars($search); ?>">
     </form>
     <section class="inventory-list">
@@ -56,23 +57,27 @@ $result = $conn->query($sql);
         <table class="table-container">
             <thead>
                 <tr>
+                    <th>Item ID</th>
                     <th>Item Name</th>
+                    <th>Category</th>
+                    <th>Description</th>
                     <th>Quantity Available</th>
-                    <th>Status</th>
                 </tr>
             </thead>
             <tbody>
                 <?php if ($result->num_rows > 0): ?>
                     <?php while ($row = $result->fetch_assoc()): ?>
                         <tr>
+                            <td><?php echo htmlspecialchars($row['item_id']); ?></td>
                             <td><?php echo htmlspecialchars($row['name']); ?></td>
+                            <td><?php echo htmlspecialchars($row['category']); ?></td>
+                            <td><?php echo htmlspecialchars($row['description']); ?></td>
                             <td><?php echo htmlspecialchars($row['quantity'] ?? 0); ?></td>
-                            <td><?php echo htmlspecialchars($row['status']); ?></td>
                         </tr>
                     <?php endwhile; ?>
                 <?php else: ?>
                     <tr>
-                        <td colspan="3" style="text-align:center;">No items found.</td>
+                        <td colspan="5" style="text-align:center;">No items found.</td>
                     </tr>
                 <?php endif; ?>
             </tbody>
@@ -80,7 +85,6 @@ $result = $conn->query($sql);
         <button onclick="window.location.href='update_inventory.php'">Update Stock</button>
         <button onclick="window.location.href='add_inventory.php'">Add New Item</button>
     </section>
-
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.get('added') === '1') {

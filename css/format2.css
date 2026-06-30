@@ -17,7 +17,7 @@ header {
     align-items: center;
     gap: 15px;
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
 }
 
 header img {
@@ -50,7 +50,7 @@ nav a:hover {
     color: #a86b8c;
 }
 
-/*LOGOUT BUTTON*/
+/* LOGOUT BUTTON */
 .logout-btn {
     background-color: #FFE4EF;
     color: #443025;
@@ -65,7 +65,7 @@ nav a:hover {
 
 .logout-btn:hover {
     background-color: #a45a66;
-} 
+}
 
 
 button {
@@ -83,8 +83,9 @@ button:hover {
     background-color: #a45a66;
 }
 
-/* TEXT INPUT */
-input[type="text"] {
+/* TEXT & NUMBER INPUT */
+input[type="text"],
+input[type="number"] {
     width: 35%;
     height: 50px;
     font-size: 16px;
@@ -100,50 +101,6 @@ input[type="text"] {
 /* =============
     ABOUT PAGE
    =============*/
-
-.header1 nav {
-    margin-left: 95px; 
-    margin-top: -55px;
-}
-
-header img {
-    border-radius: 50%;
-}
-
-/* logo side */
-.logo {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    font-weight: bold;
-}
-
-.logo h1 {
-    font-size: 30px;
-    color: #FFE4EF;
-    text-decoration: none;
-    margin: 0 3px;
-    font-weight: bold;
-}
-
-/* NAV */
-nav {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.header1 nav a {
-    font-size: 30px;
-    color: #FFE4EF;
-    text-decoration: none;
-    margin: 0 10px;
-    font-weight: bold;
-}
-
-.header1 nav a:hover {
-    color: #A86B6C;
-}
 h2, h3 {
     text-align: left;
     margin: 15px 0 5px;
@@ -248,6 +205,47 @@ th, td {
     font-size: 10pt;
 }
 
+/* Rounded style scoped ONLY to inputs/selects inside Add/Update Inventory forms
+   so the search bar above is never affected */
+.form-container input[type="text"],
+.form-container input[type="number"] {
+    border: 2px solid #A86B6C;
+    border-radius: 10px;
+    padding: 0 15px;
+}
+
+.form-container select {
+    width: 35%;
+    height: 50px;
+    font-size: 16px;
+    background-color: #FFE4EF;
+    color: #443025;
+    border: 2px solid #A86B6C;
+    border-radius: 10px;
+    padding: 0 15px;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23443025' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 18px;
+}
+
+.form-container textarea {
+    width: 35%;
+    min-height: 100px;
+    font-size: 16px;
+    background-color: #FFE4EF;
+    color: #443025;
+    border: 2px solid #A86B6C;
+    border-radius: 10px;
+    padding: 10px 15px;
+    font-family: Arial, sans-serif;
+    resize: vertical;
+}
+
 @media (max-width: 768px) {
 
     header {
@@ -340,9 +338,22 @@ th, td {
         margin-top: 10px;
     }
 
-    input[type="text"] {
+    input[type="text"],
+    input[type="number"] {
         width: 100%;
         height: 40px;
+        font-size: 14px;
+    }
+
+    .form-container select {
+        width: 100%;
+        height: 40px;
+        font-size: 14px;
+    }
+
+    .form-container textarea {
+        width: 100%;
+        min-height: 80px;
         font-size: 14px;
     }
 
