@@ -10,6 +10,7 @@
 body {
     background-color: #443025;
     color: #443025;
+    overflow-x: hidden;
 }
 
 /* HEADER */
@@ -20,6 +21,7 @@ header {
     display: flex;
     align-items: center;
     gap: 15px;
+    flex-wrap: wrap;
 }
 
 .header1 nav {
@@ -52,6 +54,7 @@ nav {
     display: flex;
     align-items: center;
     gap: 5px;
+    flex-wrap: wrap;
 }
 
 .header1 nav a {
@@ -213,6 +216,7 @@ nav {
     align-items: center;
     gap: 30px;
     margin-bottom: 10px;
+    flex-wrap: wrap;
 }
 
 /* PROGRESS */
@@ -278,6 +282,7 @@ footer p {
 
 .form-container {
     width: 350px;
+    max-width: 100%;
     height: 455px;
     margin: 40px auto;
     background: white;
@@ -363,6 +368,8 @@ footer p {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
 
     background-color: #FFE4EF;
     border: 2px solid #A86B6C;
@@ -435,6 +442,7 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
 }
 
 .top-header h1 {
@@ -473,6 +481,7 @@ header {
     display: flex;
     gap: 50px;
     width: 100%;
+    flex-wrap: wrap;
 }
 
 .event-form input,
@@ -498,6 +507,7 @@ header {
     align-items: center;
     gap: 10px;
     margin-bottom: 15px;
+    flex-wrap: wrap;
 }
 
 .target-input input {
@@ -507,6 +517,7 @@ header {
     border-radius: 10px;
     background-color: #FFE4EF;
     margin: 0;
+    min-width: 120px;
 }
 
 .add-item-btn {
@@ -539,6 +550,8 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
 
     background-color: #FFE4EF;
     border: 1px solid #A86B6C;
@@ -635,4 +648,221 @@ header {
     margin-left: auto;
     display: flex;
     gap: 10px;
+    flex-wrap: wrap;
+}
+
+
+/* TABLET — 992px and below */
+@media (max-width: 992px) {
+    .event-grid {
+        grid-template-columns: repeat(2, 1fr);
+        padding: 20px;
+    }
+
+    .event-form {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .left-panel,
+    .right-panel {
+        max-width: 100%;
+    }
+
+    .search-bar {
+        width: 60%;
+    }
+
+    .search-icon {
+        left: 55%;
+    }
+
+    .alert,
+    .alert2 {
+        width: 50%;
+    }
+
+    .progress-container {
+        width: 60%;
+    }
+}
+
+/* MOBILE — 768px and below */
+@media (max-width: 768px) {
+    header {
+        padding: 15px;
+    }
+
+    .header1 nav {
+        margin-left: 0;
+        margin-top: 10px;
+        width: 100%;
+        justify-content: center;
+    }
+
+    .header1 nav a {
+        font-size: 20px;
+        margin: 0 8px;
+    }
+
+    .logo h1 {
+        font-size: 22px;
+    }
+
+    .top-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .top-header h1 {
+        margin-top: 0;
+    }
+
+    .page-title h1,
+    .page-title2 h1 {
+        font-size: 22px;
+        margin-left: 10px;
+    }
+
+    .page-title p,
+    .page-title2 p {
+        margin-left: 10px;
+    }
+
+    .page-title2 {
+        margin-left: 10px;
+    }
+
+    .search-bar {
+        width: 90%;
+        margin: 20px auto;
+    }
+
+    .search-icon {
+        left: 80%;
+    }
+
+    .event-grid {
+        grid-template-columns: 1fr;
+        padding: 15px;
+    }
+
+    .event-card {
+        height: auto;
+        min-height: 320px;
+    }
+
+    .card-content {
+        position: static;
+        margin-top: 10px;
+    }
+
+    .donate-btn {
+        position: static;
+        transform: none;
+        display: block;
+        margin: 15px auto;
+    }
+
+    .alert,
+    .alert2 {
+        width: 90%;
+        margin-left: 10px;
+    }
+
+    .progress-container {
+        width: 90%;
+    }
+
+    .form-container {
+        width: 90%;
+        height: auto;
+        padding: 20px;
+        margin: 20px auto;
+    }
+
+    .reg {
+        height: auto;
+    }
+
+    .admin-table {
+        padding: 15px;
+    }
+
+    .admin-table h2 {
+        margin-left: 10px;
+    }
+
+    .admin-table button {
+        margin-left: 10px;
+        padding: 12px 20px;
+    }
+
+    .event-row {
+        flex-direction: column;
+        align-items: flex-start;
+        margin-left: 10px;
+    }
+
+    .action-btns {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .form-page {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .target-row span:nth-child(1),
+    .target-row span:nth-child(2),
+    .target-row span:nth-child(3) {
+        width: auto;
+    }
+
+    .progress-header {
+        flex-wrap: wrap;
+    }
+
+    footer {
+        padding: 20px;
+    }
+}
+
+/* SMALL MOBILE — 480px and below */
+@media (max-width: 480px) {
+    .logo h1 {
+        font-size: 18px;
+    }
+
+    .header1 nav a {
+        font-size: 16px;
+        margin: 0 6px;
+    }
+
+    .page-title h1,
+    .page-title2 h1 {
+        font-size: 18px;
+    }
+
+    .event-card {
+        min-height: 280px;
+    }
+
+    .donate-btn,
+    .submit-btn,
+    .back-btn {
+        width: 100%;
+        text-align: center;
+    }
+
+    .target-input {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .add-item-btn {
+        width: 100%;
+    }
 }
