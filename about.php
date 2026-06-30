@@ -3,24 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="css/format2.css">
     <title>About Page</title>
 </head>
 
-<body>
+<body class="about-page">
     <header>
+
         <div class="logo">
-        <img src="logo.png" alt="Hand2Hand logo" width="80">
-        <h1>Hand2Hand</h1>
+            <img src="image/logo.png" alt="Hand2Hand logo" width="80">
         </div>
+
         <nav>
-            |
+            <a href="home.php">Hand2Hand</a> |
             <a href="about.php">About Us</a> |
             <a href="event.php">Events</a> |
             <a href="login.php">Login</a>
         </nav>
-    </header>
 
+    </header>
     <div class="description">
         <h2>About Hand2Hand</h2>
         <p>Hand2Hand is a community-driven platform that connects individuals who wish to donate unused items with those who need them. 

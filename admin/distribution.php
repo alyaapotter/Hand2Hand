@@ -135,7 +135,7 @@ if ($selected_request && $selected_request['item_id']) {
                 <option value="">-- Select --</option>
                 <?php foreach ($approved_requests as $req): ?>
                     <option value="<?= $req['request_id'] ?>" <?= $request_id_param == $req['request_id'] ? 'selected' : '' ?>>
-                        <?= htmlspecialchars($req['username']) ?> — <?= htmlspecialchars($req['item_name'] ?? 'Item not specified') ?> (Qty: <?= $req['quantity'] ?? '—' ?>) — #<?= $req['request_id'] ?>
+                        <?= htmlspecialchars($req['username']) ?>
                     </option>
                 <?php endforeach; ?>
             </select>
