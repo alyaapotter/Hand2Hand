@@ -150,15 +150,33 @@ while ($row = mysqli_fetch_assoc($cnt_res)) {
                     <td><?= $r['quantity'] ?? '—' ?></td>
                     <td style="white-space:nowrap"><?= date('d M Y', strtotime($r['date'])) ?></td>
                     <td>
-                        <?php if ($r['reason']): ?>
-                            <div class="reason-box">
-                                <?= htmlspecialchars($r['reason']) ?>
-                                <?php if ($r['status'] == 'Pending'): ?>
-                                    <div class="hint">Review → Approve or Reject</div>
-                                <?php endif; ?>
-                            </div>
-                        <?php else: ?><em style="color:#aaa">—</em><?php endif; ?>
-                    </td>
+                    <?php if ($r['reason'] || $r['description']): ?>
+                        <div class="reason-box">
+                            <?php if ($r['reason']): ?>
+                                <strong><?= htmlspecialchars($r['reason']) ?></strong>
+                            <?php endif; ?>
+                            
+                            <?php 
+                            $desc = $r['description'];
+                            $marker = "Additional info: ";
+                            $pos = strpos($desc, $marker);
+                            $display_desc = ($pos !== false) ? substr($desc, $pos + strlen($marker)) : $desc;
+                            ?>
+                            
+                            <?php if ($display_desc): ?>
+                                <div style="font-size:11px; color:#555; margin-top:5px; <?= $r['reason'] ? 'border-top:1px dashed #A86B6C; padding-top:4px;' : '' ?> word-break:break-word; line-height:1.4;">
+                                    <?= htmlspecialchars($display_desc) ?>
+                                </div>
+                            <?php endif; ?>
+                            
+                            <?php if ($r['status'] == 'Pending'): ?>
+                                <div class="hint">Review → Approve or Reject</div>
+                            <?php endif; ?>
+                        </div>
+                    <?php else: ?>
+                        <em style="color:#bbb">—</em>
+                    <?php endif; ?>
+                </td>
                     <td><?= htmlspecialchars($r['delivery_option'] ?? '—') ?></td>
                     <td><span class="badge badge-<?= strtolower($r['status']) ?>"><?= $r['status'] ?></span></td>
                     <td>
