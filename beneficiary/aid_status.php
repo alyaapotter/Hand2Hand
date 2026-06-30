@@ -46,10 +46,7 @@ $distributions = mysqli_fetch_all($result, MYSQLI_ASSOC);
         .badge-distributed { background-color: #6366f1; }
         .empty-msg { text-align:center; color:#7a5c3a; padding:30px; font-style:italic; }
 
-        /* Dark Footer styling for Light background pages */
-        footer.dark-footer { background-color: #443025 !important; color: #FFE4EF !important; padding: 30px !important; margin-top: 0 !important; }
-        footer.dark-footer h4 { color: #FFE4EF !important; margin-bottom: 15px !important; }
-        footer.dark-footer p { color: #FFE4EF !important; margin-bottom: 2px !important; font-size: 14px !important; }
+
     </style>
 </head>
 <body>
@@ -94,11 +91,7 @@ $distributions = mysqli_fetch_all($result, MYSQLI_ASSOC);
     </section>
 </div>
 
-<footer class="dark-footer">
-    <h4>Hand2Hand</h4>
-    <p>Contact Us:</p>
-    <p>Email: hand2hand@support.com</p>
-</footer>
+<?php include '../includes/footer.php'; ?>
 
 <script>
 function filterTable(val) {

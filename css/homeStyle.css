@@ -177,20 +177,30 @@ nav .nav-links a:active {
 }
 
 
-.event-card {
-    width: 250px;       
-    height: 250px;      
-    border: 6px solid #7F5836;
-    border-radius: 6px;
-    overflow: hidden;
+.events-grid {
+    display: flex;
+    justify-content: center;
+    gap: 40px;   /* tambah jarak antara gambar */
+    flex-wrap: wrap;
 }
 
 .event-card img {
     width: 100%;
-    height: 250px;       
+    height: 250px;
     object-fit: cover;
     border-radius: 4px;
+    margin-bottom: 10px; /* jarak bawah gambar dengan label */
 }
+
+.events-grid img {
+    width: 280px;              /* Tetapkan lebar tetap untuk setiap gambar */
+    height: 200px;             /* Tetapkan tinggi tetap untuk setiap gambar */
+    object-fit: cover;         /* PENTING: Supaya gambar tidak kemek/herot bila dipotong */
+    border: 2px solid #5c3a21; /* Kekalkan border coklat gelap */
+    border-radius: 8px;        /* Kekalkan bucu melengkung */
+    box-sizing: border-box;    /* Memastikan border tidak mengganggu saiz gambar */
+}
+
 
 
 .event-label {

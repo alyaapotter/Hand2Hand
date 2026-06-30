@@ -122,11 +122,7 @@ $items       = mysqli_fetch_all($item_result, MYSQLI_ASSOC);
     </section>
 </div>
 
-<footer class="dark-footer">
-    <h4>Hand2Hand</h4>
-    <p>Contact Us:</p>
-    <p>Email: hand2hand@support.com</p>
-</footer>
+<?php include '../includes/footer.php'; ?>
 
 <script>
 function toggleDelivery(val) {
