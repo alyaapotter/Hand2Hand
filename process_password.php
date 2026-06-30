@@ -9,10 +9,11 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = $_SESSION['user_id'];
 
-$current_password = trim($_POST['current_password']);
-$new_password = trim($_POST['new_password']);
-$confirm_password = trim($_POST['confirm_password']);
+$current_password = trim($_POST['current_password'] ?? '');
+$new_password = trim($_POST['new_password'] ?? '');
+$confirm_password = trim($_POST['confirm_password'] ?? '');
 
+/* Validation */
 if ($new_password !== $confirm_password) {
     $_SESSION['error_msg'] = "New password and confirm password do not match.";
     header('Location: donor/profile_page_donor.php');
@@ -25,23 +26,33 @@ if (strlen($new_password) < 6) {
     exit();
 }
 
+/* Get current password from database */
 $stmt = $conn->prepare("SELECT password FROM user WHERE user_id = ?");
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $result = $stmt->get_result();
 
-$user = $result->fetch_assoc();
+if ($result->num_rows === 0) {
+    $_SESSION['error_msg'] = "User not found.";
+    header('Location: donor/profile_page_donor.php');
+    exit();
+}
 
-if (!$user || $current_password !== $user['password']) {
+$user = $result->fetch_assoc();
+$stmt->close();
+
+/* Verify current password */
+if (!password_verify($current_password, $user['password'])) {
     $_SESSION['error_msg'] = "Current password is incorrect.";
     header('Location: donor/profile_page_donor.php');
     exit();
 }
 
-$stmt->close();
+/* Hash and update new password */
+$hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
 
 $update = $conn->prepare("UPDATE user SET password = ? WHERE user_id = ?");
-$update->bind_param("si", $new_password, $user_id);
+$update->bind_param("si", $hashed_password, $user_id);
 
 if ($update->execute()) {
     $_SESSION['success_msg'] = "Password updated successfully.";
