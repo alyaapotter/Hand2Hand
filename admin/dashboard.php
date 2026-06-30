@@ -31,60 +31,53 @@ $beneficiaries = $conn->query("SELECT COUNT(DISTINCT user_id) FROM request")->fe
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Hand2Hand - Dashboard (Admin)</title>
-  <link rel="stylesheet" href="../css/dashboard_admin.css" />
+  <link rel="stylesheet" href="../css/formatBulan.css" />
   <link rel="stylesheet" href="../css/navbar_footer.css" />
 </head>
 <body>
 
   <?php include '../includes/navbar.php'; ?>
 
-  <!-- Main -->
-  <div class="main">
-    <h2>Target Tracking Dashboard</h2>
+  <!-- Page Title -->
+  <div class="page-title2">
+    <h1>Target Tracking Dashboard</h1>
+  </div>
 
-    <div class="stats">
+  <!-- Stats -->
+  <div class="admin-table">
+    <div class="event-row">
       <span class="badge">Total events: <?= $totalEvents ?></span>
       <span class="badge">Active events: <?= $activeEvents ?></span>
       <span class="badge">Items collected: <?= $itemsCollected ?></span>
       <span class="badge">Beneficiaries: <?= $beneficiaries ?></span>
     </div>
+  </div>
 
-    <div class="divider"></div>
-
-    <!-- Table -->
-    <div class="table-section">
-      <h3>Event Tracking Table</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Event name</th>
-            <th>Item</th>
-            <th>Target</th>
-            <th>Collected</th>
-            <th>Progress</th>
-          </tr>
-        </thead>
-        <tbody>
-          <?php foreach ($rows as $row): ?>
-            <?php
-              $progress = $row['target_qty'] > 0 
-                          ? round(($row['collected_qty'] / $row['target_qty']) * 100) 
-                          : 0;
-            ?>
-            <tr>
-              <td><?= htmlspecialchars($row['event_name']) ?></td>
-              <td><?= htmlspecialchars($row['item_name']) ?></td>
-              <td><?= $row['target_qty'] ?></td>
-              <td><?= $row['collected_qty'] ?></td>
-              <td><?= $progress ?>%</td>
-            </tr>
-          <?php endforeach; ?>
-        </tbody>
-      </table>
+  <!-- Event Tracking -->
+  <div class="admin-table">
+    <h2>Event Tracking Table</h2>
+    <div class="event-list">
+      <?php foreach ($rows as $row): ?>
+        <?php
+          $progress = $row['target_qty'] > 0 
+                      ? round(($row['collected_qty'] / $row['target_qty']) * 100) 
+                      : 0;
+        ?>
+        <div class="event-row">
+          <div class="event-info">
+            <h3><?= htmlspecialchars($row['event_name']) ?> — <?= htmlspecialchars($row['item_name']) ?></h3>
+            <p>Target: <?= $row['target_qty'] ?> | Collected: <?= $row['collected_qty'] ?></p>
+          </div>
+          <div class="progress-item">
+            <div class="progress-container">
+              <div class="progress-bar" style="width: <?= $progress ?>%;"><?= $progress ?>%</div>
+            </div>
+          </div>
+        </div>
+      <?php endforeach; ?>
     </div>
   </div>
 
-   <div class="divider"></div>
   <?php include '../includes/footer.php'; ?>
 
 </body>
