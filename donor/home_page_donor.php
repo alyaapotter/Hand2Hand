@@ -30,9 +30,9 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'Donor') {
     </div>
 
     <nav class="donor-nav">
-        <a href="home_page_donor.php" class="active">Home</a> |
-        <a href="donation_event_donor.php">My Events</a> |
-        <a href="#">My Donations</a>
+        <a href="donor/home_page_donor.php" class="active">Home</a> |
+        <a href="donor/donation_event_donor.php">My Events</a> |
+        <a href="donor/donate_item.php">My Donations</a>
     </nav>
 </header>
 
