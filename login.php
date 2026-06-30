@@ -4,9 +4,9 @@ session_start();
 
 // If already logged in, redirect
 if (isset($_SESSION['user_id'])) {
-    if ($_SESSION['role'] == 'Admin') header("Location: admin/beneficiary_needs.php");
-    elseif ($_SESSION['role'] == 'Requester') header("Location: beneficiary/aid_status.php");
-    elseif ($_SESSION['role'] == 'Donor') header("Location: donor/donate_item.php");
+    if ($_SESSION['role'] == 'Admin') header("Location: admin/dashboard.php");
+    elseif ($_SESSION['role'] == 'Requester') header("Location: beneficiary/home_beneficiary.php");
+    elseif ($_SESSION['role'] == 'Donor') header("Location: donor/home_page_donor.php");
     exit();
 }
 

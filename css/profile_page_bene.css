@@ -7,89 +7,94 @@
 }
 
 body {
-  background-color: #b59b8a; /* Muted taupe brown */
+  background-color: #f3e7dc;
   color: #443025;
 }
 
-/* Header dark brown */
-.admin-header {
-  background-color: #3b2a1a;
-  padding: 30px 40px;
+.input-field {
+  background-color: #fffaf6;
+  border: 2px solid #443025;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 16px;
+  color: #443025;
 }
 
-.header-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
+.input-field:focus {
+  border-color: #a46869;
+  box-shadow: 0 0 8px rgba(164, 104, 105, 0.3);
 }
 
-.logo-brand-container {
+/* ── NAVBAR ── */
+nav {
+  background-color: #443025;
   display: flex;
   align-items: center;
-  gap: 20px;
+  justify-content: space-between;
+  padding: 25px 15px;
 }
-
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
 .logo-circle {
-  width: 90px;
-  height: 90px;
+  width: 88px;
+  height: 88px;
   border-radius: 50%;
-  background-color: #ffe4ef;
-  object-fit: cover;
+  background-color: #c8a882;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
 }
-
-.brand-nav-box {
+.nav-text {
   display: flex;
   flex-direction: column;
-  gap: 5px;
-}
-
-.brand-title {
-  color: #ffffff;
-  font-size: 36px;
+  align-items: flex-start;
+  gap: 4px;
+  font-size: 25px;
   font-weight: bold;
+  color: #FFE4EF;
 }
-
-/* Admin Navbar links */
-.admin-nav {
-  color: #ffe4ef;
+.nav-text h1 {
+  color: #FFE4EF;
+  font-size: 30px;
+  font-weight: bold;
+  margin-right: 0;
+  margin-bottom: 4px;
+}
+.nav-links {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0px;
+  color: #FFE4EF;
   font-size: 20px;
   font-weight: bold;
 }
-
-.admin-nav a {
-  color: #ffe4ef;
+.nav-text a {
+  color: #FFE4EF;
   text-decoration: none;
-  margin: 0 4px;
-}
-
-.admin-nav a:hover, .admin-nav a.active {
-  text-decoration: underline;
-  color: #ffd6e0;
-}
-
-.btn-logout {
-  background-color: #ffe4ef;
-  color: #3b2a1a;
-  text-decoration: none;
-  padding: 8px 24px;
-  border-radius: 20px;
+  font-size: 20px;
   font-weight: bold;
-  font-size: 14px;
+  margin: 0 6px;
 }
-
-.btn-logout:hover {
-  background-color: #ffd6e0;
+.nav-text a:hover {
+  text-decoration: underline;
+  color: #FFD6E0;
 }
-
-.header-title-section {
-  margin-top: 30px;
+.btn-logout {
+  background-color: #A86B6C;
+  color: #FFE4EF;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 22px;
+  font-size: 20px;
+  cursor: pointer;
+  margin-right: 5px;
 }
-
-.header-title-section h2 {
-  color: #ffffff;
-  font-size: 32px;
-}
-
 .content-container {
   padding: 30px 40px;
 }
@@ -97,6 +102,13 @@ body {
 .profile-form {
   display: flex;
   flex-direction: column;
+  background-color: #fffaf6;
+  border: 3px solid #443025;
+  border-radius: 15px;
+  padding: 35px;
+  max-width: 1000px;
+  margin: 20px auto;
+  box-shadow: 0 4px 15px rgba(68, 48, 37, 0.15);
 }
 
 .form-section {
@@ -105,10 +117,10 @@ body {
 }
 
 .section-title {
-  font-size: 24px;
-  color: #3b2a1a;
-  margin-bottom: 20px;
-  font-weight: normal;
+  font-size: 30px;
+  font-weight: 600;
+  color: #443025;
+  margin-bottom: 25px;
 }
 
 .form-group {
@@ -121,15 +133,6 @@ body {
 .form-group label {
   width: 160px; 
   color: #443025;
-}
-
-.input-field {
-  border: none;
-  background-color: #ffe4ef;
-  padding: 8px 12px;
-  font-size: 16px;
-  color: #3b2a1a;
-  outline: none;
 }
 
 .dynamic-width { width: 300px; }
@@ -145,33 +148,36 @@ body {
   background-size: 20px;
   padding-right: 30px;
 }
-
 .section-divider {
   border: none;
-  border-top: 1px dotted #7a6b63;
-  margin: 20px 0;
+  border-top: 2px solid #443025;
+  margin: 30px 0;
 }
-
 .save-button-container {
   margin-top: 15px;
 }
 
 .btn-save {
-  background-color: #a46869; /* Muted reddish-brown button */
-  color: #ffe4ef;
+  background-color: #a46869;
+  color: white;
   border: none;
-  padding: 12px 40px;
-  font-size: 16px;
-  border-radius: 12px;
-  cursor: pointer;
+  padding: 12px 35px;
+  border-radius: 8px;
+  font-weight: bold;
+  transition: 0.3s;
 }
 
 .btn-save:hover {
-  background-color: #93595a;
+  background-color: #8f5758;
+  transform: translateY(-2px);
 }
 
 .main-footer {
   padding: 10px 40px 40px 40px;
+}
+
+.content-container {
+  padding: 40px;
 }
 
 .footer-divider {

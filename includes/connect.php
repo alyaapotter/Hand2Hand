@@ -1,18 +1,16 @@
 <?php
-// includes/db.php
-// Database connection for Hand2Hand system
-
 $servername = "localhost";
 $username = "root";
-$password = "root123";
+$password = "";
 $dbname = "hand2hand";
-$port = 3307;
 
-$conn = new mysqli($servername, $username, $password, $dbname, $port);
-
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname, 3301);
+ 
+// Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
-}
+} 
+//echo "Connected successfully";
 
-// Set character encoding
-$conn->set_charset("utf8");
+?>

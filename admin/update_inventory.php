@@ -68,15 +68,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <form method="POST" action="update_inventory.php" onsubmit="return validateForm(event)">
             <div class="form-container">
                 <label>Item:</label>
-                <input type="text" name="item" id="item" placeholder="Item">
+                <input type="text" name="item" id="item">
                 <div id="itemError" class="error-msg"></div>
             </div>
             <div class="form-container">
                 <label>Quantity:</label>
-                <input type="text" name="quantity" id="quantity" placeholder="Quantity">
+                <input type="text" name="quantity" id="quantity">
                 <div id="qtyError" class="error-msg"></div>
             </div>
             <button type="submit" name="action" value="update">Update Item</button>
+            <button type="button" onclick="window.location.href='inventory.php'">Back</button>
         </form>
     </section>
 

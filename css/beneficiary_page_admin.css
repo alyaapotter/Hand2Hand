@@ -136,26 +136,57 @@ body {
 
 /* Beneficiaries Table */
 .beneficiaries-table {
-  width: 75%;
-  border-collapse: collapse;
-  background-color: #ffe4ef;
+  width: 100%; /* Ubah ke 100% atau kekalkan 75% ikut keperluan wrapper */
+  border-collapse: separate; /* Tukar dari collapse supaya border-radius berfungsi */
+  border-spacing: 0;
+  background-color: #ffeef4; /* Warna pink lembut seakan dalam gambar */
+  border-radius: 8px; /* Membuatkan bucu jadual bulat sedikit */
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); /* Sedikit shadow lembut */
 }
 
-.beneficiaries-table th, .beneficiaries-table td {
-  border: 1px solid #b59b8a;
-  padding: 15px;
-  text-align: left;
-  font-size: 16px;
-  color: #3b2a1a;
-}
-
+/* Header Jadual */
 .beneficiaries-table th {
-  font-weight: normal;
+  background-color: transparent;
+  font-weight: bold;
+  color: #5a4538; /* Warna teks kelabu/coklat gelap */
+  border-bottom: 2px solid #e1cbd4; /* Garisan bawah untuk header */
+  padding: 18px 20px;
+  font-size: 16px;
 }
 
-/* Menetapkan tinggi baris jadual yang kosong supaya nampak seperti di mock-up */
-.beneficiaries-table tbody tr {
-  height: 48px; 
+/* Sel Kandungan Jadual */
+.beneficiaries-table td {
+  border-bottom: 1px solid #e1cbd4; /* Ganti border penuh kepada garisan bawah sahaja */
+  padding: 16px 20px;
+  font-size: 15px;
+  color: #443025;
+  vertical-align: middle;
+}
+
+/* Hilangkan garisan bawah untuk baris terakhir */
+.beneficiaries-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Efek bila letak tetikus (Hover Effect) */
+.beneficiaries-table tbody tr:hover {
+  background-color: #ffd6e0;
+  transition: background-color 0.2s ease;
+}
+
+/* Rekabentuk Label Status (Approved, Pending, Rejected) */
+.status-badge {
+  font-weight: bold;
+}
+.status-badge.approved {
+  color: #2e7d32; /* Hijau gelap */
+}
+.status-badge.pending {
+  color: #c43e00; /* Oren gelap */
+}
+.status-badge.rejected {
+  color: #c62828; /* Merah gelap */
 }
 
 /* Edit Buttons Column */

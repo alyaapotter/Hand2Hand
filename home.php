@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once "connect.php";
+require_once __DIR__ . '/includes/connect.php';
 ?>
 
 <!DOCTYPE html>
@@ -20,7 +20,7 @@ require_once "connect.php";
     <div class="nav-links">
       <a href="home.php">Hand2Hand</a> |
       <a href="about.php">About Us</a> |
-      <a href="events.php">Events</a> |
+      <a href="event.php">Events</a> |
       <a href="login.php">Login</a>
     </div>
   </nav>
@@ -30,7 +30,7 @@ require_once "connect.php";
     <div class="hero-text">
       <h1>Support Communities Through Donation Events</h1>
       <p class="description">Join us in making a difference by donating to those in need.</p>
-      <a href="donate.php"><button class="btn-donate">Donate</button></a>
+      <a href="login.php"><button class="btn-donate">Donate</button></a>
     </div>
     <div class="hero-divider"></div>
     <img class="hero-image" src="image/donation.jpg" alt="Charity event" />
@@ -40,15 +40,15 @@ require_once "connect.php";
 
   <!-- About Section -->
   <section class="about-section">
-    <h2>About Hand2Hand</h2>
-    <p>Hand2Hand is a community-driven platform that connects donors with those in need through organized donation events.</p>
+    <h2 style="font-size: 22px;">About Hand2Hand</h2>
+    <p style="font-size: 16px;">Hand2Hand is more than just a donation platform — it's a bridge between generosity and genuine need. We connect everyday donors with families and individuals facing hardship, making sure every contribution, big or small, finds its way to someone who truly needs it. Through organized donation events covering essentials like food, school supplies, baby care items, and medical aid, we strive to build a community where no one is left behind.</p>
   </section>
 
   <div class="divider"></div>
 
   <!-- Active Donation Events Section -->
   <section class="events-section">
-    <h2>Active Donation Events</h2>
+    <h2 style="font-size: 22px;">Active Donation Events</h2>
     <div class="events-grid">
 
       <div>

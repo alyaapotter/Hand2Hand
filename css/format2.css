@@ -17,7 +17,7 @@ header {
     align-items: center;
     gap: 15px;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
 }
 
 header img {
@@ -31,7 +31,7 @@ header img {
     display: flex;
 }
 
-/* NAV
+/* NAV */
 nav {
     align-items: center;
     gap: 5px;
@@ -50,7 +50,7 @@ nav a:hover {
     color: #a86b8c;
 }
 
- LOGOUT BUTTON
+/*LOGOUT BUTTON*/
 .logout-btn {
     background-color: #FFE4EF;
     color: #443025;
@@ -65,7 +65,7 @@ nav a:hover {
 
 .logout-btn:hover {
     background-color: #a45a66;
-} */
+} 
 
 
 button {
@@ -94,11 +94,56 @@ input[type="text"] {
 .text {
     color: #443025;
     font-size: 17pt;
+    font-weight: bold;
 }
 
 /* =============
     ABOUT PAGE
    =============*/
+
+.header1 nav {
+    margin-left: 95px; 
+    margin-top: -55px;
+}
+
+header img {
+    border-radius: 50%;
+}
+
+/* logo side */
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    font-weight: bold;
+}
+
+.logo h1 {
+    font-size: 30px;
+    color: #FFE4EF;
+    text-decoration: none;
+    margin: 0 3px;
+    font-weight: bold;
+}
+
+/* NAV */
+nav {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.header1 nav a {
+    font-size: 30px;
+    color: #FFE4EF;
+    text-decoration: none;
+    margin: 0 10px;
+    font-weight: bold;
+}
+
+.header1 nav a:hover {
+    color: #A86B6C;
+}
 h2, h3 {
     text-align: left;
     margin: 15px 0 5px;
@@ -166,13 +211,14 @@ footer p {
     color: #443025;
     border: 2px solid #A86B6C;
     table-layout: fixed;
+    font-size: 11pt;
 }
 
 th, td {
     border: 1px solid #A86B6C;
-    padding: 30px;
+    padding: 10px;
     color: #443025;
-    font-size: 17pt;
+    font-size: 11pt;
 }
 
 /* =======================================
@@ -271,8 +317,8 @@ th, td {
     }
 
     th, td {
-        padding: 12px;
-        font-size: 12pt;
+        padding: 8px;
+        font-size: 9pt;
     }
 
     /* =======================================
