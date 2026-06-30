@@ -42,35 +42,23 @@ $result = mysqli_query($conn, $query);
 </head>
 <body>
 
-    <header class="admin-header">
-        <div class="header-top">
-            <div class="logo-brand-container">
-                <img src="../image/logo.png" alt="Logo" class="logo-circle">
-                <div class="brand-nav-box">
-                    <span class="brand-title">Hand2Hand</span>
-                    <nav class="admin-nav">
-                        <a href="dashboard.php">Dashboard</a> | 
-                        <a href="beneficiary_page_admin.php" class="active">Beneficiaries</a> | 
-                        <a href="event_management.php">Events</a> | 
-                        <a href="inventory.php">Inventory</a> | 
-                        <a href="distribution.php">Distribution</a>
-                    </nav>
-                </div>
-            </div>
-            <a href="../logout.php" class="btn-logout">Logout</a>
-        </div>
-        
-        <div class="header-title-section">
-            <h2>Beneficiaries</h2>
-            
-            <form action="" method="GET" class="search-container">
-                <span class="search-icon">🔍</span>
-                <input type="text" name="search" class="search-input" placeholder="Fill with id number or name.." value="<?= htmlspecialchars($search) ?>">
-                <button type="submit" style="display: none;"></button>
-            </form>
-            
-        </div>
-    </header>
+    <?php include '../includes/navbar.php'; ?>
+
+<header class="admin-header">
+    <div class="header-title-section">
+        <h2>Beneficiaries</h2>
+
+        <form action="" method="GET" class="search-container">
+            <span class="search-icon">🔍</span>
+            <input type="text"
+                   name="search"
+                   class="search-input"
+                   placeholder="Fill with id number or name.."
+                   value="<?= htmlspecialchars($search) ?>">
+            <button type="submit" style="display:none;"></button>
+        </form>
+    </div>
+</header>
 
     <main class="content-container">
         <h3 class="section-title">

@@ -54,20 +54,7 @@ unset($_SESSION['success_msg'], $_SESSION['error_msg']);
 </head>
 <body>
 
-  <nav>
-    <div class="nav-left">
-      <img src="../image/logo.png" alt="Hand2Hand Logo" class="logo-circle">
-      <div class="nav-text">
-        <h1>Hand2Hand</h1>
-        <div class="nav-links">
-          <a href="home_beneficiary.php">Home</a> |
-          <a href="aid_status.php">My Aid</a> |
-          <a href="profile_page_bene.php" class="active">Profile</a> |
-        </div>
-      </div>
-    </div>
-    <a href="../logout.php" class="btn-logout">Logout</a>
-  </nav>
+  <?php include '../includes/navbar.php'; ?>
 
   <?php if ($success_msg): ?>
     <div class="alert alert-success"><?= htmlspecialchars($success_msg) ?></div>
@@ -127,5 +114,6 @@ unset($_SESSION['success_msg'], $_SESSION['error_msg']);
       </div>
     </form>
   </main>
+  <?php include '../includes/footer.php'; ?>
 </body>
 </html>

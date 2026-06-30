@@ -20,21 +20,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'Donor') {
 </head>
 <body>
 
-<header class="donor-header">
-    <div class="top-header">
-        <div class="logo">
-            <img src="../images/logo.png" alt="Hand2Hand logo" class="logo-circle" width="80">
-            <h1>Hand2Hand</h1>
-        </div>
-        <a href="../logout.php" class="logout-btn">Logout</a>
-    </div>
-
-    <nav class="donor-nav">
-    <a href="home_page_donor.php">Home</a> |
-    <a href="donation_event_donor.php">My Events</a> |
-    <a href="donate_item.php">My Donations</a>
-</nav>
-</header>
+<?php include '../includes/navbar.php'; ?>
 
 <main class="content-container">
     <h2 class="welcome-title">Welcome, <?= htmlspecialchars($_SESSION['username'] ?? 'Donor') ?>!</h2>
@@ -52,5 +38,8 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'Donor') {
         </div>
     </section>
 </main>
+
+<?php include '../includes/footer.php'; ?>
+
 </body>
 </html>
