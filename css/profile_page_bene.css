@@ -24,12 +24,6 @@ body {
   outline: none;
 }
 
-.profile-form {
-  background-color: #e9ddcf;
-  border: 3px solid #443025;
-  padding: 30px;
-}
-
 /* ── NAVBAR ── */
 nav {
   background-color: #443025;
@@ -105,8 +99,9 @@ nav {
 }
 
 .profile-form {
-  display: flex;
-  flex-direction: column;
+  background-color: #e9ddcf;
+  border: 3px solid #443025;
+  padding: 30px;
 }
 
 .form-section {
@@ -149,8 +144,8 @@ nav {
 
 .section-divider {
   border: none;
-  border-top: 1px dotted #7a6b63;
-  margin: 20px 0;
+  border-top: 2px solid #443025;
+  margin: 25px 0;
 }
 
 .save-button-container {
