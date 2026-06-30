@@ -9,13 +9,12 @@ $user_id = $_SESSION['user_id'];
 $success = ""; $error = "";
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $item_id        = intval($_POST['item_id']);
-    $quantity       = intval($_POST['quantity']);
-    $delivery_type  = mysqli_real_escape_string($conn, $_POST['delivery_type']);
-    $reason         = mysqli_real_escape_string($conn, trim($_POST['reason']));
-    $description    = mysqli_real_escape_string($conn, trim($_POST['description']));
-    $date           = date('Y-m-d');
-
+    $item_id       = intval($_POST['item_id']);
+    $quantity      = intval($_POST['quantity']);
+    $delivery_type = mysqli_real_escape_string($conn, $_POST['delivery_type']);
+    $reason        = mysqli_real_escape_string($conn, $_POST['reason']);
+    $description   = mysqli_real_escape_string($conn, trim($_POST['description']));
+    $date          = date('Y-m-d');
     $delivery_address = isset($_POST['delivery_address']) ? mysqli_real_escape_string($conn, trim($_POST['delivery_address'])) : '';
 
     if (!$item_id || $quantity <= 0 || empty($delivery_type) || empty($reason) || empty($description)) {
@@ -23,12 +22,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } else {
         $full_description = "Item requested: See item field. Delivery type: $delivery_type. Delivery Address: $delivery_address. Reason: $reason. Additional info: $description";
         mysqli_query($conn, "INSERT INTO REQUEST (date, status, description, user_id, item_id, quantity, delivery_option, reason) VALUES ('$date', 'Pending', '$full_description', $user_id, $item_id, $quantity, '$delivery_type', '$reason')");
-        $request_id = mysqli_insert_id($conn);
         $success = "Your request has been submitted! The admin will review it soon.";
     }
 }
 
-// Fetch items for dropdown
 $item_result = mysqli_query($conn, "SELECT item_id, name, category FROM ITEM ORDER BY category, name");
 $items       = mysqli_fetch_all($item_result, MYSQLI_ASSOC);
 ?>
@@ -38,149 +35,117 @@ $items       = mysqli_fetch_all($item_result, MYSQLI_ASSOC);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Submit Request - Hand2Hand</title>
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/formatBulan.css">
+    <style>
+        .req-form label { display:block; font-weight:bold; color:#443025; margin-bottom:5px; font-size:14px; }
+        .req-form input[type="text"],
+        .req-form input[type="number"],
+        .req-form select,
+        .req-form textarea { width:100%; padding:10px; margin-bottom:18px; border:2px solid #A86B6C; border-radius:10px; background:#FFE4EF; color:#443025; font-size:14px; box-sizing:border-box; outline:none; }
+        .req-form select { width:auto; min-width:300px; }
+        .req-form textarea { resize:vertical; min-height:100px; }
+        .req-form .small { width:100px; }
+        .required { color:#ef4444; }
+
+        /* Dark Footer styling for Light background pages */
+        footer.dark-footer { background-color: #443025 !important; color: #FFE4EF !important; padding: 30px !important; margin-top: 0 !important; }
+        footer.dark-footer h4 { color: #FFE4EF !important; margin-bottom: 15px !important; }
+        footer.dark-footer p { color: #FFE4EF !important; margin-bottom: 2px !important; font-size: 14px !important; }
+    </style>
 </head>
 <body>
 <?php include '../includes/navbar.php'; ?>
 <div class="page-container">
-    <div class="page-title">Submit Aid Request</div>
+    <div class="page-title2">
+        <h1>Submit Aid Request</h1>
+    </div>
 
     <?php if ($success): ?>
-        <div class="alert alert-success"><?= htmlspecialchars($success) ?>
-            <br><a href="aid_status.php" style="color:#065f46;font-weight:600">← Back to Aid Status</a>
+        <div class="alert alert-success" style="margin: 12px 0 15px 45px; width: 30%;"><?= htmlspecialchars($success) ?>
+            <br><a href="aid_status.php" style="color:#1a5c1a;font-weight:bold">← Back to My Aid</a>
         </div>
     <?php endif; ?>
     <?php if ($error): ?>
-        <div class="alert alert-error"><?= htmlspecialchars($error) ?></div>
+        <div class="alert alert-error" style="margin: 12px 0 15px 45px; width: 30%;"><?= htmlspecialchars($error) ?></div>
     <?php endif; ?>
 
-    <?php if (!$success): ?>
-    <form method="POST" onsubmit="return validateForm()">
+    <section class="admin-table">
+        <?php if (!$success): ?>
+        <h2>Request Details</h2>
+        <form method="POST" class="req-form" onsubmit="return validateForm()">
 
-        <!-- Item Selection -->
-        <div class="form-section">
-            <div class="form-section-title">Item Request</div>
-            <div class="form-group">
-                <label>Select Item: <span class="required">*</span></label>
-                <select name="item_id" id="itemSelect" required>
-                    <option value="">-- Select Item --</option>
-                    <?php foreach ($items as $item): ?>
-                        <option value="<?= $item['item_id'] ?>"><?= htmlspecialchars($item['name']) ?> (<?= $item['category'] ?>)</option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Quantity: <span class="required">*</span></label>
-                <input type="number" name="quantity" min="1" value="1" style="width:80px" required>
-            </div>
-        </div>
+            <label>Select Item: <span class="required">*</span></label>
+            <select name="item_id" required>
+                <option value="">-- Select Item --</option>
+                <?php foreach ($items as $item): ?>
+                    <option value="<?= $item['item_id'] ?>"><?= htmlspecialchars($item['name']) ?> (<?= $item['category'] ?>)</option>
+                <?php endforeach; ?>
+            </select>
 
-        <!-- Delivery Option -->
-        <div class="form-section">
-            <div class="form-section-title">Delivery Option</div>
-            <div class="form-group">
-                <label>Choose Option: <span class="required">*</span></label>
-                <select name="delivery_type" id="deliverySelect" onchange="toggleDelivery(this.value)" required>
-                    <option value="">-- Select --</option>
-                    <option value="Pickup">Pickup (collect at distribution centre)</option>
-                    <option value="Delivery">Delivery (deliver to my address)</option>
-                </select>
-            </div>
+            <label>Quantity: <span class="required">*</span></label>
+            <input type="number" name="quantity" min="1" value="1" class="small" required>
 
-            <!-- Show address field only if Delivery -->
+            <label>Delivery Option: <span class="required">*</span></label>
+            <select name="delivery_type" id="deliverySelect" onchange="toggleDelivery(this.value)" required>
+                <option value="">-- Select --</option>
+                <option value="Pickup">Pickup (collect at distribution centre)</option>
+                <option value="Delivery">Delivery (deliver to my address)</option>
+            </select>
+
             <div id="addressField" style="display:none">
-                <div class="form-group form-group-full">
-                    <label>Delivery Address: <span class="required">*</span></label>
-                    <input type="text" name="delivery_address" id="deliveryAddress" placeholder="Enter your full address..." style="width:100%">
-                </div>
+                <label>Delivery Address: <span class="required">*</span></label>
+                <input type="text" name="delivery_address" id="deliveryAddress" placeholder="Enter your full address...">
             </div>
-        </div>
 
-        <!-- Reason -->
-        <div class="form-section">
-            <div class="form-section-title">Request Details</div>
-            <div class="form-group form-group-full">
-                <label>Reason for Request: <span class="required">*</span></label>
-                <select name="reason" required>
-                    <option value="">-- Select Reason --</option>
-                    <option value="Low income family">Low income family</option>
-                    <option value="Single parent household">Single parent household</option>
-                    <option value="Loss of job">Loss of job</option>
-                    <option value="Medical emergency">Medical emergency</option>
-                    <option value="Natural disaster affected">Natural disaster affected</option>
-                    <option value="Elderly living alone">Elderly living alone</option>
-                    <option value="Other">Other</option>
-                </select>
-            </div>
-            <div class="form-group form-group-full">
-                <label>Additional Description: <span class="required">*</span></label>
-                <textarea name="description" rows="4"
-                    placeholder="Please describe your situation in detail. E.g. family size, specific needs, urgency..."
-                    required></textarea>
-            </div>
-        </div>
+            <label>Reason for Request: <span class="required">*</span></label>
+            <select name="reason" required>
+                <option value="">-- Select Reason --</option>
+                <option value="Low income family">Low income family</option>
+                <option value="Single parent household">Single parent household</option>
+                <option value="Loss of job">Loss of job</option>
+                <option value="Medical emergency">Medical emergency</option>
+                <option value="Natural disaster affected">Natural disaster affected</option>
+                <option value="Elderly living alone">Elderly living alone</option>
+                <option value="Other">Other</option>
+            </select>
 
-        <div style="display:flex;gap:10px">
-            <a href="aid_status.php" class="btn btn-outline">← Back</a>
-            <button type="submit" class="btn btn-primary">Submit Request</button>
-        </div>
-    </form>
-    <?php endif; ?>
+            <label>Additional Description: <span class="required">*</span></label>
+            <textarea name="description" placeholder="Please describe your situation in detail..." required></textarea>
+
+            <div style="display:flex;gap:10px;margin-top:5px">
+                <a href="aid_status.php" class="back-btn" style="text-decoration:none;">← Back</a>
+                <button type="submit" class="submit-btn" style="margin:0;">Submit Request</button>
+            </div>
+        </form>
+        <?php endif; ?>
+    </section>
 </div>
 
-<div class="page-footer">Hand2Hand<br>Contact Us:<br>Email: hand2hand@support.com</div>
+<footer class="dark-footer">
+    <h4>Hand2Hand</h4>
+    <p>Contact Us:</p>
+    <p>Email: hand2hand@support.com</p>
+</footer>
 
 <script>
 function toggleDelivery(val) {
-    const addressField = document.getElementById('addressField');
-    const addressInput = document.getElementById('deliveryAddress');
-    if (val === 'Delivery') {
-        addressField.style.display = 'block';
-        addressInput.required = true;
-    } else {
-        addressField.style.display = 'none';
-        addressInput.required = false;
-    }
+    const field = document.getElementById('addressField');
+    const input = document.getElementById('deliveryAddress');
+    if (val === 'Delivery') { field.style.display='block'; input.required=true; }
+    else { field.style.display='none'; input.required=false; }
 }
-
 function validateForm() {
-    const item     = document.querySelector('select[name="item_id"]').value;
-    const qty      = document.querySelector('input[name="quantity"]').value;
-    const delivery = document.querySelector('select[name="delivery_type"]').value;
-    const reason   = document.querySelector('select[name="reason"]').value;
-    const desc     = document.querySelector('textarea[name="description"]').value.trim();
-
-    if (item === '') {
-        alert('Please select an item!');
-        return false;
-    }
-    if (qty <= 0) {
-        alert('Please enter a valid quantity!');
-        return false;
-    }
-    if (delivery === '') {
-        alert('Please select delivery or pickup option!');
-        return false;
-    }
-    if (delivery === 'Delivery') {
-        const addr = document.getElementById('deliveryAddress').value.trim();
-        if (addr === '') {
-            alert('Please enter your delivery address!');
-            return false;
-        }
-    }
-    if (reason === '') {
-        alert('Please select a reason for your request!');
-        return false;
-    }
-    if (desc === '') {
-        alert('Please provide additional description!');
-        return false;
-    }
-    if (desc.length < 10) {
-        alert('Description is too short. Please provide more details!');
-        return false;
-    }
+    const item = document.querySelector('select[name="item_id"]').value;
+    const qty  = document.querySelector('input[name="quantity"]').value;
+    const del  = document.querySelector('select[name="delivery_type"]').value;
+    const rsn  = document.querySelector('select[name="reason"]').value;
+    const desc = document.querySelector('textarea[name="description"]').value.trim();
+    if (!item) { alert('Please select an item!'); return false; }
+    if (qty <= 0) { alert('Please enter a valid quantity!'); return false; }
+    if (!del)  { alert('Please select delivery or pickup!'); return false; }
+    if (del === 'Delivery' && !document.getElementById('deliveryAddress').value.trim()) { alert('Please enter your delivery address!'); return false; }
+    if (!rsn)  { alert('Please select a reason!'); return false; }
+    if (!desc || desc.length < 10) { alert('Please provide more details in the description!'); return false; }
     return true;
 }
 </script>
