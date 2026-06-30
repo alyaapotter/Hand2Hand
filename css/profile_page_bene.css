@@ -7,8 +7,21 @@
 }
 
 body {
-  background-color: #b59b8a; /* Muted taupe brown */
+  background-color: #e9ddcf;
   color: #443025;
+}
+
+.input-field {
+  background-color: #e9ddcf;
+  border-left: 4px solid #443025;
+  border-right: 4px solid #443025;
+  border-top: 1px solid #443025;
+  border-bottom: 1px solid #443025;
+  border-radius: 0;
+  padding: 8px 12px;
+  font-size: 16px;
+  color: #3b2a1a;
+  outline: none;
 }
 
 /* ── NAVBAR ── */
@@ -112,15 +125,6 @@ nav {
 .form-group label {
   width: 160px; 
   color: #443025;
-}
-
-.input-field {
-  border: none;
-  background-color: #ffe4ef;
-  padding: 8px 12px;
-  font-size: 16px;
-  color: #3b2a1a;
-  outline: none;
 }
 
 .dynamic-width { width: 300px; }
