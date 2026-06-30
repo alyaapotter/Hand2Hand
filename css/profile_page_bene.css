@@ -24,6 +24,12 @@ body {
   outline: none;
 }
 
+.profile-form {
+  background-color: #e9ddcf;
+  border: 3px solid #443025;
+  padding: 30px;
+}
+
 /* ── NAVBAR ── */
 nav {
   background-color: #443025;
