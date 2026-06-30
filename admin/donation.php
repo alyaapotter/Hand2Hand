@@ -304,10 +304,6 @@ while ($row = mysqli_fetch_assoc($countResult)) {
         .badge-received { background-color: #22c55e; }
         .badge-cancelled { background-color: #ef4444; }
 
-        /* Dark Footer styling for Light background pages */
-        footer.dark-footer { background-color: #443025 !important; color: #FFE4EF !important; padding: 30px !important; margin-top: 0 !important; }
-        footer.dark-footer h4 { color: #FFE4EF !important; margin-bottom: 15px !important; }
-        footer.dark-footer p { color: #FFE4EF !important; margin-bottom: 2px !important; font-size: 14px !important; }
     </style>
 
 </head>
@@ -475,12 +471,6 @@ while ($row = mysqli_fetch_assoc($countResult)) {
         </section>
 
     </div>
-
-    <footer class="dark-footer">
-        <h4>Hand2Hand</h4>
-        <p>Contact Us:</p>
-        <p>Email: hand2hand@support.com</p>
-    </footer>
 
     <script>
         function filterTable(val) {
