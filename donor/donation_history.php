@@ -12,7 +12,7 @@ $query = "SELECT d.donation_id, d.date, d.status, e.name AS event_name
           FROM DONATION d JOIN DONATIONEVENT e ON d.event_id=e.event_id
           WHERE d.user_id=$user_id";
 if ($search) $query .= " AND e.name LIKE '%$search%'";
-$query    .= " ORDER BY d.date DESC";
+$query .= " ORDER BY d.donation_id DESC";
 $result    = mysqli_query($conn, $query);
 $donations = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
@@ -44,6 +44,7 @@ if (!empty($donations)) {
         .badge { padding: 3px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; color: white; display: inline-block; }
         .badge-received { background-color: #22c55e; }
         .badge-pending  { background-color: #f59e0b; }
+        .badge-cancelled  { background-color: #ef4444; }
         .empty-msg { text-align:center; color:#7a5c3a; padding:30px; font-style:italic; }
 
         /* Dark Footer styling for Light background pages */

@@ -67,8 +67,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <input type="email" name="email" placeholder="Enter your email" required>
                 </div>
                 <div class="form-group">
-                    <label>Username</label>
-                    <input type="text" name="username" placeholder="Enter your username" required>
+                    <label>Name</label>
+                    <input type="text" name="username" placeholder="Enter your name" required>
                 </div>
                 <div class="form-group">
                     <label>Password</label>
@@ -111,7 +111,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 return false;
             }
             if (username === '') {
-                alert('Please enter your username!');
+                alert('Please enter your name!');
                 return false;
             }
             if (password === '') {

@@ -94,10 +94,6 @@ while ($row = mysqli_fetch_assoc($cnt_res)) {
         .badge-rejected { background-color: #ef4444; }
         .badge-distributed { background-color: #6366f1; }
 
-        /* Dark Footer styling for Light background pages */
-        footer.dark-footer { background-color: #443025 !important; color: #FFE4EF !important; padding: 30px !important; margin-top: 0 !important; }
-        footer.dark-footer h4 { color: #FFE4EF !important; margin-bottom: 15px !important; }
-        footer.dark-footer p { color: #FFE4EF !important; margin-bottom: 2px !important; font-size: 14px !important; }
     </style>
 </head>
 <body>
@@ -150,15 +146,33 @@ while ($row = mysqli_fetch_assoc($cnt_res)) {
                     <td><?= $r['quantity'] ?? '—' ?></td>
                     <td style="white-space:nowrap"><?= date('d M Y', strtotime($r['date'])) ?></td>
                     <td>
-                        <?php if ($r['reason']): ?>
-                            <div class="reason-box">
-                                <?= htmlspecialchars($r['reason']) ?>
-                                <?php if ($r['status'] == 'Pending'): ?>
-                                    <div class="hint">Review → Approve or Reject</div>
-                                <?php endif; ?>
-                            </div>
-                        <?php else: ?><em style="color:#aaa">—</em><?php endif; ?>
-                    </td>
+                    <?php if ($r['reason'] || $r['description']): ?>
+                        <div class="reason-box">
+                            <?php if ($r['reason']): ?>
+                                <strong><?= htmlspecialchars($r['reason']) ?></strong>
+                            <?php endif; ?>
+                            
+                            <?php 
+                            $desc = $r['description'];
+                            $marker = "Additional info: ";
+                            $pos = strpos($desc, $marker);
+                            $display_desc = ($pos !== false) ? substr($desc, $pos + strlen($marker)) : $desc;
+                            ?>
+                            
+                            <?php if ($display_desc): ?>
+                                <div style="font-size:11px; color:#555; margin-top:5px; <?= $r['reason'] ? 'border-top:1px dashed #A86B6C; padding-top:4px;' : '' ?> word-break:break-word; line-height:1.4;">
+                                    <?= htmlspecialchars($display_desc) ?>
+                                </div>
+                            <?php endif; ?>
+                            
+                            <?php if ($r['status'] == 'Pending'): ?>
+                                <div class="hint">Review → Approve or Reject</div>
+                            <?php endif; ?>
+                        </div>
+                    <?php else: ?>
+                        <em style="color:#bbb">—</em>
+                    <?php endif; ?>
+                </td>
                     <td><?= htmlspecialchars($r['delivery_option'] ?? '—') ?></td>
                     <td><span class="badge badge-<?= strtolower($r['status']) ?>"><?= $r['status'] ?></span></td>
                     <td>
@@ -195,12 +209,6 @@ while ($row = mysqli_fetch_assoc($cnt_res)) {
         </table>
     </section>
 </div>
-
-<footer class="dark-footer">
-    <h4>Hand2Hand</h4>
-    <p>Contact Us:</p>
-    <p>Email: hand2hand@support.com</p>
-</footer>
 
 <script>
 function filterTable(val) {

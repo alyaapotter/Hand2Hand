@@ -44,10 +44,15 @@ CREATE TABLE IF NOT EXISTS TARGET (
 CREATE TABLE IF NOT EXISTS REQUEST (
     request_id INT(11) AUTO_INCREMENT PRIMARY KEY,
     date DATE NOT NULL,
-    status ENUM('Pending', 'Approved', 'Rejected') NOT NULL DEFAULT 'Pending',
+    status ENUM('Pending', 'Approved', 'Rejected', 'Distributed') NOT NULL DEFAULT 'Pending',
     description TEXT,
     user_id INT(11) NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES USER(user_id)
+    item_id INT(11) DEFAULT NULL,
+    quantity INT(11) DEFAULT NULL,
+    delivery_option VARCHAR(50) DEFAULT NULL,
+    reason VARCHAR(255) DEFAULT NULL,
+    FOREIGN KEY (user_id) REFERENCES USER(user_id),
+    FOREIGN KEY (item_id) REFERENCES ITEM(item_id)
 );
 
 -- INVENTORY table
@@ -86,6 +91,7 @@ CREATE TABLE IF NOT EXISTS DISTRIBUTION (
     item_id INT(11) NOT NULL,
     quantity INT(11) NOT NULL,
     date DATE NOT NULL,
+    location VARCHAR(255) DEFAULT NULL,
     FOREIGN KEY (request_id) REFERENCES REQUEST(request_id),
     FOREIGN KEY (item_id) REFERENCES ITEM(item_id)
 );

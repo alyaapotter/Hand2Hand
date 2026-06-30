@@ -105,10 +105,6 @@ if ($selected_request && $selected_request['item_id']) {
         .stock-ok .val  { color:#166534; }
         .stock-bad .val { color:#991b1b; }
 
-        /* Dark Footer styling for Light background pages */
-        footer.dark-footer { background-color: #443025 !important; color: #FFE4EF !important; padding: 30px !important; margin-top: 0 !important; }
-        footer.dark-footer h4 { color: #FFE4EF !important; margin-bottom: 15px !important; }
-        footer.dark-footer p { color: #FFE4EF !important; margin-bottom: 2px !important; font-size: 14px !important; }
     </style>
 </head>
 <body>
@@ -135,7 +131,7 @@ if ($selected_request && $selected_request['item_id']) {
                 <option value="">-- Select --</option>
                 <?php foreach ($approved_requests as $req): ?>
                     <option value="<?= $req['request_id'] ?>" <?= $request_id_param == $req['request_id'] ? 'selected' : '' ?>>
-                        <?= htmlspecialchars($req['username']) ?> — <?= htmlspecialchars($req['item_name'] ?? 'Item not specified') ?> (Qty: <?= $req['quantity'] ?? '—' ?>) — #<?= $req['request_id'] ?>
+                        <?= htmlspecialchars($req['username']) ?>
                     </option>
                 <?php endforeach; ?>
             </select>
@@ -192,12 +188,6 @@ if ($selected_request && $selected_request['item_id']) {
         </form>
     </section>
 </div>
-
-<footer class="dark-footer">
-    <h4>Hand2Hand</h4>
-    <p>Contact Us:</p>
-    <p>Email: hand2hand@support.com</p>
-</footer>
 
 <script>
 function loadRequest(id) { if (id) window.location.href = 'distribution.php?request_id=' + id; }

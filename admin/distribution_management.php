@@ -9,25 +9,43 @@ $success = "";
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'])) {
     if ($_POST['action'] == 'delete') {
         $did = intval($_POST['distribution_id']);
-        $res = mysqli_query($conn, "SELECT item_id, quantity FROM DISTRIBUTION WHERE distribution_id=$did");
+        // Fetch distribution details first
+        $res = mysqli_query($conn, "SELECT request_id, item_id, quantity FROM DISTRIBUTION WHERE distribution_id=$did");
         $d   = mysqli_fetch_assoc($res);
         if ($d) {
+            $rid = $d['request_id'];
+            // 1. Restore inventory quantity
             mysqli_query($conn, "UPDATE INVENTORY SET quantity=quantity+{$d['quantity']} WHERE item_id={$d['item_id']}");
+            // 2. Revert request status back to 'Approved'
+            mysqli_query($conn, "UPDATE REQUEST SET status='Approved' WHERE request_id=$rid");
+            // 3. Delete distribution record
             mysqli_query($conn, "DELETE FROM DISTRIBUTION WHERE distribution_id=$did");
-            $success = "Record deleted, inventory restored.";
+            $success = "Distribution cancelled. Request status reverted to Approved, inventory restored.";
         }
+    }
+    if ($_POST['action'] == 'delete_request') {
+        $rid = intval($_POST['request_id']);
+        mysqli_query($conn, "DELETE FROM REQUEST WHERE request_id=$rid");
+        $success = "Request deleted successfully.";
     }
 }
 
 $search = isset($_GET['search']) ? mysqli_real_escape_string($conn, trim($_GET['search'])) : '';
-$query  = "SELECT d.distribution_id, d.date AS distribution_date, d.quantity, d.location,
-           u.username AS beneficiary, i.name AS item, r.request_id, r.date AS request_date
-           FROM DISTRIBUTION d
-           JOIN REQUEST r ON d.request_id=r.request_id
-           JOIN USER u ON r.user_id=u.user_id
-           JOIN ITEM i ON d.item_id=i.item_id WHERE 1=1";
-if ($search) $query .= " AND (u.username LIKE '%$search%' OR i.name LIKE '%$search%')";
-$query        .= " ORDER BY d.date DESC";
+
+// Query ALL requests and LEFT JOIN with DISTRIBUTION to get details if distributed
+$query = "SELECT r.request_id, r.date AS request_date, r.status, r.quantity AS request_qty,
+                 u.username AS beneficiary, i.name AS item,
+                 d.distribution_id, d.date AS distribution_date, d.location
+          FROM REQUEST r
+          JOIN USER u ON r.user_id=u.user_id
+          LEFT JOIN ITEM i ON r.item_id=i.item_id
+          LEFT JOIN DISTRIBUTION d ON r.request_id=d.request_id
+          WHERE 1=1";
+if ($search) {
+    $query .= " AND (u.username LIKE '%$search%' OR i.name LIKE '%$search%' OR r.status LIKE '%$search%')";
+}
+$query .= " ORDER BY FIELD(r.status,'Pending','Approved','Distributed','Rejected'), r.date DESC";
+
 $result        = mysqli_query($conn, $query);
 $distributions = mysqli_fetch_all($result, MYSQLI_ASSOC);
 ?>
@@ -57,12 +75,16 @@ $distributions = mysqli_fetch_all($result, MYSQLI_ASSOC);
         .btn-action:hover, button.btn-action:hover { background-color: #a45a66 !important; }
         .btn-delete, button.btn-delete { background-color: #7F5836 !important; color: white !important; }
         .btn-delete:hover, button.btn-delete:hover { background-color: #5c3f25 !important; }
+        .action-cell { display: flex; gap: 5px; flex-wrap: wrap; }
+        
+        /* Badges */
+        .badge { padding: 3px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; color: white; display: inline-block; }
+        .badge-pending { background-color: #f59e0b; }
+        .badge-approved { background-color: #22c55e; }
+        .badge-rejected { background-color: #ef4444; }
+        .badge-distributed { background-color: #6366f1; }
         .empty-msg { text-align:center; color:#7a5c3a; padding:30px; font-style:italic; }
 
-        /* Dark Footer styling for Light background pages */
-        footer.dark-footer { background-color: #443025 !important; color: #FFE4EF !important; padding: 30px !important; margin-top: 0 !important; }
-        footer.dark-footer h4 { color: #FFE4EF !important; margin-bottom: 15px !important; }
-        footer.dark-footer p { color: #FFE4EF !important; margin-bottom: 2px !important; font-size: 14px !important; }
     </style>
 </head>
 <body>
@@ -77,18 +99,19 @@ $distributions = mysqli_fetch_all($result, MYSQLI_ASSOC);
     <?php endif; ?>
 
     <!-- Search Bar on Dark Background -->
-    <input type="text" class="search-bar" placeholder="Search beneficiary or item..." onkeyup="filterTable(this.value)">
+    <input type="text" class="search-bar" placeholder="Search beneficiary, item or status..." onkeyup="filterTable(this.value)">
 
     <section class="admin-table">
-        <h2>Distribution List</h2>
+        <h2>Distribution & Request List</h2>
         <table class="custom-table" id="mainTable">
             <thead>
                 <tr>
-                    <th>ID</th>
+                    <th>Request ID</th>
                     <th>Beneficiary</th>
                     <th>Item</th>
                     <th>Quantity</th>
                     <th>Date Requested</th>
+                    <th>Status</th>
                     <th>Date Distributed</th>
                     <th>Location</th>
                     <th>Actions</th>
@@ -96,23 +119,36 @@ $distributions = mysqli_fetch_all($result, MYSQLI_ASSOC);
             </thead>
             <tbody>
                 <?php if (empty($distributions)): ?>
-                    <tr><td colspan="8" class="empty-msg">No distribution records yet.</td></tr>
+                    <tr><td colspan="9" class="empty-msg">No request or distribution records found.</td></tr>
                 <?php else: ?>
                 <?php foreach ($distributions as $d): ?>
                 <tr>
-                    <td>#<?= str_pad($d['distribution_id'], 4, '0', STR_PAD_LEFT) ?></td>
+                    <td>#<?= str_pad($d['request_id'], 5, '0', STR_PAD_LEFT) ?></td>
                     <td><?= htmlspecialchars($d['beneficiary']) ?></td>
-                    <td><?= htmlspecialchars($d['item']) ?></td>
-                    <td><?= $d['quantity'] ?></td>
+                    <td><?= htmlspecialchars($d['item'] ?? '—') ?></td>
+                    <td><?= $d['request_qty'] ?? '—' ?></td>
                     <td style="white-space:nowrap"><?= date('d M Y', strtotime($d['request_date'])) ?></td>
-                    <td style="white-space:nowrap"><?= date('d M Y', strtotime($d['distribution_date'])) ?></td>
-                    <td><?= htmlspecialchars($d['location'] ?? 'Warehouse') ?></td>
+                    <td><span class="badge badge-<?= strtolower($d['status']) ?>"><?= $d['status'] ?></span></td>
+                    <td style="white-space:nowrap">
+                        <?= $d['distribution_date'] ? date('d M Y', strtotime($d['distribution_date'])) : '<em style="color:#aaa">—</em>' ?>
+                    </td>
+                    <td><?= htmlspecialchars($d['location'] ?? '—') ?></td>
                     <td>
-                        <form method="POST" onsubmit="return confirm('Delete this record?')" style="display:inline">
-                            <input type="hidden" name="action" value="delete">
-                            <input type="hidden" name="distribution_id" value="<?= $d['distribution_id'] ?>">
-                            <button type="submit" class="btn-action btn-delete">🗑 Delete</button>
-                        </form>
+                        <div class="action-cell">
+                            <?php if ($d['status'] == 'Distributed'): ?>
+                                <form method="POST" onsubmit="return confirm('Cancel this distribution and restore inventory stock?')" style="display:inline">
+                                    <input type="hidden" name="action" value="delete">
+                                    <input type="hidden" name="distribution_id" value="<?= $d['distribution_id'] ?>">
+                                    <button type="submit" class="btn-action btn-delete">🗑 Cancel Dist</button>
+                                </form>
+                            <?php else: ?>
+                                <form method="POST" onsubmit="return confirm('Delete this request permanently?')" style="display:inline">
+                                    <input type="hidden" name="action" value="delete_request">
+                                    <input type="hidden" name="request_id" value="<?= $d['request_id'] ?>">
+                                    <button type="submit" class="btn-action btn-delete">🗑 Delete Req</button>
+                                </form>
+                            <?php endif; ?>
+                        </div>
                     </td>
                 </tr>
                 <?php endforeach; ?>
@@ -123,12 +159,6 @@ $distributions = mysqli_fetch_all($result, MYSQLI_ASSOC);
         <a href="distribution.php" style="text-decoration:none;"><button type="button" class="submit-btn" style="margin: 20px 0 0 0;">📦 Distribute Items</button></a>
     </section>
 </div>
-
-<footer class="dark-footer">
-    <h4>Hand2Hand</h4>
-    <p>Contact Us:</p>
-    <p>Email: hand2hand@support.com</p>
-</footer>
 
 <script>
 function filterTable(val) {

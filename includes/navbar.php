@@ -3,9 +3,9 @@
 $role = $_SESSION['role'];
 
 if ($role == 'Admin') {
-    $nav_links = "<a href='../admin/dashboard.php'>Dashboard</a> | <a href='../admin/beneficiary.php'>Beneficiaries</a> | <a href='../admin/donation_event.php'>Events</a> | <a href='../admin/inventory.php'>Inventory</a> | <a href='../admin/distribution_management.php'>Distribution</a>";
+    $nav_links = "<a href='../admin/dashboard.php'>Dashboard</a> | <a href='../admin/donation_event.php'>Events</a> | <a href='../admin/beneficiary_needs.php'>Beneficiaries</a> | <a href='../admin/donation.php'>Donation</a> | <a href='../admin/inventory.php'>Inventory</a> | <a href='../admin/distribution_management.php'>Distribution</a>";
 } else if ($role == 'Donor') {
-    $nav_links = "<a href='../donor/home_page_donor.php'>Home</a> | <a href='../donor/donation_event_donor.php'>My Events</a> | <a href='../donor/donation_history.php'>My Donations</a>";
+    $nav_links = "<a href='../donor/home_page_donor.php'>Home</a> | <a href='../donor/donation_event_donor.php'>My Events</a> | <a href='../donor/donation_history.php'>My Donations</a> | <a href='../donor/profile_page_donor.php'>Profile</a>";
 } else if ($role == 'Requester'){
     $nav_links = "<a href='../beneficiary/home_beneficiary.php'>Home</a> | <a href='../beneficiary/aid_status.php'>My Aid</a> | <a href='../beneficiary/profile_page_bene.php'>Profile</a>";
 } else {

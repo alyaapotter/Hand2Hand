@@ -11,7 +11,7 @@ $search  = isset($_GET['search']) ? mysqli_real_escape_string($conn, trim($_GET[
 $query = "SELECT
             COALESCE(d.quantity, r.quantity, '-') AS quantity,
             COALESCE(d.date, r.date) AS date,
-            COALESCE(i_dist.name, i_req.name, 'Pending Item') AS item_name,
+            COALESCE(i_dist.name, i_req.name, '—') AS item_name,
             r.status
           FROM REQUEST r
           LEFT JOIN DISTRIBUTION d ON r.request_id = d.request_id
