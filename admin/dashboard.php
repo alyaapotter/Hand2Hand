@@ -32,45 +32,22 @@ $beneficiaries = $conn->query("SELECT COUNT(DISTINCT user_id) FROM request")->fe
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Hand2Hand - Dashboard (Admin)</title>
   <link rel="stylesheet" href="../css/dashboard_admin.css" />
+  <link rel="stylesheet" href="../css/navbar_footer.css" />
 </head>
 <body>
 
-  <!-- Navbar -->
-  <nav>
-    <div class="nav-left">
-      <img src="../image/logo.png" alt="Hand2Hand Logo" class="logo-circle">
-      <div class="nav-text">
-        <h1>Hand2Hand</h1>
-<<<<<<< HEAD
-        <p> <a href="dashboard.php">Dashboard</a> | <a href="beneficiary_page_admin.php">Beneficiaries</a> | <a href="event_management.php">Events</a> | <a href="inventory.php">Inventory</a> | <a href="distribution.php">Distribution</a></p>
-=======
-        <p> <a href="dashboard.php">Dashboard</a> | <a href="beneficiary.php">Beneficiaries</a> | <a href="event_management.php">Events</a> | <a href="inventory.php">Inventory</a> | <a href="distribution_management.php">Distribution</a></p>
->>>>>>> origin/main
-      </div>
-    </div>
-    <button class="btn-logout" onclick="window.location.href='../logout.php'">Logout</button>
-  </nav>
+  <?php include '../includes/navbar.php'; ?>
 
   <!-- Main -->
   <div class="main">
     <h2>Target Tracking Dashboard</h2>
 
-<<<<<<< HEAD
-    <!-- Stats -->
     <div class="stats">
-      <span class="badge">Total events: 10</span>
-      <span class="badge">Active events: 6</span>
-      <span class="badge">Items collected: 30</span>
-      <span class="badge">Beneficiaries: 19</span>
+      <span class="badge">Total events: <?= $totalEvents ?></span>
+      <span class="badge">Active events: <?= $activeEvents ?></span>
+      <span class="badge">Items collected: <?= $itemsCollected ?></span>
+      <span class="badge">Beneficiaries: <?= $beneficiaries ?></span>
     </div>
-=======
-  <div class="stats">
-  <span class="badge">Total events: <?= $totalEvents ?></span>
-  <span class="badge">Active events: <?= $activeEvents ?></span>
-  <span class="badge">Items collected: <?= $itemsCollected ?></span>
-  <span class="badge">Beneficiaries: <?= $beneficiaries ?></span>
-</div>
->>>>>>> origin/main
 
     <div class="divider"></div>
 
@@ -88,14 +65,6 @@ $beneficiaries = $conn->query("SELECT COUNT(DISTINCT user_id) FROM request")->fe
           </tr>
         </thead>
         <tbody>
-<<<<<<< HEAD
-          <tr><td></td><td></td><td></td><td></td><td></td></tr>
-          <tr><td></td><td></td><td></td><td></td><td></td></tr>
-          <tr><td></td><td></td><td></td><td></td><td></td></tr>
-          <tr><td></td><td></td><td></td><td></td><td></td></tr>
-          <tr><td></td><td></td><td></td><td></td><td></td></tr>
-          <tr><td></td><td></td><td></td><td></td><td></td></tr>
-=======
           <?php foreach ($rows as $row): ?>
             <?php
               $progress = $row['target_qty'] > 0 
@@ -110,11 +79,13 @@ $beneficiaries = $conn->query("SELECT COUNT(DISTINCT user_id) FROM request")->fe
               <td><?= $progress ?>%</td>
             </tr>
           <?php endforeach; ?>
->>>>>>> origin/main
         </tbody>
       </table>
     </div>
   </div>
+
+   <div class="divider"></div>
+  <?php include '../includes/footer.php'; ?>
 
 </body>
 </html>

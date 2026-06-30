@@ -34,6 +34,7 @@ $stmt3 = $conn->prepare("
     JOIN item i ON d.item_id = i.item_id
     WHERE r.user_id = ?
     ORDER BY d.date DESC
+    LIMIT 5
 ");
 $stmt3->bind_param("i", $user_id);
 $stmt3->execute();
