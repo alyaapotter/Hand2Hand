@@ -2,7 +2,8 @@
 session_start();
 require_once '../includes/connect.php';
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 'Admin') {
-    header("Location: ../login.php"); exit();
+    header("Location: ../login.php");
+    exit();
 }
 
 $error = "";
@@ -32,13 +33,36 @@ if (!$event) {
     exit();
 }
 
-// Fetch existing targets for this event
-$stmt = $conn->prepare("
-    SELECT t.target_id, t.item_id, i.name, t.quantity
-    FROM TARGET t
-    JOIN ITEM i ON t.item_id = i.item_id
-    WHERE t.event_id = ?
+/// Fetch existing targets together with current donated quantity
+$stmt = $conn->prepare("SELECT
+    t.target_id,
+    t.item_id,
+    i.name,
+    t.quantity,
+    COALESCE(SUM(di.quantity), 0) AS current
+
+FROM TARGET t
+
+JOIN ITEM i
+    ON i.item_id = t.item_id
+
+LEFT JOIN DONATION d
+    ON d.event_id = t.event_id
+    AND d.status = 'Received'
+
+LEFT JOIN DONATION_ITEM di
+    ON di.donation_id = d.donation_id
+    AND di.item_id = t.item_id
+
+WHERE t.event_id = ?
+
+GROUP BY
+    t.target_id,
+    t.item_id,
+    i.name,
+    t.quantity
 ");
+
 $stmt->bind_param("i", $event_id);
 $stmt->execute();
 $existingTargets = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
@@ -106,11 +130,33 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
             $event = $stmt->get_result()->fetch_assoc();
 
             // Refetch updated targets
-            $stmt = $conn->prepare("
-                SELECT t.target_id, t.item_id, i.name, t.quantity
-                FROM TARGET t
-                JOIN ITEM i ON t.item_id = i.item_id
-                WHERE t.event_id = ?
+            $stmt = $conn->prepare("SELECT
+                t.target_id,
+                t.item_id,
+                i.name,
+                t.quantity,
+                COALESCE(SUM(di.quantity), 0) AS current
+
+            FROM TARGET t
+
+            JOIN ITEM i
+                ON i.item_id = t.item_id
+
+            LEFT JOIN DONATION d
+                ON d.event_id = t.event_id
+                AND d.status = 'Received'
+
+            LEFT JOIN DONATION_ITEM di
+                ON di.donation_id = d.donation_id
+                AND di.item_id = t.item_id
+
+            WHERE t.event_id = ?
+
+            GROUP BY
+                t.target_id,
+                t.item_id,
+                i.name,
+                t.quantity
             ");
             $stmt->bind_param("i", $event_id);
             $stmt->execute();
@@ -239,7 +285,8 @@ $items = $conn->query("SELECT item_id, name, category FROM ITEM ORDER BY name")-
         let targets = <?= json_encode(array_map(fn($t) => [
                             'item_id'  => $t['item_id'],
                             'name'     => $t['name'],
-                            'quantity' => $t['quantity']
+                            'quantity' => $t['quantity'],
+                            'current'  => $t['current']
                         ], $existingTargets)) ?>;
 
         // Render on load
@@ -265,9 +312,10 @@ $items = $conn->query("SELECT item_id, name, category FROM ITEM ORDER BY name")-
             }
 
             targets.push({
-                item_id,
-                name,
-                quantity: qty
+                item_id: Number(item_id),
+                name: name,
+                quantity: Number(qty),
+                current: 0
             });
             sel.value = '';
             document.getElementById('qtyInput').value = '';
@@ -286,56 +334,99 @@ $items = $conn->query("SELECT item_id, name, category FROM ITEM ORDER BY name")-
         }
 
         function renderProgress() {
+
             const container = document.getElementById('progressList');
             const emptyMsg = document.getElementById('emptyProgress');
+
             container.querySelectorAll('.progress-item').forEach(e => e.remove());
 
             if (targets.length === 0) {
                 emptyMsg.style.display = '';
                 return;
             }
+
             emptyMsg.style.display = 'none';
 
             targets.forEach(t => {
+
+                const percent = t.quantity > 0 ?
+                    Math.min((Number(t.current) / Number(t.quantity)) * 100, 100) :
+                    0;
+
                 const div = document.createElement('div');
                 div.className = 'progress-item';
+
                 div.innerHTML = `
-                    <div class="progress-header">
-                        <span>${t.name}</span>
-                        <span>0 / ${t.quantity}</span>
-                    </div>
-                    <div class="progress-container">
-                        <div class="progress-bar" style="width:0%;">0%</div>
-                    </div>
-                `;
+            <div class="progress-header">
+                <span>${t.name}</span>
+                <span>${t.current} / ${t.quantity}</span>
+            </div>
+
+            <div class="progress-container">
+                <div class="progress-bar"
+                     style="width:${percent}%;">
+                    ${Math.round(percent)}%
+                </div>
+            </div>
+        `;
+
                 container.appendChild(div);
+
             });
+
         }
 
         function renderTargetList() {
+
             const container = document.getElementById('targetList');
             const emptyMsg = document.getElementById('emptyTarget');
+
             container.querySelectorAll('.target-row').forEach(e => e.remove());
 
-            if (targets.length === 0) {
+            if (targets.length == 0) {
+
                 emptyMsg.style.display = '';
                 return;
+
             }
+
             emptyMsg.style.display = 'none';
 
             targets.forEach((t, i) => {
+
+                const percent = t.quantity > 0 ?
+                    Math.min(
+                        Math.round((Number(t.current) / Number(t.quantity)) * 100),
+                        100
+                    ) :
+                    0;
+
                 const div = document.createElement('div');
+
                 div.className = 'target-row';
+
                 div.innerHTML = `
-                    <span>${t.name}</span>
-                    <span>Target: ${t.quantity}</span>
-                    <span>Current: 0</span>
-                    <div class="action-btns">
-                        <button type="button" class="remove-btn" onclick="removeTarget(${i})">Remove</button>
-                    </div>
-                `;
+            <span><strong>${t.name}</strong></span>
+
+            <span>Target : ${t.quantity}</span>
+
+            <span>Current : ${t.current}</span>
+
+            <span>Progress : ${percent}%</span>
+
+            <div class="action-btns">
+                <button type="button"
+                        class="remove-btn"
+                        onclick="removeTarget(${i})">
+                    Remove
+                </button>
+            </div>
+        `;
+
                 container.appendChild(div);
+
             });
+
         }
 
         function renderHiddenInputs() {
