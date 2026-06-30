@@ -50,20 +50,165 @@ unset($_SESSION['success_msg'], $_SESSION['error_msg']);
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Hand2Hand - Profile (Beneficiary)</title>
-  <link rel="stylesheet" href="../css/profile_page_bene.css" />
+  <link rel="stylesheet" href="../css/formatBulan.css">
+  <style>
+    /* ===== Page wrapper, matches aid_status.php theme ===== */
+    .content-container {
+        max-width: 760px;
+        margin: 30px auto 60px;
+        padding: 0 20px;
+    }
+
+    .profile-heading {
+        text-align: center;
+        color: #443025;
+        margin: 25px 0 10px;
+        font-size: 26px;
+        font-weight: 700;
+    }
+
+    /* ===== Alerts ===== */
+    .alert {
+        max-width: 760px;
+        margin: 15px auto 0;
+        padding: 12px 18px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        text-align: center;
+    }
+    .alert-success { background-color: #d7f7df; color: #1f7a3c; border: 1px solid #22c55e; }
+    .alert-error   { background-color: #fde0e0; color: #9c1c1c; border: 1px solid #ef4444; }
+
+    /* ===== Card / Form ===== */
+    .profile-form {
+        background-color: #FFE4EF;
+        border: 2px solid #A86B6C;
+        border-radius: 12px;
+        padding: 30px 35px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    }
+
+    .form-section {
+        border: none;
+        margin: 0 0 10px;
+        padding: 0;
+    }
+
+    .section-title {
+        font-size: 16px;
+        font-weight: 700;
+        color: #FFE4EF;
+        background-color: #443025;
+        padding: 8px 16px;
+        border-radius: 8px;
+        display: inline-block;
+        margin-bottom: 18px;
+    }
+
+    .form-group {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        margin-bottom: 16px;
+    }
+
+    .form-group label {
+        flex: 0 0 160px;
+        font-weight: 600;
+        color: #443025;
+        font-size: 14px;
+    }
+
+    .input-field {
+        padding: 9px 12px;
+        border: 1px solid #A86B6C;
+        border-radius: 6px;
+        background-color: #ffffff;
+        color: #443025;
+        font-size: 14px;
+        outline: none;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .input-field:focus {
+        border-color: #443025;
+        box-shadow: 0 0 0 2px rgba(68,48,37,0.15);
+    }
+
+    .dynamic-width { width: 100%; max-width: 320px; }
+    .short-width   { width: 100%; max-width: 220px; }
+    .long-width    { width: 100%; max-width: 420px; }
+    .tiny-width    { width: 90px; }
+    .dropdown-field { cursor: pointer; }
+
+    .readonly-value {
+        font-size: 14px;
+        font-weight: 600;
+        color: #443025;
+        background-color: #f7d6e4;
+        padding: 8px 14px;
+        border-radius: 6px;
+        border: 1px dashed #A86B6C;
+    }
+
+    .section-divider {
+        border: none;
+        border-top: 1px solid #A86B6C;
+        margin: 22px 0;
+        opacity: 0.6;
+    }
+
+    .save-button-container {
+        text-align: center;
+        margin-top: 10px;
+    }
+
+    .btn-save {
+        background-color: #443025;
+        color: #FFE4EF;
+        border: none;
+        padding: 11px 38px;
+        border-radius: 25px;
+        font-size: 15px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: background-color 0.2s, transform 0.1s;
+    }
+    .btn-save:hover {
+        background-color: #5c4434;
+        transform: translateY(-1px);
+    }
+
+    /* Dark footer styling, consistent with aid_status.php */
+    footer.dark-footer {
+        background-color: #443025 !important;
+        color: #FFE4EF !important;
+        padding: 30px !important;
+        margin-top: 0 !important;
+    }
+    footer.dark-footer h4 { color: #FFE4EF !important; margin-bottom: 15px !important; }
+    footer.dark-footer p  { color: #FFE4EF !important; margin-bottom: 2px !important; font-size: 14px !important; }
+
+    @media (max-width: 600px) {
+        .form-group label { flex: 0 0 100%; margin-bottom: 6px; }
+        .profile-form { padding: 22px 18px; }
+    }
+  </style>
 </head>
 <body>
 
   <?php include '../includes/navbar.php'; ?>
 
-  <?php if ($success_msg): ?>
-    <div class="alert alert-success"><?= htmlspecialchars($success_msg) ?></div>
-  <?php endif; ?>
-  <?php if ($error_msg): ?>
-    <div class="alert alert-error"><?= htmlspecialchars($error_msg) ?></div>
-  <?php endif; ?>
+  <div class="content-container">
+    <h1 class="profile-heading">My Profile</h1>
 
-  <main class="content-container">
+    <?php if ($success_msg): ?>
+      <div class="alert alert-success"><?= htmlspecialchars($success_msg) ?></div>
+    <?php endif; ?>
+    <?php if ($error_msg): ?>
+      <div class="alert alert-error"><?= htmlspecialchars($error_msg) ?></div>
+    <?php endif; ?>
+
     <form action="../process_profile.php" method="POST" class="profile-form">
       <input type="hidden" name="user_id" value="<?= (int)$user_id ?>">
 
@@ -113,7 +258,13 @@ unset($_SESSION['success_msg'], $_SESSION['error_msg']);
         <button type="submit" class="btn-save">Save</button>
       </div>
     </form>
-  </main>
-  <?php include '../includes/footer.php'; ?>
+  </div>
+
+  <footer class="dark-footer">
+      <h4>Hand2Hand</h4>
+      <p>Contact Us:</p>
+      <p>Email: hand2hand@support.com</p>
+  </footer>
+
 </body>
 </html>
