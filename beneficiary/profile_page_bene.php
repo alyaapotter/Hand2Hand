@@ -12,20 +12,32 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'Requester') {
 $user_id = $_SESSION['user_id'];
 $profile = null;
 
-// Gunakan variable $conn yang sedia ada dari connect.php
 $stmt = $conn->prepare("
-    SELECT b.beneficiary_id, b.name, b.contact, b.address, b.family_size, b.priority
-    FROM   beneficiaries b
-    WHERE  b.user_id = ?
-    LIMIT  1
+    SELECT
+        user_id,
+        username,
+        contact_number,
+        address,
+        family_size,
+        priority_level
+    FROM user
+    WHERE user_id = ?
+    LIMIT 1
 ");
-$stmt->bind_param('i', $user_id);
+
+if (!$stmt) {
+    die("Database Error: " . $conn->error);
+}
+
+$stmt->bind_param("i", $user_id);
 $stmt->execute();
+
 $result = $stmt->get_result();
 
 if ($result->num_rows > 0) {
     $profile = $result->fetch_assoc();
 }
+
 $stmt->close();
 
 $success_msg = $_SESSION['success_msg'] ?? '';
@@ -38,7 +50,7 @@ unset($_SESSION['success_msg'], $_SESSION['error_msg']);
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Hand2Hand - Profile (Beneficiary)</title>
-  <link rel="stylesheet" href="profile_page_bene.css" />
+  <link rel="stylesheet" href="../css/profile_page_bene.css" />
 </head>
 <body>
 
@@ -65,24 +77,24 @@ unset($_SESSION['success_msg'], $_SESSION['error_msg']);
   <?php endif; ?>
 
   <main class="content-container">
-    <form action="process_profile.php" method="POST" class="profile-form">
+    <form action="../process_profile.php" method="POST" class="profile-form">
       <input type="hidden" name="user_id" value="<?= (int)$user_id ?>">
 
       <fieldset class="form-section">
         <legend class="section-title">Personal Information</legend>
         <div class="form-group">
           <label for="name">Name:</label>
-          <input type="text" id="name" name="name" class="input-field dynamic-width" value="<?= htmlspecialchars($profile['name'] ?? '') ?>" required />
+          <input type="text" id="name" name="name" class="input-field dynamic-width" value="<?= htmlspecialchars($profile['username'] ?? '') ?>" required />
         </div>
         <div class="form-group">
           <label>Beneficiary ID:</label>
           <span class="readonly-value">
-            <?= $profile ? 'BNF-' . str_pad($profile['beneficiary_id'], 5, '0', STR_PAD_LEFT) : 'Belum ditetapkan' ?>
+            <?= $profile ? 'USR-' . str_pad($profile['user_id'], 5, '0', STR_PAD_LEFT) : 'N/A' ?>
           </span>
         </div>
         <div class="form-group">
           <label for="contact">Contact Number:</label>
-          <input type="text" id="contact" name="contact" class="input-field short-width" value="<?= htmlspecialchars($profile['contact'] ?? '') ?>" />
+          <input type="text" id="contact" name="contact" class="input-field short-width" value="<?= htmlspecialchars($profile['contact_number'] ?? '') ?>" />
         </div>
         <div class="form-group">
           <label for="address">Address:</label>
@@ -103,7 +115,7 @@ unset($_SESSION['success_msg'], $_SESSION['error_msg']);
           <select id="priority" name="priority" class="input-field short-width dropdown-field">
             <option value="">-- Pilih --</option>
             <?php foreach (['Low', 'Medium', 'High'] as $lvl): ?>
-              <option value="<?= $lvl ?>" <?= (($profile['priority'] ?? '') === $lvl) ? 'selected' : '' ?>><?= $lvl ?></option>
+              <option value="<?= $lvl ?>" <?= (($profile['priority_level'] ?? '') === $lvl) ? 'selected' : '' ?>><?= $lvl ?></option>
             <?php endforeach; ?>
           </select>
         </div>
