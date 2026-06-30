@@ -29,11 +29,11 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'Donor') {
         <a href="../logout.php" class="logout-btn">Logout</a>
     </div>
 
-    <nav class="donor-nav">
+    
         <a href="donor/home_page_donor.php" class="active">Home</a> |
         <a href="donor/donation_event_donor.php">My Events</a> |
         <a href="donor/donate_item.php">My Donations</a>
-    </nav>
+    
 </header>
 
 <main class="content-container">
