@@ -20,7 +20,7 @@ require_once __DIR__ . '/includes/connect.php';
     <div class="nav-links">
       <a href="home.php">Hand2Hand</a> |
       <a href="about.php">About Us</a> |
-      <a href="events.php">Events</a> |
+      <a href="event.php">Events</a> |
       <a href="login.php">Login</a>
     </div>
   </nav>
