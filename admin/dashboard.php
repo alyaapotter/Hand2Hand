@@ -155,20 +155,121 @@ $beneficiaries  = $conn->query("SELECT COUNT(DISTINCT user_id) FROM request")->f
             text-align: center;
             padding: 20px !important;
         }
+
+        /* ================================================= */
+        /* ===== TAMBAHAN CSS RESPONSIF UNTUK MOBILE  ===== */
+        /* ================================================= */
+        @media (max-width: 768px) {
+            
+            /* --- 1. MENCANTIKKAN NAVBAR ADMIN DI MOBILE --- */
+            nav, .navbar {
+                flex-direction: column !important;
+                padding: 15px !important;
+                text-align: center !important;
+                gap: 12px !important;
+                height: auto !important;
+            }
+
+            /* Menyusun pautan menu secara menegak yang kemas */
+            nav .nav-links, .navbar .nav-links {
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: center !important;
+                gap: 10px !important;
+                width: 100% !important;
+                font-size: 15px !important;
+                color: transparent !important; /* Menukar simbol '|' asal menjadi telus/hilang */
+            }
+
+            /* Kekalkan warna teks pautan asal & beri ruang sentuhan yang selesa */
+            nav .nav-links a, .navbar .nav-links a {
+                color: #FFE4EF !important; /* Kekalkan warna pink lembut asal */
+                text-decoration: none !important;
+                padding: 6px 15px !important;
+                width: 80% !important;
+                max-width: 200px;
+                border-radius: 8px;
+                background-color: rgba(255, 255, 255, 0.05); /* Sedikit kesan kotak menu */
+                transition: background 0.2s;
+                display: inline-block !important;
+            }
+
+            nav .nav-links a:hover, .navbar .nav-links a:hover {
+                background-color: rgba(255, 255, 255, 0.15);
+            }
+
+            /* Butang Logout di bawah sekali */
+            .navbar .logout-btn, nav a[href*="logout"] {
+                margin-top: 5px !important;
+                width: auto !important;
+            }
+
+            /* --- 2. KANDUNGAN UTAMA DASHBOARD --- */
+            .welcome-banner {
+                padding: 20px !important; /* Selaraskan padding kiri dan kanan */
+                text-align: center !important; /* Letak teks tajuk di tengah untuk mobile */
+            }
+
+            .welcome-banner h1 {
+                font-size: 26px !important; 
+            }
+
+            .main-content-wrapper {
+                padding: 20px 12px !important; 
+            }
+
+            /* Kotak statistik: 2 lajur sebaris seimbang */
+            .card-row {
+                gap: 12px !important;
+                margin-bottom: 20px;
+            }
+
+            .summary-card {
+                width: calc(50% - 6px) !important; 
+                min-height: 75px !important;
+                padding: 10px !important;
+                box-sizing: border-box;
+            }
+
+            .card-number {
+                font-size: 22px !important;
+            }
+
+            .card-label {
+                font-size: 11px !important;
+            }
+
+            .section-title {
+                font-size: 18px !important;
+                margin-top: 15px;
+                margin-bottom: 10px;
+                text-align: center !important; /* Tajuk bahagian di tengah */
+            }
+
+            /* Kurangkan padding frame jadual di skrin kecil */
+            .admin-table-frame {
+                padding: 10px !important;
+                margin-bottom: 25px;
+                border-radius: 8px !important;
+            }
+
+            /* Saiz teks jadual dikecilkan sedikit agar mesra skrol */
+            .data-table th, .data-table td {
+                padding: 10px 8px !important;
+                font-size: 13px !important;
+            }
+        }
     </style>
 </head>
 <body>
     <?php include '../includes/navbar.php'; ?>
 
-    <!-- Bahagian tajuk yang bersambung dengan navigasi -->
     <div class="welcome-banner">
         <h1>Dashboard</h1>
     </div>
 
-    <!-- Semua kandungan halaman dalam wrapper berpusat -->
     <div class="main-content-wrapper">
 
-        <!-- 4 Box Statistik -->
         <div class="card-row">
             <div class="summary-card">
                 <div class="card-number"><?= $totalEvents ?></div>
@@ -188,10 +289,8 @@ $beneficiaries  = $conn->query("SELECT COUNT(DISTINCT user_id) FROM request")->f
             </div>
         </div>
 
-        <!-- Nama List: Event Tracking -->
         <div class="section-title">Event Tracking</div>
 
-        <!-- Jadual Ber-Frame Box -->
         <div class="admin-table-frame">
             <table class="data-table">
                 <thead>
@@ -234,7 +333,6 @@ $beneficiaries  = $conn->query("SELECT COUNT(DISTINCT user_id) FROM request")->f
         </div>
     </div>
 
-    <!-- Panggilan fail footer modular ber-pathing sepadan -->
     <?php include '../includes/footer.php'; ?>
 </body>
 </html>
