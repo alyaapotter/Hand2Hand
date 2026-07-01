@@ -11,6 +11,7 @@ if ($role == 'Admin') {
 } else {
     $nav_links = "<a href='../home.php'>Home</a> | <a href='../about.php'>About Us</a> | <a href='../event.php'>Events</a> | <a href='../login.php'>Login</a>";
 }
+
 ?>
 <link rel="stylesheet" href="../css/navbar_footer.css?v=1.2">
 <nav class="navbar">

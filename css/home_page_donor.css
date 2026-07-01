@@ -11,10 +11,6 @@ body {
   color: #443025;
 }
 
-body.donor-home {
-    background-color: #f3e7dc;
-}
-
 /* Header Styles */
 .donor-header {
     background-color: #3b2a1a; /* Dark brown */
@@ -89,14 +85,14 @@ body.donor-home {
 }
 
 .welcome-title {
-    color: #ffffff;
+    color: #3b2a1a;
     font-size: 32px;
     margin-bottom: 25px;
 }
 
 .section-title {
     font-size: 24px;
-    color: #3b2a1a;
+    color: #5b3f26;
     margin-bottom: 25px;
 }
 
