@@ -20,6 +20,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'Donor') {
 </head>
 <body>
 
+<body class="donor-home">
 <?php include '../includes/navbar.php'; ?>
 
 <main class="content-container">

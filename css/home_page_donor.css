@@ -7,8 +7,12 @@
 }
 
 body {
-    background-color: #f3e7dc; /* Muted brown background */
-    color: #443025;
+  background-color: #f3e7dc;
+  color: #443025;
+}
+
+body.donor-home {
+    background-color: #f3e7dc;
 }
 
 /* Header Styles */
