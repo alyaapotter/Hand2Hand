@@ -321,7 +321,7 @@ unset($_SESSION['success_msg'], $_SESSION['error_msg']);
         document.getElementById('passwordSection').classList.toggle('show');
     }
 
-    // Same validation pattern as register.php
+    // same validation pattern as register.php
     function validatePasswordChange() {
         const newPassword = document.getElementById('new_password').value;
         const confirmPassword = document.getElementById('confirm_password').value;

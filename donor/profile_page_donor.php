@@ -284,11 +284,7 @@ unset($_SESSION['success_msg'], $_SESSION['error_msg']);
     </div>
   </div>
 
-  <footer class="dark-footer">
-    <h4>Hand2Hand</h4>
-    <p>Contact Us:</p>
-    <p>Email: hand2hand@support.com</p>
-</footer>
+  <?php include '../includes/footer.php'; ?>
 
   <script>
     function togglePasswordSection() {
