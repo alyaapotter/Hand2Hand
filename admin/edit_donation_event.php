@@ -78,6 +78,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
 
     if (!$name || !$start_date || !$end_date || !$status) {
         $error = "Please fill in all event fields.";
+    } else if ($end_date < $start_date) {
+        $error = "End date cannot be earlier than start date.";
     } else {
 
         // Handle image upload
@@ -210,10 +212,10 @@ $items = $conn->query("SELECT item_id, name, category FROM ITEM ORDER BY name")-
                     <input type="text" name="name" required value="<?= htmlspecialchars($event['name']) ?>">
 
                     <label>Start Date</label>
-                    <input type="date" name="start_date" required value="<?= htmlspecialchars($event['start_date']) ?>">
+                    <input type="date" name="start_date" id="start_date" required value="<?= htmlspecialchars($event['start_date']) ?>">
 
                     <label>End Date</label>
-                    <input type="date" name="end_date" required value="<?= htmlspecialchars($event['end_date']) ?>">
+                    <input type="date" name="end_date" id="end_date" required value="<?= htmlspecialchars($event['end_date']) ?>">
 
                     <label>Status</label>
                     <select name="status" required>
@@ -446,6 +448,28 @@ $items = $conn->query("SELECT item_id, name, category FROM ITEM ORDER BY name")-
                 alert.style.display = 'none';
             }
         }, 3000);
+
+        const startDateInput = document.getElementById('start_date');
+        const endDateInput = document.getElementById('end_date');
+        const today = new Date().toISOString().split('T')[0];
+
+        // hanya enforce min=today kalau start date asal belum lepas
+        // (elak block admin edit event lama yang start_date dah lepas)
+        if (!startDateInput.value || startDateInput.value >= today) {
+            startDateInput.min = today;
+        }
+
+        // end date minimum ikut start date semasa (atau hari ini, ambil yang lebih besar)
+        endDateInput.min = startDateInput.value && startDateInput.value > today ?
+            startDateInput.value :
+            today;
+
+        startDateInput.addEventListener('change', function() {
+            endDateInput.min = startDateInput.value;
+            if (endDateInput.value && endDateInput.value < startDateInput.value) {
+                endDateInput.value = '';
+            }
+        });
     </script>
 </body>
 
