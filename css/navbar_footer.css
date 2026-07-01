@@ -74,3 +74,103 @@ footer p {
     margin-bottom: 2px;
     font-size: 14px;
 }
+
+/* Responsive mobile adjustments */
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        align-items: center;
+        padding: 15px;
+        gap: 15px;
+    }
+    
+    .nav-left {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        width: 100%;
+        text-align: center;
+    }
+    
+    .nav-brand-text {
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .nav-brand-name {
+        margin-left: 0;
+        font-size: 26px;
+    }
+    
+    .nav-links-sub {
+        font-size: 0; /* Hides the pipe "|" text separators */
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 5px;
+    }
+    
+    .nav-links-sub a {
+        font-size: 14px !important;
+        margin: 0 !important;
+        padding: 6px 12px;
+        background-color: rgba(255, 228, 239, 0.1);
+        border: 1px solid rgba(255, 228, 239, 0.2);
+        border-radius: 20px;
+        white-space: nowrap;
+    }
+    
+    .btn-logout {
+        width: 100%;
+        max-width: 200px;
+        text-align: center;
+        box-sizing: border-box;
+    }
+    
+    /* Make tables scrollable on small screens to prevent layout breaking */
+    .admin-table, .table-wrapper {
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    /* Shrink tabs and align them nicely on mobile */
+    .tab-container {
+        margin: 15px 0 10px 0 !important;
+        justify-content: center !important;
+        gap: 6px !important;
+    }
+    
+    .tab-link {
+        padding: 4px 10px !important;
+        font-size: 11px !important;
+        border-width: 1px !important;
+    }
+    
+    .tab-cnt {
+        padding: 0 4px !important;
+        font-size: 10px !important;
+    }
+
+    /* Shrink table lists text and spacing on mobile */
+    .custom-table th, .custom-table td {
+        padding: 8px 10px !important;
+        font-size: 12px !important;
+    }
+    
+    /* Shrink buttons inside table list on mobile */
+    .btn-action, button.btn-action {
+        padding: 4px 8px !important;
+        font-size: 11px !important;
+        border-radius: 4px !important;
+    }
+    
+    /* Shrink reason box on mobile */
+    .reason-box {
+        font-size: 11px !important;
+        padding: 5px 8px !important;
+        max-width: 180px !important;
+    }
+}
