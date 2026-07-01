@@ -2,7 +2,8 @@
 session_start();
 require_once '../includes/connect.php';
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 'Admin') {
-    header("Location: ../login.php"); exit();
+    header("Location: ../login.php");
+    exit();
 }
 
 $error = "";
@@ -114,10 +115,10 @@ $items = $conn->query("SELECT item_id, name, category FROM ITEM ORDER BY name")-
                     <input type="text" name="name" required placeholder="Enter event name">
 
                     <label>Start Date</label>
-                    <input type="date" name="start_date" required>
+                    <input type="date" name="start_date" id="start_date" required>
 
                     <label>End Date</label>
-                    <input type="date" name="end_date" required>
+                    <input type="date" name="end_date" id="end_date" required>
 
                     <label>Status</label>
                     <select name="status" required>
@@ -184,6 +185,28 @@ $items = $conn->query("SELECT item_id, name, category FROM ITEM ORDER BY name")-
 
     <script>
         let targets = [];
+
+        const startDateInput = document.getElementById('start_date');
+        const endDateInput = document.getElementById('end_date');
+
+        // dapatkan tarikh hari ini dalam format YYYY-MM-DD
+        const today = new Date().toISOString().split('T')[0];
+
+        // start date tak boleh sebelum hari ini
+        startDateInput.min = today;
+
+        // bila start date dipilih, end date pun ikut sekali (tak boleh sebelum start date)
+        startDateInput.addEventListener('change', function() {
+            endDateInput.min = startDateInput.value;
+
+            // kalau end date yang dah dipilih jadi tak valid, clear je
+            if (endDateInput.value && endDateInput.value < startDateInput.value) {
+                endDateInput.value = '';
+            }
+        });
+
+        // end date pun set minimum awal sebagai hari ini juga (default)
+        endDateInput.min = today;
 
         function addTarget() {
             const sel = document.getElementById('itemSelect');
