@@ -20,6 +20,13 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'Donor') {
 </head>
 <body>
 
+<style>
+    body {
+  background-color: #f3e7dc;
+  color: #443025;
+}
+</style>
+
 <?php include '../includes/navbar.php'; ?>
 
 <main class="content-container">
