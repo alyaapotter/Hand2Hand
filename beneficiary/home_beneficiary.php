@@ -11,7 +11,6 @@ $stmt->execute();
 $result = $stmt->get_result();
 $profile = $result->fetch_assoc();
 
-// Get next upcoming distribution date for this beneficiary
 $stmt2 = $conn->prepare("
     SELECT MIN(d.date) AS next_date
     FROM distribution d
@@ -23,7 +22,6 @@ $stmt2->execute();
 $result2 = $stmt2->get_result();
 $nextDistribution = $result2->fetch_assoc();
 
-// Get latest aid status (items distributed to this beneficiary)
 $stmt3 = $conn->prepare("
     SELECT 
         i.name AS item_name,
@@ -51,7 +49,6 @@ $aidStatus = $result3->fetch_all(MYSQLI_ASSOC);
     <link rel="stylesheet" href="../css/formatBulan.css">
     
     <style>
-        /* ===== Penyelarasan Warna & Kotak Mengikut Rekabentuk Figma ===== */
         body { 
             background-color: #f3e7dc !important; 
         }
@@ -63,7 +60,6 @@ $aidStatus = $result3->fetch_all(MYSQLI_ASSOC);
             margin-top: 40px; 
         }
 
-        /* Mengubah suai Welcome Banner supaya menyatu ke dalam Navbar dengan kedudukan seimbang */
         .welcome-banner {
             background-color: #443025 !important; 
             width: 100%;
@@ -77,7 +73,6 @@ $aidStatus = $result3->fetch_all(MYSQLI_ASSOC);
             box-sizing: border-box;
         }
 
-        /* Susunan Flexbox Kotak Ringkasan (Summary Cards) */
         .card-row {
             display: flex;
             gap: 20px;
@@ -86,7 +81,6 @@ $aidStatus = $result3->fetch_all(MYSQLI_ASSOC);
             margin-top: 15px;
         }
 
-        /* Rekabentuk Kotak (Summary Card) */
         .summary-card { 
             background-color: #FFE4EF !important; 
             border: 2px solid #A86B6C !important; 
@@ -117,7 +111,6 @@ $aidStatus = $result3->fetch_all(MYSQLI_ASSOC);
             font-weight: 500;
         }
 
-        /* Kotak Alamat */
         .form-section { 
             background-color: #FFE4EF !important; 
             border: 2px solid #A86B6C !important;
@@ -147,7 +140,6 @@ $aidStatus = $result3->fetch_all(MYSQLI_ASSOC);
             margin-bottom: 15px !important;
         }
 
-        /* Penyelarasan Gaya Jadual */
         .table-wrapper { 
             background: #7F5836 !important; 
             border-radius: 8px;
@@ -177,7 +169,6 @@ $aidStatus = $result3->fetch_all(MYSQLI_ASSOC);
             border-bottom: none;
         }
 
-        /* Badge Status */
         .badge {
             padding: 4px 12px;
             border-radius: 20px;
@@ -196,7 +187,6 @@ $aidStatus = $result3->fetch_all(MYSQLI_ASSOC);
             padding: 20px !important;
         }
 
-        /* Footer Gelap di bahagian bawah */
         footer.dark-footer { 
             background-color: #443025 !important; 
             color: #FFE4EF !important; 

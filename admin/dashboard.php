@@ -41,7 +41,6 @@ $beneficiaries  = $conn->query("SELECT COUNT(DISTINCT user_id) FROM request")->f
             padding: 0;
         }
 
-        /* ===== BANNER TAJUK BERSAMBUNG DENGAN NAVBAR ===== */
         .welcome-banner {
             background-color: #443025 !important; 
             width: 100%;
@@ -59,14 +58,12 @@ $beneficiaries  = $conn->query("SELECT COUNT(DISTINCT user_id) FROM request")->f
             font-family: sans-serif;
         }
 
-        /* Pembungkus kandungan utama - Di-tengah-kan */
         .main-content-wrapper {
             max-width: 1100px; 
             margin: 0 auto;
             padding: 30px 20px;
         }
 
-        /* Container 4 Box Statistik */
         .card-row {
             display: flex;
             gap: 20px;
@@ -75,7 +72,6 @@ $beneficiaries  = $conn->query("SELECT COUNT(DISTINCT user_id) FROM request")->f
             justify-content: center; 
         }
 
-        /* 4 Box Statistik */
         .summary-card { 
             background-color: #FFE4EF !important; 
             border: 2px solid #A86B6C !important; 
@@ -105,7 +101,6 @@ $beneficiaries  = $conn->query("SELECT COUNT(DISTINCT user_id) FROM request")->f
             font-weight: 500;
         }
 
-        /* Tajuk List "Event Tracking" */
         .section-title {
             color: #443025 !important;
             font-size: 22px !important;
@@ -115,7 +110,6 @@ $beneficiaries  = $conn->query("SELECT COUNT(DISTINCT user_id) FROM request")->f
             text-align: left;
         }
 
-        /* ===== KOTAK JADUAL (FRAME) ===== */
         .admin-table-frame {
             background-color: #FFE4EF !important; 
             border: 2px solid #A86B6C !important; 
@@ -156,12 +150,9 @@ $beneficiaries  = $conn->query("SELECT COUNT(DISTINCT user_id) FROM request")->f
             padding: 20px !important;
         }
 
-        /* ================================================= */
-        /* ===== TAMBAHAN CSS RESPONSIF UNTUK MOBILE  ===== */
-        /* ================================================= */
+      
         @media (max-width: 768px) {
             
-            /* --- 1. MENCANTIKKAN NAVBAR ADMIN DI MOBILE --- */
             nav, .navbar {
                 flex-direction: column !important;
                 padding: 15px !important;
@@ -170,7 +161,6 @@ $beneficiaries  = $conn->query("SELECT COUNT(DISTINCT user_id) FROM request")->f
                 height: auto !important;
             }
 
-            /* Menyusun pautan menu secara menegak yang kemas */
             nav .nav-links, .navbar .nav-links {
                 display: flex !important;
                 flex-direction: column !important;
@@ -178,18 +168,17 @@ $beneficiaries  = $conn->query("SELECT COUNT(DISTINCT user_id) FROM request")->f
                 gap: 10px !important;
                 width: 100% !important;
                 font-size: 15px !important;
-                color: transparent !important; /* Menukar simbol '|' asal menjadi telus/hilang */
+                color: transparent !important; 
             }
 
-            /* Kekalkan warna teks pautan asal & beri ruang sentuhan yang selesa */
             nav .nav-links a, .navbar .nav-links a {
-                color: #FFE4EF !important; /* Kekalkan warna pink lembut asal */
+                color: #FFE4EF !important; 
                 text-decoration: none !important;
                 padding: 6px 15px !important;
                 width: 80% !important;
                 max-width: 200px;
                 border-radius: 8px;
-                background-color: rgba(255, 255, 255, 0.05); /* Sedikit kesan kotak menu */
+                background-color: rgba(255, 255, 255, 0.05); 
                 transition: background 0.2s;
                 display: inline-block !important;
             }
@@ -198,16 +187,15 @@ $beneficiaries  = $conn->query("SELECT COUNT(DISTINCT user_id) FROM request")->f
                 background-color: rgba(255, 255, 255, 0.15);
             }
 
-            /* Butang Logout di bawah sekali */
             .navbar .logout-btn, nav a[href*="logout"] {
                 margin-top: 5px !important;
                 width: auto !important;
             }
 
-            /* --- 2. KANDUNGAN UTAMA DASHBOARD --- */
+            /* --- dashboard --- */
             .welcome-banner {
-                padding: 20px !important; /* Selaraskan padding kiri dan kanan */
-                text-align: center !important; /* Letak teks tajuk di tengah untuk mobile */
+                padding: 20px !important; 
+                text-align: center !important; 
             }
 
             .welcome-banner h1 {
@@ -218,7 +206,6 @@ $beneficiaries  = $conn->query("SELECT COUNT(DISTINCT user_id) FROM request")->f
                 padding: 20px 12px !important; 
             }
 
-            /* Kotak statistik: 2 lajur sebaris seimbang */
             .card-row {
                 gap: 12px !important;
                 margin-bottom: 20px;
@@ -243,17 +230,15 @@ $beneficiaries  = $conn->query("SELECT COUNT(DISTINCT user_id) FROM request")->f
                 font-size: 18px !important;
                 margin-top: 15px;
                 margin-bottom: 10px;
-                text-align: center !important; /* Tajuk bahagian di tengah */
+                text-align: center !important; 
             }
 
-            /* Kurangkan padding frame jadual di skrin kecil */
             .admin-table-frame {
                 padding: 10px !important;
                 margin-bottom: 25px;
                 border-radius: 8px !important;
             }
 
-            /* Saiz teks jadual dikecilkan sedikit agar mesra skrol */
             .data-table th, .data-table td {
                 padding: 10px 8px !important;
                 font-size: 13px !important;
