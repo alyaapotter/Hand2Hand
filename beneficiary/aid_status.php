@@ -19,7 +19,7 @@ $query = "SELECT
           LEFT JOIN ITEM i_req ON r.item_id = i_req.item_id
           WHERE r.user_id = $user_id";
 if ($search) $query .= " AND (i_dist.name LIKE '%$search%' OR i_req.name LIKE '%$search%')";
-$query .= " ORDER BY COALESCE(d.date, r.date) DESC";
+$query .= " ORDER BY r.request_id DESC";
 $result        = mysqli_query($conn, $query);
 $distributions = mysqli_fetch_all($result, MYSQLI_ASSOC);
 ?>
